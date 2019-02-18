@@ -1,4 +1,4 @@
-RwProjectLoadConfiguration {
+RwComponentLoadConfiguration {
 	#name : 'Main',
 	#comment : '',
 	#projectName : 'GsDevKit_upgradeDevKitImage',

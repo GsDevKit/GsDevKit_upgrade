@@ -1,4 +1,4 @@
-RwComponentSpecification {
+RwSimpleProjectSpecification {
 	#specName : 'GsDevKit_upgradeDevKitImage',
 	#version : '0.3.0',
 	#projectUrl : 'https://github.com/GsDevKit/GsDevKit_upgradeDevKitImage',
@@ -16,6 +16,5 @@ RwComponentSpecification {
 	],
 	#defaultGroupNames : [
 		'core'
-	],
-	#projectsPath : 'rowan/projects'
+	]
 }

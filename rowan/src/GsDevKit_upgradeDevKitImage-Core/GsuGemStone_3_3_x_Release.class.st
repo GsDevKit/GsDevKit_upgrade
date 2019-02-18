@@ -5,6 +5,14 @@ Class {
 }
 
 { #category : 'phases' }
+GsuGemStone_3_3_x_Release >> prepareImage_makeClassesObsolete: aGsDevKitUpgrade [
+	"In 3.4.0, the Pragma class is in the base, and the old Pragma class  must be obsoleted"
+
+	aGsDevKitUpgrade log: 'Prepare image - obsolete classes'.
+	aGsDevKitUpgrade prepareImage_makeClassObsolete: 'Pragma' in: aGsDevKitUpgrade upgradeSymbolDict
+]
+
+{ #category : 'phases' }
 GsuGemStone_3_3_x_Release >> prepareImage_pragmas_withPragmas_source [
 	"3.3.x source for Pragma>>withPragmasIn:do: ... needed to extract pragmas from the 3.3.x prgama data structures"
 
@@ -28,5 +36,6 @@ GsuGemStone_3_3_x_Release >> prepareImage_pragmasFor: aGsDevKitUpgrade [
 		so we need to collect all of the methods that have pragmas and then recompile them 
 		to use the new Pragma class ... when we are ready. "
 
+	aGsDevKitUpgrade log: 'Prepare image - pragmas'.
 	aGsDevKitUpgrade prepareImage_pragmas
 ]

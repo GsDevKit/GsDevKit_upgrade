@@ -103,8 +103,28 @@ GsuAbstractGsDevKitUpgrade >> prepareImage [
 	"prepare image for upgrade"
 
 	self prepareImageBanner.
-	self log: '	Prepare image'.
-	self sourceGemStoneRelease prepareImage_pragmasFor: self
+	self log: 'Prepare image'.
+	self sourceGemStoneRelease 
+		prepareImage_pragmasFor: self;
+		prepareImage_makeClassesObsolete: self
+]
+
+{ #category : 'phases' }
+GsuAbstractGsDevKitUpgrade >> prepareImage_makeClassObsolete: className in: symDict [
+	| assoc |
+	(symDict at: className ifAbsent: []) 
+		ifNil: [ 
+			self log: '	The class ' , className , ' NOT made obsolete for user ', self upgradeUserName, 
+				', the class is not present in symbol dictionary ', symDict name printString ]
+		ifNotNil: [:class |
+			self log: '	Making class ' , className , ' (', class asOop printString, ') obsolete for user ', self upgradeUserName.
+
+			assoc := symDict associationAt: className.
+			class _makeClassObsolete: symDict.
+			symDict removeKey: class name.
+			(Globals at: #ObsoleteClasses) addAssociation: assoc.
+
+			self log: '	Class ',  className , ' removed from symbolDictionary: ', symDict name printString. ]
 ]
 
 { #category : 'phases' }
@@ -119,13 +139,10 @@ GsuAbstractGsDevKitUpgrade >> prepareImage_pragmas [
 	"For 3.3.x we'll need to recompile all methods that have pragmas, so that new structure is used"
 
 	| pragmaClass oldPackagePolicyEnabled |
-	self log: 'Prepare image - pragmas'.
-	self log: 'Finding all methods with pragmas for later recompile(', GsPackagePolicy current enabled printString, ')'.
 
 	(pragmaClass := self upgradeSymbolDict at: #Pragma ifAbsent: [])
-		ifNil: [ 
-			self log: 'No Pragma class found in ', self upgradeSymbolDict name asString, ' symbol dictionary'.
-			^ self ].
+		ifNil: [ ^ self log: '	No Pragma class found in ', self upgradeSymbolDict name asString, ' symbol dictionary' ].
+	self log: '	Finding all methods with pragmas for later recompile(', GsPackagePolicy current enabled printString, ')'.
 	self log: '	Old pragma class ', pragmaClass name printString, '[', pragmaClass asOop printString, '] -- will be made obsolete'.
 
 	"need to make sure that this method is used so that we can extract pragmas from old structures"
@@ -153,7 +170,7 @@ GsuAbstractGsDevKitUpgrade >> prepareImage_pragmas [
 						self methodsWithPragmas add: meth.
 						self log: '	', beh name asString, (beh isMeta ifTrue: [' class'] ifFalse: ['']), '>>', sel printString ] ] ] ] ].
 	GsPackagePolicy current instVarAt: 1 put: oldPackagePolicyEnabled.
-	self log: '... finished finding methods with pragmas'
+	self log: '	... finished finding methods with pragmas'
 ]
 
 { #category : 'phases' }
@@ -188,14 +205,14 @@ GsuAbstractGsDevKitUpgrade >> targetGemStoneRelease [
 
 { #category : 'accessing' }
 GsuAbstractGsDevKitUpgrade >> upgradeSymbolDict [
-	"Formerly known as BootstrapSymbolDictionary"
+	"Formerly known as BootstrapSymbolDictionary ... the symbol dictionary where GsDevKit/GLASS is installed"
 
 	^ upgradeSymbolDict ifNil: [ upgradeSymbolDict:= (AllUsers userWithId: self upgradeUserName) symbolList objectNamed: #UserGlobals ]
 ]
 
 { #category : 'accessing' }
 GsuAbstractGsDevKitUpgrade >> upgradeSymbolDict: aSymbolDict [
-	"Formerly known as BootstrapSymbolDictionary"
+	"Formerly known as BootstrapSymbolDictionary ... the symbol dictionary where GsDevKit/GLASS is installed"
 
 	^ upgradeSymbolDict := aSymbolDict
 ]

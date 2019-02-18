@@ -5,10 +5,9 @@ Class {
 }
 
 { #category : 'phases' }
-GsuGsDevKit_3_5_0_BootstrapUpgrade >> prepareImage [
-	"prepare image for upgrade"
+GsuGsDevKit_3_5_0_BootstrapUpgrade >> prepareImageBanner [
 
-	self bannerLog: 'Starting Bootstrap GsDevKit upgrade'
+	self bannerLog: 'Starting Bootstrap GsDevKit upgrade'.
 ]
 
 { #category : 'initialization' }

@@ -83,7 +83,60 @@ GsuAbstractGsDevKitUpgrade >> log: aString [
 GsuAbstractGsDevKitUpgrade >> prepareImage [
 	"prepare image for upgrade"
 
-	self bannerLog: 'Starting standard GsDevKit upgrade'
+	self prepareImageBanner.
+	self log: '	Prepare image'
+]
+
+{ #category : 'phases' }
+GsuAbstractGsDevKitUpgrade >> prepareImage_pragmas [
+	"In 3.4.0, the Pragma class is in the base, and the old Pragma class is be obsoleted,
+		so we need to collect all of the methods that have pragmas and then recompile them 
+		to use the new Pragma class ... when we are ready. "
+
+	| methodsWithPragmas |
+	methodsWithPragmas := {}.
+	GsFile gciLogServer: 'Finding all methods with pragmas for later recompile(', GsPackagePolicy current enabled printString, ')'.
+	UserGlobals at: #BootstrapMethodsNeedingRecompile put: methodsWithPragmas.
+	(self seasideSymbolDictionary at: #Pragma ifAbsent: [])
+		ifNil: [ GsFile gciLogServer: 'No Pragma class found in ', self seasideSymbolDictionary name asString, ' symbol dictionary' ]
+		ifNotNil: [ :seasidePragmaClass |
+			seasidePragmaClass class
+					compileMethod: 'withPragmasIn: aClass do: aBlock
+(aClass methodDictForEnv: 0) keysAndValuesDo: [ :selector :method | 
+	| pragmas methodPragmaDict eDict selSym |
+	selSym := Symbol _existingWithAll: selector.
+  selSym ifNil: [ ^ #() ].
+	pragmas := GsPackagePolicy currentOrNil
+		ifNotNil: [ :pp | pp pragmasForMethod: selSym in: aClass ].
+	pragmas ifNotNil: [ ^ pragmas ].
+	(eDict := self extraDict) ifNil: [ ^ #() ].
+	(methodPragmaDict := eDict at: self pragmaDictName otherwise: nil)
+		ifNil: [ ^ #() ].
+  ^ methodPragmaDict at: selSym otherwise: #() ]' 
+		dictionaries: self seasideUser symbolList 
+		category: 'Updatting the Method Dictionary'. 
+	GsPackagePolicy current instVarAt: 1 put: true.
+
+	Object allSubclasses
+	do: [ :cls | 
+	  {cls.
+	  (cls class)}
+		do: [ :beh | 
+		  beh allSelectors
+			do: [ :sel | 
+			  (beh compiledMethodAt: sel otherwise: nil)
+				ifNotNil: [ :meth | 
+				  (beh _pragmasForMethod: meth) isEmpty
+					ifFalse: [ 
+						methodsWithPragmas add: meth.
+						GsFile gciLogServer: '	', beh name asString, (beh isMeta ifTrue: [' class'] ifFalse: ['']), '>>', sel printString ] ] ] ] ] ].
+	GsFile gciLogServer: '... finished finding methods with pragmas'
+]
+
+{ #category : 'phases' }
+GsuAbstractGsDevKitUpgrade >> prepareImageBanner [
+
+	self bannerLog: 'Starting standard GsDevKit upgrade'.
 ]
 
 { #category : 'initialization' }
@@ -100,13 +153,19 @@ GsuAbstractGsDevKitUpgrade >> sourceGemStoneRelease [
 { #category : 'accessing' }
 GsuAbstractGsDevKitUpgrade >> sourceGemStoneRelease: aGsuGemStoneRelease [
 
-	sourceGemStoneRelease := aGsuGemStoneRelease
+	sourceGemStoneRelease := aGsuGemStoneRelease.
+	sourceGemStoneRelease upgradeInstance: self
 ]
 
 { #category : 'accessing' }
 GsuAbstractGsDevKitUpgrade >> targetGemStoneRelease [
 
-	^ targetGemStoneRelease ifNil: [ targetGemStoneRelease := self _defaultTargetRelease ]
+	^ targetGemStoneRelease 
+		ifNil: [ 
+			targetGemStoneRelease := 
+				(self _defaultTargetRelease)
+					upgradeInstance: self; 
+					yourself ]
 ]
 
 { #category : 'accessing' }

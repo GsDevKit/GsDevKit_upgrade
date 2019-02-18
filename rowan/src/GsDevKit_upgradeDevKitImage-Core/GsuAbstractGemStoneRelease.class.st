@@ -4,7 +4,8 @@ Class {
 	#instVars : [
 		'major',
 		'minor',
-		'patch'
+		'patch',
+		'upgradeInstance'
 	],
 	#category : 'GsDevKit_upgradeDevKitImage-Core'
 }
@@ -82,4 +83,16 @@ GsuAbstractGemStoneRelease >> patch: anInteger [
 GsuAbstractGemStoneRelease >> resolveForUpgradeToGemStone350: aGsuGsDevKit_3_5_0_Upgrade [
 
 	^ aGsuGsDevKit_3_5_0_Upgrade asStandardUpgrade
+]
+
+{ #category : 'accessing' }
+GsuAbstractGemStoneRelease >> upgradeInstance [
+
+	^ upgradeInstance
+]
+
+{ #category : 'accessing' }
+GsuAbstractGemStoneRelease >> upgradeInstance: aGsuGsDevKitUpgrade [
+
+	upgradeInstance := aGsuGsDevKitUpgrade
 ]

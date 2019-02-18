@@ -1,6 +1,6 @@
 ### Rowan project creation script
 ```smalltalk
-	"Create GsDevKit_upgradeDevKitImage project"
+"Create GsDevKit_upgradeDevKitImage project"
 
 	| projectUrl projectName configurationNames groupNames comment projectHome
 		cpd packageName |

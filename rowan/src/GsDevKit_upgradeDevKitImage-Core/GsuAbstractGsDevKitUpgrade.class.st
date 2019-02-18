@@ -28,6 +28,22 @@ Class {
 	#category : 'GsDevKit_upgradeDevKitImage-Core'
 }
 
+{ #category : 'accessing' }
+GsuAbstractGsDevKitUpgrade class >> gemstone_user [
+
+	^ (System gemEnvironmentVariable: 'GEMSTONE_USER')
+		ifNil: [ 'DataCurator' ]
+]
+
+{ #category : 'instance creation' }
+GsuAbstractGsDevKitUpgrade class >> sourceGemStoneRelease: sourceRelease [
+
+	^ self new
+		upgradeUserName: self gemstone_user;
+		sourceGemStoneRelease: sourceRelease;
+		yourself
+]
+
 { #category : 'instance creation' }
 GsuAbstractGsDevKitUpgrade class >> upgradeUserName: aString sourceGemStoneRelease: sourceRelease [
 
@@ -43,8 +59,15 @@ GsuAbstractGsDevKitUpgrade >> _defaultTargetRelease [
 	self subclassResponsibility: #_defaultTargetRelease
 ]
 
+{ #category : 'private' }
+GsuAbstractGsDevKitUpgrade >> gemstone_user [
+
+	^ self class gemstone_user
+]
+
 { #category : 'phases' }
 GsuAbstractGsDevKitUpgrade >> prepareImage [
+	"prepare image for upgrade"
 ]
 
 { #category : 'accessing' }
@@ -62,7 +85,7 @@ GsuAbstractGsDevKitUpgrade >> targetGemStoneRelease [
 { #category : 'accessing' }
 GsuAbstractGsDevKitUpgrade >> upgradeUserName [
 
-	^ upgradeUserName
+	^ upgradeUserName ifNil: [ upgradeUserName := self gemstone_user ]
 ]
 
 { #category : 'accessing' }

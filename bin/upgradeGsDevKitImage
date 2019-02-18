@@ -25,7 +25,6 @@ run
 		at: #GsDevKit_Image_Upgrade
 		put: 
 			(GsuGsDevKit_3_5_0_Upgrade
-				upgradeUserName: 'DataCurator' 
 				sourceGemStoneRelease: GsuGemStone_3_3_x_Release new)
 %
 

@@ -4,6 +4,13 @@ Class {
 	#category : 'GsDevKit_upgradeDevKitImage-Core'
 }
 
+{ #category : 'phases' }
+GsuGsDevKit_3_5_0_BootstrapUpgrade >> prepareImage [
+	"prepare image for upgrade"
+
+	self bannerLog: 'Starting Bootstrap GsDevKit upgrade'
+]
+
 { #category : 'initialization' }
 GsuGsDevKit_3_5_0_BootstrapUpgrade >> resolveForUpgrade [
 	"Receiver is already resolved"

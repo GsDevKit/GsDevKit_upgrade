@@ -59,15 +59,31 @@ GsuAbstractGsDevKitUpgrade >> _defaultTargetRelease [
 	self subclassResponsibility: #_defaultTargetRelease
 ]
 
+{ #category : 'logging' }
+GsuAbstractGsDevKitUpgrade >> bannerLog: aString [
+
+	self log: '--------------------'.
+	self log: aString.
+	self log: '--------------------'.
+]
+
 { #category : 'private' }
 GsuAbstractGsDevKitUpgrade >> gemstone_user [
 
 	^ self class gemstone_user
 ]
 
+{ #category : 'logging' }
+GsuAbstractGsDevKitUpgrade >> log: aString [
+
+	GsFile gciLogServer: aString
+]
+
 { #category : 'phases' }
 GsuAbstractGsDevKitUpgrade >> prepareImage [
 	"prepare image for upgrade"
+
+	self bannerLog: 'Starting standard GsDevKit upgrade'
 ]
 
 { #category : 'initialization' }

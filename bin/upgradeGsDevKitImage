@@ -1,0 +1,36 @@
+#!/usr/bin/env topaz
+#
+#	env var $GEMSTONE should be set
+#	env var $GEMSTONE_SOLO_USER should be set
+#	topaz must be in PATH
+#
+iferr 1 stack
+iferr 2 exit 1
+display oops
+set u SystemUser p swordfish
+login
+
+run
+	"Install upgrade support code"
+	| codeLibrarian |
+	codeLibrarian := (AllUsers userWithId: 'CodeLibrarianUser') symbolList objectNamed: #CodeLibrarian.
+	codeLibrarian new
+		repository: 'tonel:$ROWAN_PROJECTS_HOME/GsDevKit_upgradeDevKitImage/rowan/src/';
+		load: #('GsDevKit_upgradeDevKitImage-Core').
+%
+
+run
+	
+	UserGlobals
+		at: #GsDevKit_Image_Upgrade
+		put: 
+			(GsuGsDevKit_3_5_0_Upgrade
+				upgradeUserName: 'DataCurator' 
+				sourceGemStoneRelease: GsuGemStone_3_3_x_Release new)
+%
+
+run
+	GsDevKit_Image_Upgrade prepareImage
+%
+
+errorCount

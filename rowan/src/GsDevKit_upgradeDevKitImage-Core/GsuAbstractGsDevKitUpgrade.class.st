@@ -23,15 +23,28 @@ Class {
 	#instVars : [
 		'upgradeUserName',
 		'sourceGemStoneRelease',
-		'targetGemStoneRelease
+		'targetGemStoneRelease'
 	],
 	#category : 'GsDevKit_upgradeDevKitImage-Core'
 }
 
-{ #category : 'accessing' }
-GsuAbstractGsDevKitUpgrade >> upgradeUserName [
+{ #category : 'instance creation' }
+GsuAbstractGsDevKitUpgrade class >> upgradeUserName: aString sourceGemStoneRelease: sourceRelease [
 
-	^ upgradeUserName
+	^ self new
+		upgradeUserName: aString;
+		sourceGemStoneRelease: sourceRelease;
+		yourself
+]
+
+{ #category : 'private' }
+GsuAbstractGsDevKitUpgrade >> _defaultTargetRelease [
+
+	self subclassResponsibility: #_defaultTargetRelease
+]
+
+{ #category : 'phases' }
+GsuAbstractGsDevKitUpgrade >> prepareImage [
 ]
 
 { #category : 'accessing' }
@@ -41,9 +54,15 @@ GsuAbstractGsDevKitUpgrade >> sourceGemStoneRelease: aGsuGemStoneRelease [
 ]
 
 { #category : 'accessing' }
-GsuAbstractGsDevKitUpgrade >> targetGemStoneRelease: aGsuGemStoneRelease [
+GsuAbstractGsDevKitUpgrade >> targetGemStoneRelease [
 
-	targetGemStoneRelease := aGsuGemStoneRelease
+	^ targetGemStoneRelease ifNil: [ targetGemStoneRelease := self _defaultTargetRelease ]
+]
+
+{ #category : 'accessing' }
+GsuAbstractGsDevKitUpgrade >> upgradeUserName [
+
+	^ upgradeUserName
 ]
 
 { #category : 'accessing' }

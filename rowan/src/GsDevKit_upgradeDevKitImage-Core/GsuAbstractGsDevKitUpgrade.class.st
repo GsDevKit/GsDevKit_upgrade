@@ -41,7 +41,7 @@ GsuAbstractGsDevKitUpgrade class >> sourceGemStoneRelease: sourceRelease [
 	^ self new
 		upgradeUserName: self gemstone_user;
 		sourceGemStoneRelease: sourceRelease;
-		yourself
+		resolveForUpgrade
 ]
 
 { #category : 'instance creation' }
@@ -50,7 +50,7 @@ GsuAbstractGsDevKitUpgrade class >> upgradeUserName: aString sourceGemStoneRelea
 	^ self new
 		upgradeUserName: aString;
 		sourceGemStoneRelease: sourceRelease;
-		yourself
+		resolveForUpgrade
 ]
 
 { #category : 'private' }
@@ -68,6 +68,17 @@ GsuAbstractGsDevKitUpgrade >> gemstone_user [
 { #category : 'phases' }
 GsuAbstractGsDevKitUpgrade >> prepareImage [
 	"prepare image for upgrade"
+]
+
+{ #category : 'initialization' }
+GsuAbstractGsDevKitUpgrade >> resolveForUpgrade [
+	"determine which concrete upgrade class to use, base on source GemStone version"
+]
+
+{ #category : 'accessing' }
+GsuAbstractGsDevKitUpgrade >> sourceGemStoneRelease [
+
+	^ sourceGemStoneRelease
 ]
 
 { #category : 'accessing' }

@@ -26,7 +26,7 @@ GsuAbstractGemStoneRelease class >> _classForMajorVersion: major minorVersion: m
 { #category : 'instance creation' }
 GsuAbstractGemStoneRelease class >> major: major minor: minor [
 
-	^ ((self _classForMajorVersion: major minorVersion: minor) new)
+	^ (self _classForMajorVersion: major minorVersion: minor) new
 		major: major;
 		minor: minor;
 		yourself
@@ -35,7 +35,7 @@ GsuAbstractGemStoneRelease class >> major: major minor: minor [
 { #category : 'instance creation' }
 GsuAbstractGemStoneRelease class >> major: major minor: minor patch: patch [
 
-	^ ((self _classForMajorVersion: major minorVersion: minor) new)
+	^ (self _classForMajorVersion: major minorVersion: minor) new
 		major: major;
 		minor: minor;
 		patch: patch asInteger;
@@ -76,4 +76,10 @@ GsuAbstractGemStoneRelease >> patch [
 GsuAbstractGemStoneRelease >> patch: anInteger [
 
 	patch := anInteger
+]
+
+{ #category : 'initialization' }
+GsuAbstractGemStoneRelease >> resolveForUpgradeToGemStone350: aGsuGsDevKit_3_5_0_Upgrade [
+
+	^ aGsuGsDevKit_3_5_0_Upgrade asStandardUpgrade
 ]

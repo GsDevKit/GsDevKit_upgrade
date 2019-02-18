@@ -4,8 +4,9 @@
 #	env var $GEMSTONE_SOLO_USER should be set
 #	topaz must be in PATH
 #
-iferr 1 stack
-iferr 2 exit 1
+iferr 1 stk
+iferr 2 stack
+iferr 3 exit 1
 display oops
 set u SystemUser p swordfish
 login
@@ -25,7 +26,7 @@ run
 		at: #GsDevKit_Image_Upgrade
 		put: 
 			(GsuGsDevKit_3_5_0_Upgrade
-				sourceGemStoneRelease: (GsuGemStone_3_3_x_Release major: 3 minor: 3 patch: 6))
+				sourceGemStoneRelease: (GsuAbstractGemStoneRelease major: 3 minor: 3 patch: 6))
 %
 
 run

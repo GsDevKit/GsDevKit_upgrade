@@ -4,8 +4,7 @@ Class {
 	#instVars : [
 		'major',
 		'minor',
-		'patch',
-		'upgradeInstance'
+		'patch'
 	],
 	#category : 'GsDevKit_upgradeDevKitImage-Core'
 }
@@ -79,20 +78,17 @@ GsuAbstractGemStoneRelease >> patch: anInteger [
 	patch := anInteger
 ]
 
+{ #category : 'phases' }
+GsuAbstractGemStoneRelease >> prepareImage_pragmasFor: aGsDevKitUpgrade [
+	"In 3.4.0, the Pragma class is in the base, and the old Pragma class is be obsoleted,
+		so we need to collect all of the methods that have pragmas and then recompile them 
+		to use the new Pragma class ... when we are ready. "
+
+	"noop by default"
+]
+
 { #category : 'initialization' }
 GsuAbstractGemStoneRelease >> resolveForUpgradeToGemStone350: aGsuGsDevKit_3_5_0_Upgrade [
 
 	^ aGsuGsDevKit_3_5_0_Upgrade asStandardUpgrade
-]
-
-{ #category : 'accessing' }
-GsuAbstractGemStoneRelease >> upgradeInstance [
-
-	^ upgradeInstance
-]
-
-{ #category : 'accessing' }
-GsuAbstractGemStoneRelease >> upgradeInstance: aGsuGsDevKitUpgrade [
-
-	upgradeInstance := aGsuGsDevKitUpgrade
 ]

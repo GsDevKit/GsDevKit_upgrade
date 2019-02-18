@@ -23,7 +23,10 @@ Class {
 	#instVars : [
 		'upgradeUserName',
 		'sourceGemStoneRelease',
-		'targetGemStoneRelease'
+		'targetGemStoneRelease',
+		'methodsWithPragmas',
+		'upgradeUserSymbolDict',
+		'upgradeSymbolDict'
 	],
 	#category : 'GsDevKit_upgradeDevKitImage-Core'
 }
@@ -47,9 +50,19 @@ GsuAbstractGsDevKitUpgrade class >> sourceGemStoneRelease: sourceRelease [
 { #category : 'instance creation' }
 GsuAbstractGsDevKitUpgrade class >> upgradeUserName: aString sourceGemStoneRelease: sourceRelease [
 
+	^ self 
+		upgradeUserName: aString 
+		upgradeSymbolDict: nil 
+		sourceGemStoneRelease: sourceRelease
+]
+
+{ #category : 'instance creation' }
+GsuAbstractGsDevKitUpgrade class >> upgradeUserName: aString upgradeSymbolDict: aSymbolDict sourceGemStoneRelease: sourceRelease [
+
 	^ self new
 		upgradeUserName: aString;
 		sourceGemStoneRelease: sourceRelease;
+		upgradeSymbolDict: aSymbolDict;
 		resolveForUpgrade
 ]
 
@@ -79,12 +92,19 @@ GsuAbstractGsDevKitUpgrade >> log: aString [
 	GsFile gciLogServer: aString
 ]
 
+{ #category : 'accessing' }
+GsuAbstractGsDevKitUpgrade >> methodsWithPragmas [
+
+	^ methodsWithPragmas ifNil: [ methodsWithPragmas := {} ]
+]
+
 { #category : 'phases' }
 GsuAbstractGsDevKitUpgrade >> prepareImage [
 	"prepare image for upgrade"
 
 	self prepareImageBanner.
-	self log: '	Prepare image'
+	self log: '	Prepare image'.
+	self sourceGemStoneRelease prepareImage_pragmasFor: self
 ]
 
 { #category : 'phases' }
@@ -93,28 +113,30 @@ GsuAbstractGsDevKitUpgrade >> prepareImage_pragmas [
 		so we need to collect all of the methods that have pragmas and then recompile them 
 		to use the new Pragma class ... when we are ready. "
 
-	| methodsWithPragmas |
-	methodsWithPragmas := {}.
-	GsFile gciLogServer: 'Finding all methods with pragmas for later recompile(', GsPackagePolicy current enabled printString, ')'.
-	UserGlobals at: #BootstrapMethodsNeedingRecompile put: methodsWithPragmas.
-	(self seasideSymbolDictionary at: #Pragma ifAbsent: [])
-		ifNil: [ GsFile gciLogServer: 'No Pragma class found in ', self seasideSymbolDictionary name asString, ' symbol dictionary' ]
-		ifNotNil: [ :seasidePragmaClass |
-			seasidePragmaClass class
-					compileMethod: 'withPragmasIn: aClass do: aBlock
-(aClass methodDictForEnv: 0) keysAndValuesDo: [ :selector :method | 
-	| pragmas methodPragmaDict eDict selSym |
-	selSym := Symbol _existingWithAll: selector.
-  selSym ifNil: [ ^ #() ].
-	pragmas := GsPackagePolicy currentOrNil
-		ifNotNil: [ :pp | pp pragmasForMethod: selSym in: aClass ].
-	pragmas ifNotNil: [ ^ pragmas ].
-	(eDict := self extraDict) ifNil: [ ^ #() ].
-	(methodPragmaDict := eDict at: self pragmaDictName otherwise: nil)
-		ifNil: [ ^ #() ].
-  ^ methodPragmaDict at: selSym otherwise: #() ]' 
-		dictionaries: self seasideUser symbolList 
-		category: 'Updatting the Method Dictionary'. 
+	"For 3.2.x, all methods need to be recompiled ... pragma data structures should be destroyed 
+		before all methods reloaded"
+
+	"For 3.3.x we'll need to recompile all methods that have pragmas, so that new structure is used"
+
+	| pragmaClass oldPackagePolicyEnabled |
+	self log: 'Prepare image - pragmas'.
+	self log: 'Finding all methods with pragmas for later recompile(', GsPackagePolicy current enabled printString, ')'.
+
+	(pragmaClass := self upgradeSymbolDict at: #Pragma ifAbsent: [])
+		ifNil: [ 
+			self log: 'No Pragma class found in ', self upgradeSymbolDict name asString, ' symbol dictionary'.
+			^ self ].
+	self log: '	Old pragma class ', pragmaClass name printString, '[', pragmaClass asOop printString, '] -- will be made obsolete'.
+
+	"need to make sure that this method is used so that we can extract pragmas from old structures"
+	self log: 'Installing ...oldPragma>>'.
+	pragmaClass class
+		compileMethod: self sourceGemStoneRelease prepareImage_pragmas_withPragmas_source 
+		dictionaries: self upgradeUserPrifile symbolList 
+		category: 'Updatting the Method Dictionary -- during upgrade'. 
+
+	oldPackagePolicyEnabled := GsPackagePolicy current instVarAt: 1.
+	self log: '	GsPackagePolicy currently ', (oldPackagePolicyEnabled ifTrue: [ 'enabled.'] ifFalse: ['disabled.']).
 	GsPackagePolicy current instVarAt: 1 put: true.
 
 	Object allSubclasses
@@ -128,9 +150,10 @@ GsuAbstractGsDevKitUpgrade >> prepareImage_pragmas [
 				ifNotNil: [ :meth | 
 				  (beh _pragmasForMethod: meth) isEmpty
 					ifFalse: [ 
-						methodsWithPragmas add: meth.
-						GsFile gciLogServer: '	', beh name asString, (beh isMeta ifTrue: [' class'] ifFalse: ['']), '>>', sel printString ] ] ] ] ] ].
-	GsFile gciLogServer: '... finished finding methods with pragmas'
+						self methodsWithPragmas add: meth.
+						self log: '	', beh name asString, (beh isMeta ifTrue: [' class'] ifFalse: ['']), '>>', sel printString ] ] ] ] ].
+	GsPackagePolicy current instVarAt: 1 put: oldPackagePolicyEnabled.
+	self log: '... finished finding methods with pragmas'
 ]
 
 { #category : 'phases' }
@@ -153,19 +176,28 @@ GsuAbstractGsDevKitUpgrade >> sourceGemStoneRelease [
 { #category : 'accessing' }
 GsuAbstractGsDevKitUpgrade >> sourceGemStoneRelease: aGsuGemStoneRelease [
 
-	sourceGemStoneRelease := aGsuGemStoneRelease.
-	sourceGemStoneRelease upgradeInstance: self
+	sourceGemStoneRelease := aGsuGemStoneRelease
 ]
 
 { #category : 'accessing' }
 GsuAbstractGsDevKitUpgrade >> targetGemStoneRelease [
 
 	^ targetGemStoneRelease 
-		ifNil: [ 
-			targetGemStoneRelease := 
-				(self _defaultTargetRelease)
-					upgradeInstance: self; 
-					yourself ]
+		ifNil: [ targetGemStoneRelease := self _defaultTargetRelease ]
+]
+
+{ #category : 'accessing' }
+GsuAbstractGsDevKitUpgrade >> upgradeSymbolDict [
+	"Formerly known as BootstrapSymbolDictionary"
+
+	^ upgradeSymbolDict ifNil: [ upgradeSymbolDict:= (AllUsers userWithId: self upgradeUserName) symbolList objectNamed: #UserGlobals ]
+]
+
+{ #category : 'accessing' }
+GsuAbstractGsDevKitUpgrade >> upgradeSymbolDict: aSymbolDict [
+	"Formerly known as BootstrapSymbolDictionary"
+
+	^ upgradeSymbolDict := aSymbolDict
 ]
 
 { #category : 'accessing' }
@@ -178,4 +210,10 @@ GsuAbstractGsDevKitUpgrade >> upgradeUserName [
 GsuAbstractGsDevKitUpgrade >> upgradeUserName: aString [
 
 	upgradeUserName := aString
+]
+
+{ #category : 'accessing' }
+GsuAbstractGsDevKitUpgrade >> upgradeUserPrifile [
+
+	^ (AllUsers userWithId: self upgradeUserName)
 ]

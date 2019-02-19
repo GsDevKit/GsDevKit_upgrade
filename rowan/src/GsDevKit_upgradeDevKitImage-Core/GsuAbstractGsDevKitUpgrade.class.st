@@ -277,10 +277,10 @@ GsuAbstractGsDevKitUpgrade >> prepareImage_pragmas [
 GsuAbstractGsDevKitUpgrade >> prepareImage_user [
 	"prepare image for upgrade"
 
-	self prepareImageBanner.
-	self log: 'Prepare image_user'.
+	self prepareImageUserBanner.
+	self log: 'Prepare image user'.
 	self sourceGemStoneRelease 
-		prepareImage_UserFor: self;
+		prepareImage_userPatches: self;
 		prepareImage_user_clear_subscriptions: self;
 		yourself
 ]
@@ -295,6 +295,10 @@ GsuAbstractGsDevKitUpgrade >> prepareImage_user_bug46217 [
 
 { #category : 'prepare image user' }
 GsuAbstractGsDevKitUpgrade >> prepareImage_user_clear_subscriptions [
+	"need to clear subscriptions during bootstrap upgrade, because class initialization 
+		methods are unconditionally fired, creating extra subscriptions for all subscribed classes."
+
+	"bootstrap is the default upgrade path"
 
 	| cls |
 	self log: '	SystemLoginNotification Subscriptions cleared'.
@@ -306,6 +310,12 @@ GsuAbstractGsDevKitUpgrade >> prepareImage_user_clear_subscriptions [
 GsuAbstractGsDevKitUpgrade >> prepareImageBanner [
 
 	self bannerLog: 'Starting standard GsDevKit upgrade: prepare image as ', System myUserProfile userId.
+]
+
+{ #category : 'prepare image' }
+GsuAbstractGsDevKitUpgrade >> prepareImageUserBanner [
+
+	self bannerLog: 'Starting standard GsDevKit upgrade: prepare image for user ', System myUserProfile userId.
 ]
 
 { #category : 'initialization' }

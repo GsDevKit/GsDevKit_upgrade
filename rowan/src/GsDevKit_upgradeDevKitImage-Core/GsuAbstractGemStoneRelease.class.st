@@ -106,15 +106,15 @@ GsuAbstractGemStoneRelease >> prepareImage_pragmasFor: aGsDevKitUpgrade [
 GsuAbstractGemStoneRelease >> prepareImage_user_clear_subscriptions: aGsDevKitUpgrade [
 	"Opportunity for target image to perform user-specific preparation"
 
-	aGsDevKitUpgrade log: 'Prepare image - clear subscriptions'.
+	aGsDevKitUpgrade log: 'Prepare image user - clear subscriptions'.
 	aGsDevKitUpgrade prepareImage_user_clear_subscriptions
 ]
 
 { #category : 'perpare image user' }
-GsuAbstractGemStoneRelease >> prepareImage_UserFor: aGsDevKitUpgrade [
+GsuAbstractGemStoneRelease >> prepareImage_userPatches: aGsDevKitUpgrade [
 	"Opportunity for target image to perform user-specific preparation"
 
-	aGsDevKitUpgrade log: 'Prepare image - user'.
+	aGsDevKitUpgrade log: 'Prepare image user - patches'.
 ]
 
 { #category : 'initialization' }

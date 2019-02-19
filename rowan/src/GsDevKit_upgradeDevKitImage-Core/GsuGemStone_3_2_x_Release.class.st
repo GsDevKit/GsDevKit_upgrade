@@ -16,10 +16,10 @@ GsuGemStone_3_2_x_Release >> prepareImage_patches: aGsDevKitUpgrade [
 ]
 
 { #category : 'prepare image user' }
-GsuGemStone_3_2_x_Release >> prepareImage_UserFor: aGsDevKitUpgrade [
+GsuGemStone_3_2_x_Release >> prepareImage_userPatches: aGsDevKitUpgrade [
 	"Opportunity for target image to perform user-specific preparation"
 
-	super prepareImage_UserFor: aGsDevKitUpgrade.
+	super prepareImage_userPatches: aGsDevKitUpgrade.
 	(self patch >= 0 and: [ self patch <= 15 ])
 		ifTrue: [
 			"bug46217 patch needed: 3.2.0 thru 3.2.15, and 3.3.0"

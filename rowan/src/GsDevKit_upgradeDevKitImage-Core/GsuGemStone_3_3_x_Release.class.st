@@ -52,9 +52,9 @@ GsuGemStone_3_3_x_Release >> prepareImage_pragmasFor: aGsDevKitUpgrade [
 ]
 
 { #category : 'prepare image user' }
-GsuGemStone_3_3_x_Release >> prepareImage_UserFor: aGsDevKitUpgrade [
+GsuGemStone_3_3_x_Release >> prepareImage_userPatches: aGsDevKitUpgrade [
 
-	super prepareImage_UserFor: aGsDevKitUpgrade.
+	super prepareImage_userPatches: aGsDevKitUpgrade.
 	self patch = 0
 		ifTrue: [
 			"bug46217 patch needed: 3.2.0 thru 3.2.15, and 3.3.0"

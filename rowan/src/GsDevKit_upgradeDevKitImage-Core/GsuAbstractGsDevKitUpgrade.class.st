@@ -28,6 +28,9 @@ Class {
 		'upgradeUserSymbolDict',
 		'upgradeSymbolDict'
 	],
+	#classVars : [
+		'SymbolDictionary'
+	],
 	#category : 'GsDevKit_upgradeDevKitImage-Core'
 }
 
@@ -45,6 +48,20 @@ GsuAbstractGsDevKitUpgrade class >> sourceGemStoneRelease: sourceRelease [
 		upgradeUserName: self gemstone_user;
 		sourceGemStoneRelease: sourceRelease;
 		resolveForUpgrade
+]
+
+{ #category : 'accessing' }
+GsuAbstractGsDevKitUpgrade class >> symbolDictionary [
+	"Install classes in a separate symbol dictionary, so the cleasses can be easily installed/removed in/from an image"
+
+	^ SymbolDictionary
+]
+
+{ #category : 'accessing' }
+GsuAbstractGsDevKitUpgrade class >> symbolDictionary: aSymbolDictionary [
+	"Install classes in a separate symbol dictionary, so the cleasses can be easily installed/removed in/from an image"
+
+	SymbolDictionary := aSymbolDictionary
 ]
 
 { #category : 'instance creation' }
@@ -106,7 +123,8 @@ GsuAbstractGsDevKitUpgrade >> prepareImage [
 	self log: 'Prepare image'.
 	self sourceGemStoneRelease 
 		prepareImage_pragmasFor: self;
-		prepareImage_makeClassesObsolete: self
+		prepareImage_makeClassesObsolete: self;
+		prepareImage_patches: self
 ]
 
 { #category : 'phases' }
@@ -125,6 +143,11 @@ GsuAbstractGsDevKitUpgrade >> prepareImage_makeClassObsolete: className in: symD
 			(Globals at: #ObsoleteClasses) addAssociation: assoc.
 
 			self log: '	Class ',  className , ' removed from symbolDictionary: ', symDict name printString. ]
+]
+
+{ #category : 'phases' }
+GsuAbstractGsDevKitUpgrade >> prepareImage_patches [
+	"noop by default"
 ]
 
 { #category : 'phases' }

@@ -86,6 +86,14 @@ GsuAbstractGemStoneRelease >> prepareImage_makeClassesObsolete: aGsDevKitUpgrade
 ]
 
 { #category : 'phases' }
+GsuAbstractGemStoneRelease >> prepareImage_patches: aGsDevKitUpgrade [
+	"Opportunity for target image to install any patches needed pre-upgrade"
+
+	aGsDevKitUpgrade log: 'Prepare image - patches'.
+	aGsDevKitUpgrade prepareImage_patches
+]
+
+{ #category : 'phases' }
 GsuAbstractGemStoneRelease >> prepareImage_pragmasFor: aGsDevKitUpgrade [
 	"In 3.4.0, the Pragma class is in the base, and the old Pragma class is be obsoleted,
 		so we need to collect all of the methods that have pragmas and then recompile them 

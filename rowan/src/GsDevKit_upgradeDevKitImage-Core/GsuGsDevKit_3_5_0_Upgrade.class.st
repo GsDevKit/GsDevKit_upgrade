@@ -10,6 +10,20 @@ GsuGsDevKit_3_5_0_Upgrade >> _defaultTargetRelease [
 	^ GsuGemStone_3_5_x_Release major: 3 minor: 5
 ]
 
+{ #category : 'private' }
+GsuGsDevKit_3_5_0_Upgrade >> _prepareImage_behavior_patchSource [
+
+	^ '_primitiveCompileMethod: sourceString symbolList: aSymbolList category: categorySymbol oldLitVars: litVarArray intoMethodDict: aMethodDict intoCategories: aCategDict intoPragmas: ignored environmentId: environmentId
+  ^ self
+    _primitiveCompileMethod: sourceString
+    symbolList: aSymbolList
+    category: categorySymbol
+    oldLitVars: litVarArray
+    intoMethodDict: aMethodDict
+    intoCategories: aCategDict
+    environmentId: environmentId'
+]
+
 { #category : 'initialization' }
 GsuGsDevKit_3_5_0_Upgrade >> asBootstrapUpgrade [
 
@@ -24,6 +38,18 @@ GsuGsDevKit_3_5_0_Upgrade >> asStandardUpgrade [
 	"Application methods in upgraded repository do NOT need to recompiled"
 
 	^ GsuGsDevKit_3_5_0_StdUpgrade upgradeUserName: self upgradeUserName sourceGemStoneRelease: self sourceGemStoneRelease
+]
+
+{ #category : 'phases' }
+GsuGsDevKit_3_5_0_Upgrade >> prepareImage_patches [
+
+	"Needed for installing GsdevKit/GLASS"
+
+	self log: '	patch Behavior >> _primitiveCompileMethod:symbolList:category:oldLitVars:intoMethodDict:intoCategories:intoPragmas:environmentId:'.
+	Behavior
+		compileMethod: self _prepareImage_behavior_patchSource 
+		dictionaries: self upgradeUserPrifile symbolList 
+		category:  '*Core35x'
 ]
 
 { #category : 'initialization' }

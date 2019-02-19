@@ -29,7 +29,7 @@ Class {
 		'upgradeSymbolDict'
 	],
 	#classVars : [
-		'SymbolDictionary'
+		'TheSymbolDictionary'
 	],
 	#category : 'GsDevKit_upgradeDevKitImage-Core'
 }
@@ -38,6 +38,27 @@ Class {
 GsuAbstractGsDevKitUpgrade class >> _globalName [
 
 	^ #GsDevKit_Upgrade_Cache
+]
+
+{ #category : 'private' }
+GsuAbstractGsDevKitUpgrade class >> _installSymDictInSymbolList [
+	| dictName symbolName session symbolList |
+
+	dictName := 'GsDevKit_DymDict'.
+	symbolName := dictName asSymbol.
+	session := GsCurrentSession currentSession.
+	symbolList := session symbolList.
+	symbolList
+		detect: [ :each | (each at: symbolName ifAbsent: [ nil ]) == each ]
+		ifNone: [ 
+			| theDict size |
+			theDict := self symbolDictionary ifNil: [
+				SymbolDictionary new
+					name: symbolName;
+					objectSecurityPolicy: symbolList objectSecurityPolicy;
+					yourself ].
+			size := System myUserProfile symbolList size.
+			System myUserProfile insertDictionary: theDict at: size + 1 ].
 ]
 
 { #category : 'accessing' }
@@ -60,7 +81,7 @@ GsuAbstractGsDevKitUpgrade class >> sourceGemStoneRelease: sourceRelease [
 GsuAbstractGsDevKitUpgrade class >> symbolDictionary [
 	"Install classes in a separate symbol dictionary, so the cleasses can be easily installed/removed in/from an image"
 
-	^ SymbolDictionary ifNil: [ SymbolDictionary :=	((AllUsers userWithId: 'SystemUser') objectNamed: #UserGlobals) at: self _globalName ifAbsent: [] ].
+	^ TheSymbolDictionary ifNil: [ TheSymbolDictionary :=	((AllUsers userWithId: 'SystemUser') objectNamed: #UserGlobals) at: self _globalName ifAbsent: [] ].
 ]
 
 { #category : 'accessing' }
@@ -68,7 +89,7 @@ GsuAbstractGsDevKitUpgrade class >> symbolDictionary: aSymbolDictionary [
 	"Install classes in a separate symbol dictionary, so the cleasses can be easily installed/removed in/from an image"
 
 	((AllUsers userWithId: 'SystemUser') objectNamed: #UserGlobals) at: self _globalName put: aSymbolDictionary.
-	SymbolDictionary := aSymbolDictionary
+	TheSymbolDictionary:= aSymbolDictionary
 ]
 
 { #category : 'instance creation' }

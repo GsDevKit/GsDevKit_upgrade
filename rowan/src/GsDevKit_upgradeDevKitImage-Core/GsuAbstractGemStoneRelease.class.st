@@ -114,7 +114,9 @@ GsuAbstractGemStoneRelease >> prepareImage_user_clear_subscriptions: aGsDevKitUp
 GsuAbstractGemStoneRelease >> prepareImage_userPatches: aGsDevKitUpgrade [
 	"Opportunity for target image to perform user-specific preparation"
 
-	aGsDevKitUpgrade log: 'Prepare image user - patches'.
+	aGsDevKitUpgrade 
+		log: 'Prepare image user - patches';
+		prepareImage_user_bug46059
 ]
 
 { #category : 'initialization' }

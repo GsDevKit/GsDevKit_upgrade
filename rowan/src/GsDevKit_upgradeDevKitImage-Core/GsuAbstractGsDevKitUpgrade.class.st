@@ -149,6 +149,15 @@ GsuAbstractGsDevKitUpgrade >> _prepareImage_mcgemstoneplatform_bug46217_patchSou
 	(ar at: 1) removeKey: (ar at: 2) ]'
 ]
 
+{ #category : 'private' }
+GsuAbstractGsDevKitUpgrade >> _prepareImage_user_class_bug46o59_patchSource [
+
+	^ 'removeFromSystem
+| ar |
+  ar := System myUserProfile dictionaryAndSymbolOf: self.
+  ar ifNotNil: [ (ar at: 1) removeKey: (ar at: 2) ].'
+]
+
 { #category : 'logging' }
 GsuAbstractGsDevKitUpgrade >> bannerLog: aString [
 
@@ -283,6 +292,22 @@ GsuAbstractGsDevKitUpgrade >> prepareImage_user [
 		prepareImage_userPatches: self;
 		prepareImage_user_clear_subscriptions: self;
 		yourself
+]
+
+{ #category : 'prepare image user' }
+GsuAbstractGsDevKitUpgrade >> prepareImage_user_bug46059 [
+
+	"until bug is fixed - should be run as SystemUser"
+
+	| package symbolDict class theSymbolList |
+	self log: '	patch MCGemStonePlatform >> removeClassFromSystem: (bug 46217)'.
+	GsPackageLibrary 
+		installMonticelloPackagesHome: (GsCurrentSession currentSession objectNamed: #'UserGlobals') 
+		during: [:globals | 
+			Class
+			compileMethod: self _prepareImage_user_class_bug46o59_patchSource
+			dictionaries: GsCurrentSession currentSession symbolList
+			category: '*change-notification' ].
 ]
 
 { #category : 'prepare image user' }

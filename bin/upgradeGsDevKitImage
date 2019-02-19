@@ -1,7 +1,6 @@
 #!/usr/bin/env topaz
 #
 #	env var $GEMSTONE should be set
-#	env var $GEMSTONE_SOLO_USER should be set
 #	topaz must be in PATH
 #
 iferr 1 stk

@@ -112,9 +112,21 @@ GsuAbstractGsDevKitUpgrade class >> upgradeUserName: aString upgradeSymbolDict: 
 ]
 
 { #category : 'private' }
+GsuAbstractGsDevKitUpgrade >> _currentUserGlobals [
+
+	^ GsSession currentSession objectNamed: #UserGlobals
+]
+
+{ #category : 'private' }
 GsuAbstractGsDevKitUpgrade >> _defaultTargetRelease [
 
 	self subclassResponsibility: #_defaultTargetRelease
+]
+
+{ #category : 'private' }
+GsuAbstractGsDevKitUpgrade >> _globalNamed: aString [
+
+	^ GsSession currentSession objectNamed: aString
 ]
 
 { #category : 'private' }
@@ -178,10 +190,10 @@ GsuAbstractGsDevKitUpgrade >> prepareImage [
 { #category : 'prepare image' }
 GsuAbstractGsDevKitUpgrade >> prepareImage_bug46217_patch [
 
-	"patch needed: 3.2.0 thru 3.2.15, and 3.3.0"
+	"patch needed: 3.2.0 thru 3.2.15, and 3.3.0 - should be run as SystemUser"
 
 	| package symbolDict class theSymbolList |
-	self log: '	patch MCGemStonePlatform >> removeClassFromSystem:'.
+	self log: '	patch MCGemStonePlatform >> removeClassFromSystem: (bug 46217)'.
 	package := GsPackageLibrary packageNamed: #'Monticello_Globals'.
 	symbolDict := package symbolDict.
 	class := symbolDict at: #'MCGemStonePlatform'.
@@ -259,6 +271,35 @@ GsuAbstractGsDevKitUpgrade >> prepareImage_pragmas [
 						self log: '	', beh name asString, (beh isMeta ifTrue: [' class'] ifFalse: ['']), '>>', sel printString ] ] ] ] ].
 	GsPackagePolicy current instVarAt: 1 put: oldPackagePolicyEnabled.
 	self log: '	... finished finding methods with pragmas'
+]
+
+{ #category : 'phases' }
+GsuAbstractGsDevKitUpgrade >> prepareImage_user [
+	"prepare image for upgrade"
+
+	self prepareImageBanner.
+	self log: 'Prepare image_user'.
+	self sourceGemStoneRelease 
+		prepareImage_UserFor: self;
+		prepareImage_user_clear_subscriptions: self;
+		yourself
+]
+
+{ #category : 'prepare image user' }
+GsuAbstractGsDevKitUpgrade >> prepareImage_user_bug46217 [
+	"patch needed: 3.2.0 thru 3.2.15, and 3.3.0 - run as GsDevKit user"
+
+	self log: '	set GS_BOOTSTRAP_MONTICELLO_SKIP_REMOVE_CLASS global true (bug 46217)'.
+	self _currentUserGlobals at: #'GS_BOOTSTRAP_MONTICELLO_SKIP_REMOVE_CLASS' put: true.
+]
+
+{ #category : 'prepare image user' }
+GsuAbstractGsDevKitUpgrade >> prepareImage_user_clear_subscriptions [
+
+	| cls |
+	self log: '	SystemLoginNotification Subscriptions cleared'.
+	cls := self _globalNamed: 'SystemLoginNotification'.
+	(cls _classVars at: #'Subscriptions') removeAll: (cls _classVars at: #'Subscriptions').
 ]
 
 { #category : 'prepare image' }

@@ -78,14 +78,14 @@ GsuAbstractGemStoneRelease >> patch: anInteger [
 	patch := anInteger
 ]
 
-{ #category : 'phases' }
+{ #category : 'prepare image' }
 GsuAbstractGemStoneRelease >> prepareImage_makeClassesObsolete: aGsDevKitUpgrade [
 	"In 3.4.0, the Pragma class is in the base, and the old Pragma class  must be obsoleted"
 
 	"noop by default"
 ]
 
-{ #category : 'phases' }
+{ #category : 'prepare image' }
 GsuAbstractGemStoneRelease >> prepareImage_patches: aGsDevKitUpgrade [
 	"Opportunity for target image to install any patches needed pre-upgrade"
 
@@ -93,13 +93,28 @@ GsuAbstractGemStoneRelease >> prepareImage_patches: aGsDevKitUpgrade [
 	aGsDevKitUpgrade prepareImage_patches
 ]
 
-{ #category : 'phases' }
+{ #category : 'prepare image' }
 GsuAbstractGemStoneRelease >> prepareImage_pragmasFor: aGsDevKitUpgrade [
 	"In 3.4.0, the Pragma class is in the base, and the old Pragma class is be obsoleted,
 		so we need to collect all of the methods that have pragmas and then recompile them 
 		to use the new Pragma class ... when we are ready. "
 
 	"noop by default"
+]
+
+{ #category : 'perpare image user' }
+GsuAbstractGemStoneRelease >> prepareImage_user_clear_subscriptions: aGsDevKitUpgrade [
+	"Opportunity for target image to perform user-specific preparation"
+
+	aGsDevKitUpgrade log: 'Prepare image - clear subscriptions'.
+	aGsDevKitUpgrade prepareImage_user_clear_subscriptions
+]
+
+{ #category : 'perpare image user' }
+GsuAbstractGemStoneRelease >> prepareImage_UserFor: aGsDevKitUpgrade [
+	"Opportunity for target image to perform user-specific preparation"
+
+	aGsDevKitUpgrade log: 'Prepare image - user'.
 ]
 
 { #category : 'initialization' }

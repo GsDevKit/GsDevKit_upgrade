@@ -4,7 +4,7 @@ Class {
 	#category : 'GsDevKit_upgradeDevKitImage-Core'
 }
 
-{ #category : 'phases' }
+{ #category : 'prepare image' }
 GsuGemStone_3_3_x_Release >> prepareImage_makeClassesObsolete: aGsDevKitUpgrade [
 	"In 3.4.0, the Pragma class is in the base, and the old Pragma class  must be obsoleted"
 
@@ -12,7 +12,7 @@ GsuGemStone_3_3_x_Release >> prepareImage_makeClassesObsolete: aGsDevKitUpgrade 
 	aGsDevKitUpgrade prepareImage_makeClassObsolete: 'Pragma' in: aGsDevKitUpgrade upgradeSymbolDict
 ]
 
-{ #category : 'phases' }
+{ #category : 'prepare image' }
 GsuGemStone_3_3_x_Release >> prepareImage_patches: aGsDevKitUpgrade [
 	"Opportunity for target image to install any patches needed pre-upgrade"
 
@@ -23,7 +23,7 @@ GsuGemStone_3_3_x_Release >> prepareImage_patches: aGsDevKitUpgrade [
 			aGsDevKitUpgrade prepareImage_bug46217_patch ]
 ]
 
-{ #category : 'phases' }
+{ #category : 'prepare image' }
 GsuGemStone_3_3_x_Release >> prepareImage_pragmas_withPragmas_source [
 	"3.3.x source for Pragma>>withPragmasIn:do: ... needed to extract pragmas from the 3.3.x prgama data structures"
 
@@ -41,7 +41,7 @@ GsuGemStone_3_3_x_Release >> prepareImage_pragmas_withPragmas_source [
   ^ methodPragmaDict at: selSym otherwise: #() ]'
 ]
 
-{ #category : 'phases' }
+{ #category : 'prepare image' }
 GsuGemStone_3_3_x_Release >> prepareImage_pragmasFor: aGsDevKitUpgrade [
 	"In 3.4.0, the Pragma class is in the base, and the old Pragma class is be obsoleted,
 		so we need to collect all of the methods that have pragmas and then recompile them 
@@ -49,4 +49,14 @@ GsuGemStone_3_3_x_Release >> prepareImage_pragmasFor: aGsDevKitUpgrade [
 
 	aGsDevKitUpgrade log: 'Prepare image - pragmas'.
 	aGsDevKitUpgrade prepareImage_pragmas
+]
+
+{ #category : 'prepare image user' }
+GsuGemStone_3_3_x_Release >> prepareImage_UserFor: aGsDevKitUpgrade [
+
+	super prepareImage_UserFor: aGsDevKitUpgrade.
+	self patch = 0
+		ifTrue: [
+			"bug46217 patch needed: 3.2.0 thru 3.2.15, and 3.3.0"
+			aGsDevKitUpgrade prepareImage_user_bug46217 ]
 ]

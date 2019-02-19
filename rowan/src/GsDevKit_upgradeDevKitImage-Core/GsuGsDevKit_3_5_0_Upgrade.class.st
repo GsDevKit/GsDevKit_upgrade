@@ -43,7 +43,7 @@ GsuGsDevKit_3_5_0_Upgrade >> asStandardUpgrade [
 { #category : 'prepare image' }
 GsuGsDevKit_3_5_0_Upgrade >> prepareImage_patches [
 
-	"Needed for installing GsdevKit/GLASS"
+	"Needed for installing GsdevKit/GLASS - should be run as System User"
 
 	super prepareImage_patches.
 	self log: '	patch Behavior >> _primitiveCompileMethod:symbolList:category:oldLitVars:intoMethodDict:intoCategories:intoPragmas:environmentId:'.

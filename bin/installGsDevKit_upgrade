@@ -1,7 +1,3 @@
-#!/usr/bin/env topaz
-#
-#	env var $GEMSTONE should be set
-#	topaz must be in PATH
 #
 iferr 1 stk
 iferr 2 stack
@@ -47,9 +43,7 @@ run
 				sourceGemStoneRelease: (GsuAbstractGemStoneRelease major: 3 minor: 3 patch: 6))
 %
 
-run
-	GsDevKit_Image_Upgrade prepareImage
-%
+commit
 
 errorCount
 

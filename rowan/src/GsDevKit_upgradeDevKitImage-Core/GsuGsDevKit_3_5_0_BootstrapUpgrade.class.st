@@ -7,7 +7,7 @@ Class {
 { #category : 'prepare image' }
 GsuGsDevKit_3_5_0_BootstrapUpgrade >> prepareImageBanner [
 
-	self bannerLog: 'Starting Bootstrap GsDevKit upgrade'.
+	self bannerLog: 'Starting Bootstrap GsDevKit upgrade: prepare image as ', System myUserProfile userId.
 ]
 
 { #category : 'initialization' }

@@ -264,7 +264,7 @@ GsuAbstractGsDevKitUpgrade >> prepareImage_pragmas [
 { #category : 'prepare image' }
 GsuAbstractGsDevKitUpgrade >> prepareImageBanner [
 
-	self bannerLog: 'Starting standard GsDevKit upgrade'.
+	self bannerLog: 'Starting standard GsDevKit upgrade: prepare image as ', System myUserProfile userId.
 ]
 
 { #category : 'initialization' }

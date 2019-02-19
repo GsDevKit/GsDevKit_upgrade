@@ -4,7 +4,7 @@ Class {
 	#category : 'GsDevKit_upgradeDevKitImage-Core'
 }
 
-{ #category : 'phases' }
+{ #category : 'prepare image' }
 GsuGsDevKit_3_5_0_BootstrapUpgrade >> prepareImageBanner [
 
 	self bannerLog: 'Starting Bootstrap GsDevKit upgrade'.

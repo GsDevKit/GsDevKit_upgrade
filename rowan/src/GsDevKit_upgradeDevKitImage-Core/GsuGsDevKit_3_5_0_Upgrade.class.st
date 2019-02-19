@@ -40,11 +40,12 @@ GsuGsDevKit_3_5_0_Upgrade >> asStandardUpgrade [
 	^ GsuGsDevKit_3_5_0_StdUpgrade upgradeUserName: self upgradeUserName sourceGemStoneRelease: self sourceGemStoneRelease
 ]
 
-{ #category : 'phases' }
+{ #category : 'prepare image' }
 GsuGsDevKit_3_5_0_Upgrade >> prepareImage_patches [
 
 	"Needed for installing GsdevKit/GLASS"
 
+	super prepareImage_patches.
 	self log: '	patch Behavior >> _primitiveCompileMethod:symbolList:category:oldLitVars:intoMethodDict:intoCategories:intoPragmas:environmentId:'.
 	Behavior
 		compileMethod: self _prepareImage_behavior_patchSource 

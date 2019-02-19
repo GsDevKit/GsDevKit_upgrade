@@ -13,6 +13,17 @@ GsuGemStone_3_3_x_Release >> prepareImage_makeClassesObsolete: aGsDevKitUpgrade 
 ]
 
 { #category : 'phases' }
+GsuGemStone_3_3_x_Release >> prepareImage_patches: aGsDevKitUpgrade [
+	"Opportunity for target image to install any patches needed pre-upgrade"
+
+	super prepareImage_patches: aGsDevKitUpgrade.
+	self patch = 0
+		ifTrue: [
+			"bug46217 patch needed: 3.2.0 thru 3.2.15, and 3.3.0"
+			aGsDevKitUpgrade prepareImage_bug46217_patch ]
+]
+
+{ #category : 'phases' }
 GsuGemStone_3_3_x_Release >> prepareImage_pragmas_withPragmas_source [
 	"3.3.x source for Pragma>>withPragmasIn:do: ... needed to extract pragmas from the 3.3.x prgama data structures"
 

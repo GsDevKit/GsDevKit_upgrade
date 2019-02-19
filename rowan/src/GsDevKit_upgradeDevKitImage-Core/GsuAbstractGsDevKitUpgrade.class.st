@@ -117,6 +117,26 @@ GsuAbstractGsDevKitUpgrade >> _defaultTargetRelease [
 	self subclassResponsibility: #_defaultTargetRelease
 ]
 
+{ #category : 'private' }
+GsuAbstractGsDevKitUpgrade >> _prepareImage_mcgemstoneplatform_bug46217_patchSource [
+
+	^'removeClassFromSystem: aClass
+
+  ((GsSession currentSession objectNamed: #UserGlobals) 
+      at: #''GS_BOOTSTRAP_MONTICELLO_SKIP_REMOVE_CLASS'' ifAbsent: [ false ]) 
+    ifTrue: [
+      "Bug 46217 - during bootstrap don''t remove any classes.
+        during initial bootstrap no classes will be removed
+        during upgrade unexpected classes should not be removed during the
+          bootstrap operation" ]
+    ifFalse: [
+	| ar |
+	aClass subclasses isEmpty not ifTrue: [ ^self error: ''class has subclasses'' ].
+	ar := System myUserProfile dictionaryAndSymbolOf: aClass.
+	ar ifNil: [ ^self error: ''class not found in current user profile'' ].
+	(ar at: 1) removeKey: (ar at: 2) ]'
+]
+
 { #category : 'logging' }
 GsuAbstractGsDevKitUpgrade >> bannerLog: aString [
 
@@ -155,7 +175,24 @@ GsuAbstractGsDevKitUpgrade >> prepareImage [
 		prepareImage_patches: self
 ]
 
-{ #category : 'phases' }
+{ #category : 'prepare image' }
+GsuAbstractGsDevKitUpgrade >> prepareImage_bug46217_patch [
+
+	"patch needed: 3.2.0 thru 3.2.15, and 3.3.0"
+
+	| package symbolDict class theSymbolList |
+	self log: '	patch MCGemStonePlatform >> removeClassFromSystem:'.
+	package := GsPackageLibrary packageNamed: #'Monticello_Globals'.
+	symbolDict := package symbolDict.
+	class := symbolDict at: #'MCGemStonePlatform'.
+	theSymbolList := GsCurrentSession currentSession symbolList.
+	class
+		compileMethod: self _prepareImage_mcgemstoneplatform_bug46217_patchSource 
+		dictionaries: theSymbolList
+		category:  'patch bug 46217'
+]
+
+{ #category : 'prepare image' }
 GsuAbstractGsDevKitUpgrade >> prepareImage_makeClassObsolete: className in: symDict [
 	| assoc |
 	(symDict at: className ifAbsent: []) 
@@ -173,12 +210,12 @@ GsuAbstractGsDevKitUpgrade >> prepareImage_makeClassObsolete: className in: symD
 			self log: '	Class ',  className , ' removed from symbolDictionary: ', symDict name printString. ]
 ]
 
-{ #category : 'phases' }
+{ #category : 'prepare image' }
 GsuAbstractGsDevKitUpgrade >> prepareImage_patches [
 	"noop by default"
 ]
 
-{ #category : 'phases' }
+{ #category : 'prepare image' }
 GsuAbstractGsDevKitUpgrade >> prepareImage_pragmas [
 	"In 3.4.0, the Pragma class is in the base, and the old Pragma class is be obsoleted,
 		so we need to collect all of the methods that have pragmas and then recompile them 
@@ -224,7 +261,7 @@ GsuAbstractGsDevKitUpgrade >> prepareImage_pragmas [
 	self log: '	... finished finding methods with pragmas'
 ]
 
-{ #category : 'phases' }
+{ #category : 'prepare image' }
 GsuAbstractGsDevKitUpgrade >> prepareImageBanner [
 
 	self bannerLog: 'Starting standard GsDevKit upgrade'.

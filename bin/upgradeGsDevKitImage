@@ -14,7 +14,7 @@ login
 run
 	"Install upgrade support code"
 	| codeLibrarian symbolName session symbolList symbolDict dictName |
-	dictName := 'GsDevKit_DymDict'.
+	dictName := 'Upgrade_GsDevKit_SymDict'.
 	symbolName := dictName asSymbol.
 	session := GsCurrentSession currentSession.
 	symbolList := session symbolList.
@@ -35,6 +35,7 @@ run
 		repository: 'tonel:$ROWAN_PROJECTS_HOME/GsDevKit_upgradeDevKitImage/rowan/src/';
 		load: #('GsDevKit_upgradeDevKitImage-Core').
 	(symbolList objectNamed: 'GsuAbstractGsDevKitUpgrade') symbolDictionary: symbolDict.
+	true
 %
 
 run
@@ -51,4 +52,6 @@ run
 %
 
 errorCount
+
+exit 
 

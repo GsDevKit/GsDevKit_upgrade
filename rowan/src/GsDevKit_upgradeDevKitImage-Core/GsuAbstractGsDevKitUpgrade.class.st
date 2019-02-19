@@ -291,6 +291,7 @@ GsuAbstractGsDevKitUpgrade >> prepareImage_user [
 	self sourceGemStoneRelease 
 		prepareImage_userPatches: self;
 		prepareImage_user_clear_subscriptions: self;
+		prepareImage_user_bootstrapApplicationPostloadClassList: self;
 		yourself
 ]
 
@@ -329,6 +330,16 @@ GsuAbstractGsDevKitUpgrade >> prepareImage_user_clear_subscriptions [
 	self log: '	SystemLoginNotification Subscriptions cleared'.
 	cls := self _globalNamed: 'SystemLoginNotification'.
 	(cls _classVars at: #'Subscriptions') removeAll: (cls _classVars at: #'Subscriptions').
+]
+
+{ #category : 'prepare image user' }
+GsuAbstractGsDevKitUpgrade >> prepareImage_user_create_bootstrapApplicationPostloadClassList [
+	"create BootstrapApplicationPostloadClassList, list of classes that should not be initialized during bootstrap"
+
+	"bootstrap is the default upgrade path"
+
+	self log: '	create BootstrapApplicationPostloadClassList'.
+	self _currentUserGlobals at: #BootstrapApplicationPostloadClassList put: #( #SecureHashAlgorithm #MCFileTreeFileDirectoryUtils ).
 ]
 
 { #category : 'prepare image' }

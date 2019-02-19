@@ -34,6 +34,12 @@ Class {
 	#category : 'GsDevKit_upgradeDevKitImage-Core'
 }
 
+{ #category : 'private' }
+GsuAbstractGsDevKitUpgrade class >> _globalName [
+
+	^ #GsDevKit_Upgrade_Cache
+]
+
 { #category : 'accessing' }
 GsuAbstractGsDevKitUpgrade class >> gemstone_user [
 
@@ -54,13 +60,14 @@ GsuAbstractGsDevKitUpgrade class >> sourceGemStoneRelease: sourceRelease [
 GsuAbstractGsDevKitUpgrade class >> symbolDictionary [
 	"Install classes in a separate symbol dictionary, so the cleasses can be easily installed/removed in/from an image"
 
-	^ SymbolDictionary
+	^ SymbolDictionary ifNil: [ SymbolDictionary :=	((AllUsers userWithId: 'SystemUser') objectNamed: #UserGlobals) at: self _globalName ifAbsent: [] ].
 ]
 
 { #category : 'accessing' }
 GsuAbstractGsDevKitUpgrade class >> symbolDictionary: aSymbolDictionary [
 	"Install classes in a separate symbol dictionary, so the cleasses can be easily installed/removed in/from an image"
 
+	((AllUsers userWithId: 'SystemUser') objectNamed: #UserGlobals) at: self _globalName put: aSymbolDictionary.
 	SymbolDictionary := aSymbolDictionary
 ]
 

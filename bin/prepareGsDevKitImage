@@ -1,4 +1,6 @@
 #
+#	login as SystemUser to to prepareImage work
+#
 iferr 1 stk
 iferr 2 stack
 iferr 3 exit 1

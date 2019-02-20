@@ -49,7 +49,7 @@ GsuGsDevKit_3_5_0_Upgrade >> prepareImage_patches [
 	self log: '	patch Behavior >> _primitiveCompileMethod:symbolList:category:oldLitVars:intoMethodDict:intoCategories:intoPragmas:environmentId:'.
 	Behavior
 		compileMethod: self _prepareImage_behavior_patchSource 
-		dictionaries: self upgradeUserPrifile symbolList 
+		dictionaries: self upgradeUserProfile symbolList 
 		category:  '*Core35x'
 ]
 

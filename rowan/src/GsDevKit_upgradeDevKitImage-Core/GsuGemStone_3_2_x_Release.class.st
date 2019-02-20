@@ -5,6 +5,14 @@ Class {
 }
 
 { #category : 'prepare image' }
+GsuGemStone_3_2_x_Release >> prepareImage_makeClassesObsolete: aGsDevKitUpgrade [
+	"In 3.4.0, the Pragma class is in the base, and the old Pragma class  must be obsoleted"
+
+	super prepareImage_makeClassesObsolete: aGsDevKitUpgrade.
+	aGsDevKitUpgrade prepareImage_makeClassObsolete: 'Pragma' in: aGsDevKitUpgrade upgradeSymbolDict
+]
+
+{ #category : 'prepare image' }
 GsuGemStone_3_2_x_Release >> prepareImage_patches: aGsDevKitUpgrade [
 	"Opportunity for target image to install any patches needed pre-upgrade"
 

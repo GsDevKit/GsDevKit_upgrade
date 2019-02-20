@@ -31,6 +31,12 @@ GsuGsDevKit_3_5_0_StdUpgrade >> prepareImageUserBanner [
 	self bannerLog: 'Starting Standard GsDevKit upgrade: prepare image for user ', System myUserProfile userId.
 ]
 
+{ #category : 'prepare image' }
+GsuGsDevKit_3_5_0_StdUpgrade >> prepareSeasideImageBanner [
+
+	self bannerLog: 'Starting Standard GsDevKit upgrade: prepare seaside image as ', System myUserProfile userId.
+]
+
 { #category : 'initialization' }
 GsuGsDevKit_3_5_0_StdUpgrade >> resolveForUpgrade [
 	"Receiver is already resolved"

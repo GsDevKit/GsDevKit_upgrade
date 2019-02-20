@@ -15,6 +15,16 @@ GsuGemStone_3_2_x_Release >> prepareImage_patches: aGsDevKitUpgrade [
 			aGsDevKitUpgrade prepareImage_bug46217_patch ]
 ]
 
+{ #category : 'prepare image' }
+GsuGemStone_3_2_x_Release >> prepareImage_pragmasFor: aGsDevKitUpgrade [
+	"In 3.4.0, the Pragma class is in the base, and the old Pragma class is be obsoleted,
+		so we need to collect all of the methods that have pragmas and then recompile them 
+		to use the new Pragma class ... when we are ready. "
+
+	super prepareImage_pragmasFor: aGsDevKitUpgrade.
+	aGsDevKitUpgrade prepareImage_pragmas
+]
+
 { #category : 'prepare image user' }
 GsuGemStone_3_2_x_Release >> prepareImage_userPatches: aGsDevKitUpgrade [
 	"Opportunity for target image to perform user-specific preparation"

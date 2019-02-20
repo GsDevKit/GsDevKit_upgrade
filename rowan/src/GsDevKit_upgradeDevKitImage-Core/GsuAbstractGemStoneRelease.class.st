@@ -100,7 +100,7 @@ GsuAbstractGemStoneRelease >> prepareImage_pragmasFor: aGsDevKitUpgrade [
 		so we need to collect all of the methods that have pragmas and then recompile them 
 		to use the new Pragma class ... when we are ready. "
 
-	"noop by default"
+	aGsDevKitUpgrade log: 'Prepare image - pragmas'.
 ]
 
 { #category : 'perpare image user' }

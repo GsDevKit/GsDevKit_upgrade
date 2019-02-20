@@ -124,6 +124,12 @@ GsuAbstractGsDevKitUpgrade >> _defaultTargetRelease [
 ]
 
 { #category : 'private' }
+GsuAbstractGsDevKitUpgrade >> _gemstone_user [
+
+	^ self class gemstone_user
+]
+
+{ #category : 'private' }
 GsuAbstractGsDevKitUpgrade >> _globalNamed: aString [
 
 	^ GsSession currentSession objectNamed: aString
@@ -150,6 +156,24 @@ GsuAbstractGsDevKitUpgrade >> _prepareImage_mcgemstoneplatform_bug46217_patchSou
 ]
 
 { #category : 'private' }
+GsuAbstractGsDevKitUpgrade >> _prepareImage_pragmas_withPragmas_source [
+	"3.3.x source for Pragma>>withPragmasIn:do: ... needed to extract pragmas from the 3.3.x prgama data structures"
+
+	^'withPragmasIn: aClass do: aBlock
+(aClass methodDictForEnv: 0) keysAndValuesDo: [ :selector :method | 
+	| pragmas methodPragmaDict eDict selSym |
+	selSym := Symbol _existingWithAll: selector.
+  selSym ifNil: [ ^ #() ].
+	pragmas := GsPackagePolicy currentOrNil
+		ifNotNil: [ :pp | pp pragmasForMethod: selSym in: aClass ].
+	pragmas ifNotNil: [ ^ pragmas ].
+	(eDict := self extraDict) ifNil: [ ^ #() ].
+	(methodPragmaDict := eDict at: self pragmaDictName otherwise: nil)
+		ifNil: [ ^ #() ].
+  ^ methodPragmaDict at: selSym otherwise: #() ]'
+]
+
+{ #category : 'private' }
 GsuAbstractGsDevKitUpgrade >> _prepareImage_user_class_bug46o59_patchSource [
 
 	^ 'removeFromSystem
@@ -164,12 +188,6 @@ GsuAbstractGsDevKitUpgrade >> bannerLog: aString [
 	self log: '--------------------'.
 	self log: aString.
 	self log: '--------------------'.
-]
-
-{ #category : 'private' }
-GsuAbstractGsDevKitUpgrade >> gemstone_user [
-
-	^ self class gemstone_user
 ]
 
 { #category : 'logging' }
@@ -257,7 +275,7 @@ GsuAbstractGsDevKitUpgrade >> prepareImage_pragmas [
 	"need to make sure that this method is used so that we can extract pragmas from old structures"
 	self log: 'Installing ...oldPragma>>'.
 	pragmaClass class
-		compileMethod: self sourceGemStoneRelease prepareImage_pragmas_withPragmas_source 
+		compileMethod: self _prepareImage_pragmas_withPragmas_source 
 		dictionaries: self upgradeUserPrifile symbolList 
 		category: 'Updatting the Method Dictionary -- during upgrade'. 
 
@@ -354,6 +372,21 @@ GsuAbstractGsDevKitUpgrade >> prepareImageUserBanner [
 	self bannerLog: 'Starting Bootstrap GsDevKit upgrade: prepare image for user ', System myUserProfile userId.
 ]
 
+{ #category : 'phases' }
+GsuAbstractGsDevKitUpgrade >> prepareSeasideImage [
+	"formerly done by $GEMSTONE/upgrade/prepareSeasideImage"
+
+	self prepareSeasideImageBanner.
+	self log: 'Prepare seaside image'.
+	self sourceGemStoneRelease
+]
+
+{ #category : 'prepare image' }
+GsuAbstractGsDevKitUpgrade >> prepareSeasideImageBanner [
+
+	self bannerLog: 'Starting Bootstrap GsDevKit upgrade: prepare seaside image as ', System myUserProfile userId.
+]
+
 { #category : 'initialization' }
 GsuAbstractGsDevKitUpgrade >> resolveForUpgrade [
 	"determine which concrete upgrade class to use, base on source GemStone version"
@@ -395,7 +428,7 @@ GsuAbstractGsDevKitUpgrade >> upgradeSymbolDict: aSymbolDict [
 { #category : 'accessing' }
 GsuAbstractGsDevKitUpgrade >> upgradeUserName [
 
-	^ upgradeUserName ifNil: [ upgradeUserName := self gemstone_user ]
+	^ upgradeUserName ifNil: [ upgradeUserName := self _gemstone_user ]
 ]
 
 { #category : 'accessing' }

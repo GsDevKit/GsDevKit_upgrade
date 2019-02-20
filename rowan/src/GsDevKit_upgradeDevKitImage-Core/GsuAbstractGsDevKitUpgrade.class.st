@@ -345,13 +345,13 @@ GsuAbstractGsDevKitUpgrade >> prepareImage_user_create_bootstrapApplicationPostl
 { #category : 'prepare image' }
 GsuAbstractGsDevKitUpgrade >> prepareImageBanner [
 
-	self bannerLog: 'Starting standard GsDevKit upgrade: prepare image as ', System myUserProfile userId.
+	self bannerLog: 'Starting Bootstrap GsDevKit upgrade: prepare image as ', System myUserProfile userId.
 ]
 
 { #category : 'prepare image' }
 GsuAbstractGsDevKitUpgrade >> prepareImageUserBanner [
 
-	self bannerLog: 'Starting standard GsDevKit upgrade: prepare image for user ', System myUserProfile userId.
+	self bannerLog: 'Starting Bootstrap GsDevKit upgrade: prepare image for user ', System myUserProfile userId.
 ]
 
 { #category : 'initialization' }

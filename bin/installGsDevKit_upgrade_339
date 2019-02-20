@@ -1,0 +1,51 @@
+#
+iferr 1 stk
+iferr 2 stack
+iferr 3 exit 1
+display oops
+limit bytes 200
+set u SystemUser p swordfish
+login
+
+run
+	"Install upgrade support code"
+	| codeLibrarian symbolName session symbolList symbolDict dictName |
+	dictName := 'Upgrade_GsDevKit_SymDict'.
+	symbolName := dictName asSymbol.
+	session := GsCurrentSession currentSession.
+	symbolList := session symbolList.
+	symbolDict := symbolList
+		detect: [ :each | (each at: symbolName ifAbsent: [ nil ]) == each ]
+		ifNone: [ 
+			| newDict size |
+			newDict := SymbolDictionary new
+				name: symbolName;
+				objectSecurityPolicy: symbolList objectSecurityPolicy;
+				yourself.
+			size := System myUserProfile symbolList size.
+			System myUserProfile insertDictionary: newDict at: size + 1.
+			newDict ].
+	codeLibrarian := (AllUsers userWithId: 'CodeLibrarianUser') symbolList objectNamed: #CodeLibrarian.
+	codeLibrarian new
+		symbolDictName: dictName;
+		repository: 'tonel:$ROWAN_PROJECTS_HOME/GsDevKit_upgradeDevKitImage/rowan/src/';
+		load: #('GsDevKit_upgradeDevKitImage-Core').
+	(symbolList objectNamed: 'GsuAbstractGsDevKitUpgrade') symbolDictionary: symbolDict.
+	true
+%
+
+run
+	
+	UserGlobals
+		at: #GsDevKit_Image_Upgrade
+		put: 
+			(GsuGsDevKit_3_5_0_Upgrade
+				sourceGemStoneRelease: (GsuAbstractGemStoneRelease major: 3 minor: 3 patch: 9))
+%
+
+commit
+
+errorCount
+
+exit 
+

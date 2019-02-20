@@ -19,6 +19,18 @@ GsuGsDevKit_3_5_0_StdUpgrade >> prepareImage_user_create_bootstrapApplicationPos
 	self log: '	BootstrapApplicationPostloadClassList NOT created'.
 ]
 
+{ #category : 'prepare image' }
+GsuGsDevKit_3_5_0_StdUpgrade >> prepareImageBanner [
+
+	self bannerLog: 'Starting Standard GsDevKit upgrade: prepare image as ', System myUserProfile userId.
+]
+
+{ #category : 'prepare image' }
+GsuGsDevKit_3_5_0_StdUpgrade >> prepareImageUserBanner [
+
+	self bannerLog: 'Starting Standard GsDevKit upgrade: prepare image for user ', System myUserProfile userId.
+]
+
 { #category : 'initialization' }
 GsuGsDevKit_3_5_0_StdUpgrade >> resolveForUpgrade [
 	"Receiver is already resolved"

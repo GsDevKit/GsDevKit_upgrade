@@ -58,5 +58,5 @@ GsuGsDevKit_3_5_0_Upgrade >> resolveForUpgrade [
 	"determine which concrete upgrade class to use, base on source GemStone version"
 
 	super resolveForUpgrade.
-	^ self targetGemStoneRelease resolveForUpgradeToGemStone350: self
+	^ self sourceGemStoneRelease resolveForUpgradeToGemStone350: self
 ]

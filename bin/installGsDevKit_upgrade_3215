@@ -40,7 +40,7 @@ run
 		at: #GsDevKit_Image_Upgrade
 		put: 
 			(GsuGsDevKit_3_5_0_Upgrade
-				sourceGemStoneRelease: (GsuAbstractGemStoneRelease major: 3 minor: 3 patch: 6))
+				sourceGemStoneRelease: (GsuAbstractGemStoneRelease major: 3 minor: 2 patch: 15))
 %
 
 commit

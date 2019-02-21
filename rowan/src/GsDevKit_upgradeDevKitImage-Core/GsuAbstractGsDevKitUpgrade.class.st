@@ -216,6 +216,12 @@ GsuAbstractGsDevKitUpgrade >> bootstrapPostLoadClassList: aListOfClassNameSymbol
 ]
 
 { #category : 'logging' }
+GsuAbstractGsDevKitUpgrade >> endBannerLog [
+
+	self log: '--------------------'.
+]
+
+{ #category : 'logging' }
 GsuAbstractGsDevKitUpgrade >> log: aString [
 
 	GsFile gciLogServer: aString
@@ -228,6 +234,45 @@ GsuAbstractGsDevKitUpgrade >> methodsWithPragmas [
 ]
 
 { #category : 'phases' }
+GsuAbstractGsDevKitUpgrade >> prepareGsDevKitImage [
+	"formerly done by $GEMSTONE/upgrade/prepareSeasideImage"
+
+	self prepareGsDevKitImageBanner.
+	self log: 'Prepare gsdevkit image'.
+	self updateDBFHistoryStartUpgrade.
+	self sourceGemStoneRelease
+		prepareGsDevKitImage_enableSessionMethods: self;
+		yourself.
+	self endBannerLog
+]
+
+{ #category : 'prepare gsdevkit  image' }
+GsuAbstractGsDevKitUpgrade >> prepareGsDevKitImage_enableSessionMethods [
+
+	| policy package targetSymbolDictionary |
+	package := GsPackageLibrary createPackageNamed: #SessionMethods.
+	GsPackageLibrary installPackage: package.
+	policy := GsPackagePolicy current.
+	targetSymbolDictionary := GsCurrentSession currentSession objectNamed:  self upgradeSymbolDictName.
+	(targetSymbolDictionary isKindOf: SymbolDictionary)
+	   ifFalse: [nil error: self upgradeSymbolDict, ' must be the name of a SymbolDictionary'].
+	policy homeSymbolDict:  targetSymbolDictionary.
+	policy externalSymbolList: Array new.
+
+	System commit.
+
+	GsPackagePolicy current refreshSessionMethodDictionary. "no persistent state modified"
+
+	self log: '	session methods enambled (commit)'.
+]
+
+{ #category : 'prepare gsdevkit  image' }
+GsuAbstractGsDevKitUpgrade >> prepareGsDevKitImageBanner [
+
+	self bannerLog: 'Starting Bootstrap GsDevKit upgrade: prepare gsdevkit image as ', System myUserProfile userId.
+]
+
+{ #category : 'phases' }
 GsuAbstractGsDevKitUpgrade >> prepareImage [
 	"prepare image for upgrade"
 
@@ -236,7 +281,8 @@ GsuAbstractGsDevKitUpgrade >> prepareImage [
 	self sourceGemStoneRelease 
 		prepareImage_pragmasFor: self;
 		prepareImage_makeClassesObsolete: self;
-		prepareImage_patches: self
+		prepareImage_patches: self.
+	self endBannerLog
 ]
 
 { #category : 'prepare image' }
@@ -334,7 +380,8 @@ GsuAbstractGsDevKitUpgrade >> prepareImage_user [
 	self sourceGemStoneRelease 
 		prepareImage_userPatches: self;
 		prepareImage_user_clear_subscriptions: self;
-		yourself
+		yourself.
+	self endBannerLog
 ]
 
 { #category : 'prepare image user' }
@@ -380,25 +427,10 @@ GsuAbstractGsDevKitUpgrade >> prepareImageBanner [
 	self bannerLog: 'Starting Bootstrap GsDevKit upgrade: prepare image as ', System myUserProfile userId.
 ]
 
-{ #category : 'prepare image' }
+{ #category : 'prepare image user' }
 GsuAbstractGsDevKitUpgrade >> prepareImageUserBanner [
 
 	self bannerLog: 'Starting Bootstrap GsDevKit upgrade: prepare image for user ', System myUserProfile userId.
-]
-
-{ #category : 'phases' }
-GsuAbstractGsDevKitUpgrade >> prepareSeasideImage [
-	"formerly done by $GEMSTONE/upgrade/prepareSeasideImage"
-
-	self prepareSeasideImageBanner.
-	self log: 'Prepare seaside image'.
-	self sourceGemStoneRelease
-]
-
-{ #category : 'prepare image' }
-GsuAbstractGsDevKitUpgrade >> prepareSeasideImageBanner [
-
-	self bannerLog: 'Starting Bootstrap GsDevKit upgrade: prepare seaside image as ', System myUserProfile userId.
 ]
 
 { #category : 'initialization' }
@@ -423,6 +455,19 @@ GsuAbstractGsDevKitUpgrade >> targetGemStoneRelease [
 
 	^ targetGemStoneRelease 
 		ifNil: [ targetGemStoneRelease := self _defaultTargetRelease ]
+]
+
+{ #category : 'prepare gsdevkit  image' }
+GsuAbstractGsDevKitUpgrade >> updateDBFHistoryStartUpgrade [
+
+	| history imageRelease |
+	imageRelease := ImageVersion at: #gsRelease.
+	history := String new.
+	history addAll: ((GsCurrentSession currentSession objectNamed: self upgradeSymbolDictName) at: #DbfSeasideHistory ifAbsent: ['']).
+	history addAll: 'Begin image upgrade for GsDevKit image ', imageRelease, '.'.
+	history add: Character lf.
+	(GsCurrentSession currentSession objectNamed:self upgradeSymbolDictName) at: #DbfSeasideHistory put: history.
+	self log: '	update dbf history for upgrade start'.
 ]
 
 { #category : 'accessing' }

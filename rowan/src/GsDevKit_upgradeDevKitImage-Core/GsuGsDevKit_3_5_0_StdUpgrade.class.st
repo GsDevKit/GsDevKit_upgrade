@@ -4,6 +4,12 @@ Class {
 	#category : 'GsDevKit_upgradeDevKitImage-Core'
 }
 
+{ #category : 'prepare image' }
+GsuGsDevKit_3_5_0_StdUpgrade >> prepareGsDevKitImageBanner [
+
+	self bannerLog: 'Starting Standard GsDevKit upgrade: prepare gsdevkit image as ', System myUserProfile userId.
+]
+
 { #category : 'prepare image user' }
 GsuGsDevKit_3_5_0_StdUpgrade >> prepareImage_user_clear_subscriptions [
 	"no need to clear subscriptions during standard upgrade, because class initialization 
@@ -22,12 +28,6 @@ GsuGsDevKit_3_5_0_StdUpgrade >> prepareImageBanner [
 GsuGsDevKit_3_5_0_StdUpgrade >> prepareImageUserBanner [
 
 	self bannerLog: 'Starting Standard GsDevKit upgrade: prepare image for user ', System myUserProfile userId.
-]
-
-{ #category : 'prepare image' }
-GsuGsDevKit_3_5_0_StdUpgrade >> prepareSeasideImageBanner [
-
-	self bannerLog: 'Starting Standard GsDevKit upgrade: prepare seaside image as ', System myUserProfile userId.
 ]
 
 { #category : 'initialization' }

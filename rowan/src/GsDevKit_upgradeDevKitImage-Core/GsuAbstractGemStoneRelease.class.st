@@ -79,6 +79,14 @@ GsuAbstractGemStoneRelease >> patch: anInteger [
 	patch := anInteger
 ]
 
+{ #category : 'prepare gsdevkit image' }
+GsuAbstractGemStoneRelease >> prepareGsDevKitImage_enableSessionMethods:  aGsDevKitUpgrade [
+	"Steps to prepare an upgraded gsdevkit image for immediate use of bootstrapping (when method recompile is needed)"
+
+	aGsDevKitUpgrade log: 'Prepare gsdevkit - enableSessionMethods'.
+	aGsDevKitUpgrade prepareGsDevKitImage_enableSessionMethods
+]
+
 { #category : 'prepare image' }
 GsuAbstractGemStoneRelease >> prepareImage_makeClassesObsolete: aGsDevKitUpgrade [
 	"In 3.4.0, the Pragma class is in the base, and the old Pragma class  must be obsoleted"

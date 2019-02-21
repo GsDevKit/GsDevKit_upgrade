@@ -13,7 +13,8 @@ run
 	(((AllUsers userWithId: 'SystemUser') 
 		objectNamed: #UserGlobals) 
 			at: #'GsDevKit_Image_Upgrade')
-				prepareImage_user
+				prepareImage_user;
+				prepareGsDevKitImage
 %
 
 commit

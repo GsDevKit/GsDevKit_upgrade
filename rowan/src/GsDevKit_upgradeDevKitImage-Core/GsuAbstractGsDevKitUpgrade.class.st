@@ -25,10 +25,12 @@ Class {
 		'sourceGemStoneRelease',
 		'targetGemStoneRelease',
 		'methodsWithPragmas',
-		'upgradeUserSymbolDict',
 		'upgradeSymbolDict',
 		'upgradeSymbolDictName',
-		'bootstrapPostLoadClassList'
+		'bootstrapPostLoadClassList',
+		'bootstrapRepositoryDirectory',
+		'bootstrapApplicationLoadSpecs',
+		'bootstrapExistingConfigurationList'
 	],
 	#classVars : [
 		'TheSymbolDictionary'
@@ -120,10 +122,29 @@ GsuAbstractGsDevKitUpgrade >> _currentUserGlobals [
 ]
 
 { #category : 'private' }
+GsuAbstractGsDevKitUpgrade >> _defaultBootstrapApplicationLoadSpecs [
+	"formerly BootstrapApplicationLoadSpecs, bootstrap GLASS configuration name, version, load spec and directory path"
+
+	^ {
+		'ConfigurationOfGLASS'. 
+		'1.0-beta.9.2.2'. 
+		#('default'). 
+		nil.	"nill - use bootstrapRepositoryDirectory"
+	}
+]
+
+{ #category : 'private' }
 GsuAbstractGsDevKitUpgrade >> _defaultBootstrapPostLoadClassList [
 	"formerly BootstrapApplicationPostloadClassList, list of classes that should not be initialized during bootstrap"
 
 	^ #( #SecureHashAlgorithm #MCFileTreeFileDirectoryUtils )
+]
+
+{ #category : 'private' }
+GsuAbstractGsDevKitUpgrade >> _defaultBootstrapRepositoryDirectory [
+	"formerly BootstrapRepositoryDirectory, location of Monticello bootstrap directory"
+
+	^ GsPackageLibrary getMonticelloRepositoryDirectory
 ]
 
 { #category : 'private' }
@@ -142,6 +163,12 @@ GsuAbstractGsDevKitUpgrade >> _gemstone_user [
 GsuAbstractGsDevKitUpgrade >> _globalNamed: aString [
 
 	^ GsSession currentSession objectNamed: aString
+]
+
+{ #category : 'private' }
+GsuAbstractGsDevKitUpgrade >> _listUpgradeParameters [
+
+	^ #( bootstrapPostLoadClassList bootstrapApplicationLoadSpecs )
 ]
 
 { #category : 'private' }
@@ -201,12 +228,39 @@ GsuAbstractGsDevKitUpgrade >> _prepareImage_user_class_bug46059_patchSource [
   ar ifNotNil: [ (ar at: 1) removeKey: (ar at: 2) ].'
 ]
 
+{ #category : 'private' }
+GsuAbstractGsDevKitUpgrade >> _singletonUpgradeParameters [
+
+	^ #( upgradeUserName upgradeSymbolDictName bootstrapRepositoryDirectory )
+]
+
 { #category : 'logging' }
 GsuAbstractGsDevKitUpgrade >> bannerLog: aString [
 
-	self log: '--------------------'.
+	self bannerLogDash.
 	self log: aString.
+	self bannerLogDash.
+]
+
+{ #category : 'logging' }
+GsuAbstractGsDevKitUpgrade >> bannerLogDash [
+
 	self log: '--------------------'.
+]
+
+{ #category : 'accessing' }
+GsuAbstractGsDevKitUpgrade >> bootstrapApplicationLoadSpecs [
+	"formerly BootstrapApplicationLoadSpecs, bootstrap GLASS configuration name, version, load spec and directory path"
+
+	^ bootstrapApplicationLoadSpecs
+		ifNil: [ bootstrapApplicationLoadSpecs := self _defaultBootstrapApplicationLoadSpecs ]
+]
+
+{ #category : 'accessing' }
+GsuAbstractGsDevKitUpgrade >> bootstrapApplicationLoadSpecs: loadSpecArray [
+	"formerly BootstrapApplicationLoadSpecs, bootstrap GLASS configuration name, version, load spec and directory path"
+
+	bootstrapApplicationLoadSpecs := loadSpecArray
 ]
 
 { #category : 'accessing' }
@@ -214,7 +268,6 @@ GsuAbstractGsDevKitUpgrade >> bootstrapPostLoadClassList [
 	"formerly BootstrapApplicationPostloadClassList, list of classes that should not be initialized during bootstrap"
 
 	^ bootstrapPostLoadClassList
-		ifNotNil: [ bootstrapPostLoadClassList := (bootstrapPostLoadClassList, self _defaultBootstrapPostLoadClassList) asIdentitySet asArray ]
 		ifNil: [ bootstrapPostLoadClassList := self _defaultBootstrapPostLoadClassList ]
 ]
 
@@ -222,19 +275,60 @@ GsuAbstractGsDevKitUpgrade >> bootstrapPostLoadClassList [
 GsuAbstractGsDevKitUpgrade >> bootstrapPostLoadClassList: aListOfClassNameSymbols [
 	"formerly BootstrapApplicationPostloadClassList, list of application classes that should not be initialized during bootstrap"
 
-	bootstrapPostLoadClassList := aListOfClassNameSymbols
+	"make sure that the _default list are included ... they are required"
+
+	bootstrapPostLoadClassList := ( aListOfClassNameSymbols, self _defaultBootstrapPostLoadClassList) asIdentitySet asArray
 ]
 
-{ #category : 'logging' }
-GsuAbstractGsDevKitUpgrade >> endBannerLog [
+{ #category : 'accessing' }
+GsuAbstractGsDevKitUpgrade >> bootstrapRepositoryDirectory [
+	"formerly BootstrapRepositoryDirectory, location of Monticello bootstrap directory"
 
-	self log: '--------------------'.
+	^ bootstrapRepositoryDirectory
+		ifNil: [ bootstrapRepositoryDirectory := self _defaultBootstrapRepositoryDirectory ]
+]
+
+{ #category : 'accessing' }
+GsuAbstractGsDevKitUpgrade >> bootstrapRepositoryDirectory: directoryPath [
+	"formerly BootstrapRepositoryDirectory, location of Monticello bootstrap directory"
+
+	bootstrapRepositoryDirectory := directoryPath
+]
+
+{ #category : 'accessing' }
+GsuAbstractGsDevKitUpgrade >> buildString [
+
+	" 
+		Standard -	method recompilation not required
+		Bootstrap -	method recompilation required 
+	"
+
+	^ 'Bootstrap'
 ]
 
 { #category : 'logging' }
 GsuAbstractGsDevKitUpgrade >> log: aString [
+	"append LF to aString"
 
 	GsFile gciLogServer: aString
+]
+
+{ #category : 'logging' }
+GsuAbstractGsDevKitUpgrade >> logUpgradeParameters [
+
+	self log: 'Upgrade parameters'.
+
+	self bannerLogDash.
+
+	self _singletonUpgradeParameters do: [:selectorSymbol |
+		self log: '	', selectorSymbol asString, ' : ', (self perform: selectorSymbol) ].
+
+	self _listUpgradeParameters do: [:selectorSymbol |
+		self log: '	', selectorSymbol asString, ' : '.
+		(self perform: selectorSymbol) do: [:entry |
+			self log: '		', entry printString ] ].
+
+	self bannerLogDash.
 ]
 
 { #category : 'accessing' }
@@ -256,7 +350,7 @@ GsuAbstractGsDevKitUpgrade >> prepareGsDevKitImage [
 		prepareGsDevKitImage_removeAllMethods: self;
 		prepareGsDevKitImage_patch46217: self;
 		yourself.
-	self endBannerLog
+	self bannerLogDash
 ]
 
 { #category : 'prepare gsdevkit  image' }
@@ -355,7 +449,7 @@ GsuAbstractGsDevKitUpgrade >> prepareGsDevKitImage_removeAllMethods [
 { #category : 'prepare gsdevkit  image' }
 GsuAbstractGsDevKitUpgrade >> prepareGsDevKitImageBanner [
 
-	self bannerLog: 'Starting Bootstrap GsDevKit upgrade: prepare gsdevkit image as ', System myUserProfile userId.
+	self bannerLog: 'Starting ', self buildString, ' GsDevKit upgrade: prepare gsdevkit image as ', System myUserProfile userId.
 ]
 
 { #category : 'phases' }
@@ -368,7 +462,7 @@ GsuAbstractGsDevKitUpgrade >> prepareImage [
 		prepareImage_pragmasFor: self;
 		prepareImage_makeClassesObsolete: self;
 		prepareImage_patches: self.
-	self endBannerLog
+	self bannerLogDash
 ]
 
 { #category : 'prepare image' }
@@ -467,7 +561,7 @@ GsuAbstractGsDevKitUpgrade >> prepareImage_user [
 		prepareImage_userPatches: self;
 		prepareImage_user_clear_subscriptions: self;
 		yourself.
-	self endBannerLog
+	self bannerLogDash
 ]
 
 { #category : 'prepare image user' }
@@ -510,13 +604,15 @@ GsuAbstractGsDevKitUpgrade >> prepareImage_user_clear_subscriptions [
 { #category : 'prepare image' }
 GsuAbstractGsDevKitUpgrade >> prepareImageBanner [
 
-	self bannerLog: 'Starting Bootstrap GsDevKit upgrade: prepare image as ', System myUserProfile userId.
+	self bannerLog: 'Starting ', self buildString, ' GsDevKit upgrade: prepare image as ', System myUserProfile userId.
+	self logUpgradeParameters
 ]
 
 { #category : 'prepare image user' }
 GsuAbstractGsDevKitUpgrade >> prepareImageUserBanner [
 
-	self bannerLog: 'Starting Bootstrap GsDevKit upgrade: prepare image for user ', System myUserProfile userId.
+	self bannerLog: 'Starting ', self buildString, ' GsDevKit upgrade: prepare image for user ', System myUserProfile userId.
+	self logUpgradeParameters
 ]
 
 { #category : 'initialization' }

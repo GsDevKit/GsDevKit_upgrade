@@ -4,6 +4,14 @@ Class {
 	#category : 'GsDevKit_upgradeDevKitImage-Core'
 }
 
+{ #category : 'prepare gsdevkit  image' }
+GsuGsDevKit_3_5_0_StdUpgrade >> prepareGsDevKitImage_clearMonticelloCaches [
+
+	" clear caches - those that are unneeded or create problem during initial bootstrap load"
+
+	"noop for standard upgrade"
+]
+
 { #category : 'prepare image' }
 GsuGsDevKit_3_5_0_StdUpgrade >> prepareGsDevKitImageBanner [
 

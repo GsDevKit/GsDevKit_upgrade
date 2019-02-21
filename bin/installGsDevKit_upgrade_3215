@@ -36,11 +36,15 @@ run
 
 run
 	
+	"Recompile of methods will be required.
+		postLoadClassList only needed if there are classes that should not be initialized when methods 
+		recompiled by bootstrap code"
 	UserGlobals
 		at: #GsDevKit_Image_Upgrade
 		put: 
-			(GsuGsDevKit_3_5_0_Upgrade
-				sourceGemStoneRelease: (GsuAbstractGemStoneRelease major: 3 minor: 2 patch: 15))
+			((GsuGsDevKit_3_5_0_Upgrade sourceGemStoneRelease: (GsuAbstractGemStoneRelease major: 3 minor: 2 patch: 15))
+				postLoadClassList: #( #SecureHashAlgorithm ); "SecureHashAlgorithm present by default - example only"
+				yourself)
 %
 
 commit

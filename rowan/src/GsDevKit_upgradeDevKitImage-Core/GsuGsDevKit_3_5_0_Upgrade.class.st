@@ -29,13 +29,19 @@ GsuGsDevKit_3_5_0_Upgrade >> asBootstrapUpgrade [
 
 	"All application methods in upgraded repository must be recompiled"
 
-	^ GsuGsDevKit_3_5_0_BootstrapUpgrade upgradeUserName: self upgradeUserName sourceGemStoneRelease: self sourceGemStoneRelease
+	"postLoadClassList is used in the bootstrap case"
+
+	^ (GsuGsDevKit_3_5_0_BootstrapUpgrade upgradeUserName: self upgradeUserName sourceGemStoneRelease: self sourceGemStoneRelease)
+			postLoadClassList: postLoadClassList;
+			yourself
 ]
 
 { #category : 'initialization' }
 GsuGsDevKit_3_5_0_Upgrade >> asStandardUpgrade [
 
 	"Application methods in upgraded repository do NOT need to recompiled"
+
+	"postLoadClassList is not used in standard upgrade case"
 
 	^ GsuGsDevKit_3_5_0_StdUpgrade upgradeUserName: self upgradeUserName sourceGemStoneRelease: self sourceGemStoneRelease
 ]

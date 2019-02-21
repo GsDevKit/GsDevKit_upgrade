@@ -106,15 +106,6 @@ GsuAbstractGemStoneRelease >> prepareImage_pragmasFor: aGsDevKitUpgrade [
 ]
 
 { #category : 'perpare image user' }
-GsuAbstractGemStoneRelease >> prepareImage_user_bootstrapApplicationPostloadClassList: aGsDevKitUpgrade [
-	"create BootstrapApplicationPostloadClassList, list of classes that should not be initialized during bootstrap"
-
-	aGsDevKitUpgrade 
-		log: 'Prepare image user - create BootstrapApplicationPostloadClassList';
-		prepareImage_user_create_bootstrapApplicationPostloadClassList
-]
-
-{ #category : 'perpare image user' }
 GsuAbstractGemStoneRelease >> prepareImage_user_clear_subscriptions: aGsDevKitUpgrade [
 	"Opportunity for target image to perform user-specific preparation"
 

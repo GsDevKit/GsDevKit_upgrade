@@ -26,7 +26,8 @@ Class {
 		'targetGemStoneRelease',
 		'methodsWithPragmas',
 		'upgradeUserSymbolDict',
-		'upgradeSymbolDict'
+		'upgradeSymbolDict',
+		'postLoadClassList'
 	],
 	#classVars : [
 		'TheSymbolDictionary'
@@ -118,6 +119,13 @@ GsuAbstractGsDevKitUpgrade >> _currentUserGlobals [
 ]
 
 { #category : 'private' }
+GsuAbstractGsDevKitUpgrade >> _defaultPostLoadClassList [
+	"formerly BootstrapApplicationPostloadClassList, list of classes that should not be initialized during bootstrap"
+
+	^ #( #SecureHashAlgorithm #MCFileTreeFileDirectoryUtils )
+]
+
+{ #category : 'private' }
 GsuAbstractGsDevKitUpgrade >> _defaultTargetRelease [
 
 	self subclassResponsibility: #_defaultTargetRelease
@@ -200,6 +208,22 @@ GsuAbstractGsDevKitUpgrade >> log: aString [
 GsuAbstractGsDevKitUpgrade >> methodsWithPragmas [
 
 	^ methodsWithPragmas ifNil: [ methodsWithPragmas := {} ]
+]
+
+{ #category : 'accessing' }
+GsuAbstractGsDevKitUpgrade >> postLoadClassList [
+	"formerly BootstrapApplicationPostloadClassList, list of classes that should not be initialized during bootstrap"
+
+	^ postLoadClassList
+		ifNotNil: [ postLoadClassList := (postLoadClassList, self _defaultPostLoadClassList) asIdentitySet asArray ]
+		ifNil: [ postLoadClassList := self _defaultPostLoadClassList ]
+]
+
+{ #category : 'accessing' }
+GsuAbstractGsDevKitUpgrade >> postLoadClassList: aListOfClassNameSymbols [
+	"formerly BootstrapApplicationPostloadClassList, list of application classes that should not be initialized during bootstrap"
+
+	postLoadClassList := aListOfClassNameSymbols
 ]
 
 { #category : 'phases' }
@@ -309,7 +333,6 @@ GsuAbstractGsDevKitUpgrade >> prepareImage_user [
 	self sourceGemStoneRelease 
 		prepareImage_userPatches: self;
 		prepareImage_user_clear_subscriptions: self;
-		prepareImage_user_bootstrapApplicationPostloadClassList: self;
 		yourself
 ]
 
@@ -348,16 +371,6 @@ GsuAbstractGsDevKitUpgrade >> prepareImage_user_clear_subscriptions [
 	self log: '	SystemLoginNotification Subscriptions cleared'.
 	cls := self _globalNamed: 'SystemLoginNotification'.
 	(cls _classVars at: #'Subscriptions') removeAll: (cls _classVars at: #'Subscriptions').
-]
-
-{ #category : 'prepare image user' }
-GsuAbstractGsDevKitUpgrade >> prepareImage_user_create_bootstrapApplicationPostloadClassList [
-	"create BootstrapApplicationPostloadClassList, list of classes that should not be initialized during bootstrap"
-
-	"bootstrap is the default upgrade path"
-
-	self log: '	create BootstrapApplicationPostloadClassList'.
-	self _currentUserGlobals at: #BootstrapApplicationPostloadClassList put: #( #SecureHashAlgorithm #MCFileTreeFileDirectoryUtils ).
 ]
 
 { #category : 'prepare image' }

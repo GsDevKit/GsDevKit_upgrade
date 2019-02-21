@@ -27,6 +27,7 @@ Class {
 		'methodsWithPragmas',
 		'upgradeUserSymbolDict',
 		'upgradeSymbolDict',
+		'upgradeSymbolDictName',
 		'bootstrapPostLoadClassList'
 	],
 	#classVars : [
@@ -94,31 +95,21 @@ GsuAbstractGsDevKitUpgrade class >> sourceGemStoneRelease: sourceRelease [
 ]
 
 { #category : 'instance creation' }
-GsuAbstractGsDevKitUpgrade class >> upgradeSymbolDict: aSymbolDict sourceGemStoneRelease: sourceRelease [
-
-	^ self new
-		upgradeUserName: self gemstone_user;
-		sourceGemStoneRelease: sourceRelease;
-		upgradeSymbolDict: aSymbolDict;
-		resolveForUpgrade
-]
-
-{ #category : 'instance creation' }
 GsuAbstractGsDevKitUpgrade class >> upgradeUserName: aString sourceGemStoneRelease: sourceRelease [
 
 	^ self 
 		upgradeUserName: aString 
-		upgradeSymbolDict: nil 
+		upgradeSymbolDictName: nil 
 		sourceGemStoneRelease: sourceRelease
 ]
 
 { #category : 'instance creation' }
-GsuAbstractGsDevKitUpgrade class >> upgradeUserName: aString upgradeSymbolDict: aSymbolDict sourceGemStoneRelease: sourceRelease [
+GsuAbstractGsDevKitUpgrade class >> upgradeUserName: aString upgradeSymbolDictName: aSymbol sourceGemStoneRelease: sourceRelease [
 
 	^ self new
 		upgradeUserName: aString;
 		sourceGemStoneRelease: sourceRelease;
-		upgradeSymbolDict: aSymbolDict;
+		upgradeSymbolDictName: aSymbol;
 		resolveForUpgrade
 ]
 
@@ -438,14 +429,21 @@ GsuAbstractGsDevKitUpgrade >> targetGemStoneRelease [
 GsuAbstractGsDevKitUpgrade >> upgradeSymbolDict [
 	"Formerly known as BootstrapSymbolDictionary ... the symbol dictionary where GsDevKit/GLASS is installed"
 
-	^ upgradeSymbolDict ifNil: [ upgradeSymbolDict:= (AllUsers userWithId: self upgradeUserName) symbolList objectNamed: #UserGlobals ]
+	^ upgradeSymbolDict ifNil: [ upgradeSymbolDict:= (AllUsers userWithId: self upgradeUserName) symbolList objectNamed: self upgradeSymbolDictName ]
 ]
 
 { #category : 'accessing' }
-GsuAbstractGsDevKitUpgrade >> upgradeSymbolDict: aSymbolDict [
-	"Formerly known as BootstrapSymbolDictionary ... the symbol dictionary where GsDevKit/GLASS is installed"
+GsuAbstractGsDevKitUpgrade >> upgradeSymbolDictName [
+	"Formerly known as BootstrapSymbolDictionaryName ... the name of the symbol dictionary where GsDevKit/GLASS is installed"
 
-	^ upgradeSymbolDict := aSymbolDict
+	^ upgradeSymbolDictName ifNil: [ #UserGlobals ]
+]
+
+{ #category : 'accessing' }
+GsuAbstractGsDevKitUpgrade >> upgradeSymbolDictName: aSymbol [
+	"Formerly known as BootstrapSymbolDictionaryName ... the name of the symbol dictionary where GsDevKit/GLASS is installed"
+
+	^ upgradeSymbolDictName := aSymbol
 ]
 
 { #category : 'accessing' }

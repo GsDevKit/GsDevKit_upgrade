@@ -41,7 +41,7 @@ run
 		put: 
 			(GsuGsDevKit_3_5_0_Upgrade
 				upgradeUserName: 'DataCurator'
-				upgradeSymbolDict: UserGlobals
+				upgradeSymbolDictName: #UserGlobals
 				sourceGemStoneRelease: (GsuAbstractGemStoneRelease major: 3 minor: 3 patch: 9))
 %
 commit

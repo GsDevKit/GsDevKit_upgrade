@@ -32,7 +32,7 @@ GsuGsDevKit_3_5_0_Upgrade >> asBootstrapUpgrade [
 	"postLoadClassList is used in the bootstrap case"
 
 	^ (GsuGsDevKit_3_5_0_BootstrapUpgrade upgradeUserName: self upgradeUserName sourceGemStoneRelease: self sourceGemStoneRelease)
-			postLoadClassList: postLoadClassList;
+			bootstrapPostLoadClassList: bootstrapPostLoadClassList;
 			yourself
 ]
 

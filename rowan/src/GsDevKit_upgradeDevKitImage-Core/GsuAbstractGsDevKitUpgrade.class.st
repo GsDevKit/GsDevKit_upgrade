@@ -27,7 +27,7 @@ Class {
 		'methodsWithPragmas',
 		'upgradeUserSymbolDict',
 		'upgradeSymbolDict',
-		'postLoadClassList'
+		'bootstrapPostLoadClassList'
 	],
 	#classVars : [
 		'TheSymbolDictionary'
@@ -119,7 +119,7 @@ GsuAbstractGsDevKitUpgrade >> _currentUserGlobals [
 ]
 
 { #category : 'private' }
-GsuAbstractGsDevKitUpgrade >> _defaultPostLoadClassList [
+GsuAbstractGsDevKitUpgrade >> _defaultBootstrapPostLoadClassList [
 	"formerly BootstrapApplicationPostloadClassList, list of classes that should not be initialized during bootstrap"
 
 	^ #( #SecureHashAlgorithm #MCFileTreeFileDirectoryUtils )
@@ -198,6 +198,22 @@ GsuAbstractGsDevKitUpgrade >> bannerLog: aString [
 	self log: '--------------------'.
 ]
 
+{ #category : 'accessing' }
+GsuAbstractGsDevKitUpgrade >> bootstrapPostLoadClassList [
+	"formerly BootstrapApplicationPostloadClassList, list of classes that should not be initialized during bootstrap"
+
+	^ bootstrapPostLoadClassList
+		ifNotNil: [ bootstrapPostLoadClassList := (bootstrapPostLoadClassList, self _defaultBootstrapPostLoadClassList) asIdentitySet asArray ]
+		ifNil: [ bootstrapPostLoadClassList := self _defaultBootstrapPostLoadClassList ]
+]
+
+{ #category : 'accessing' }
+GsuAbstractGsDevKitUpgrade >> bootstrapPostLoadClassList: aListOfClassNameSymbols [
+	"formerly BootstrapApplicationPostloadClassList, list of application classes that should not be initialized during bootstrap"
+
+	bootstrapPostLoadClassList := aListOfClassNameSymbols
+]
+
 { #category : 'logging' }
 GsuAbstractGsDevKitUpgrade >> log: aString [
 
@@ -208,22 +224,6 @@ GsuAbstractGsDevKitUpgrade >> log: aString [
 GsuAbstractGsDevKitUpgrade >> methodsWithPragmas [
 
 	^ methodsWithPragmas ifNil: [ methodsWithPragmas := {} ]
-]
-
-{ #category : 'accessing' }
-GsuAbstractGsDevKitUpgrade >> postLoadClassList [
-	"formerly BootstrapApplicationPostloadClassList, list of classes that should not be initialized during bootstrap"
-
-	^ postLoadClassList
-		ifNotNil: [ postLoadClassList := (postLoadClassList, self _defaultPostLoadClassList) asIdentitySet asArray ]
-		ifNil: [ postLoadClassList := self _defaultPostLoadClassList ]
-]
-
-{ #category : 'accessing' }
-GsuAbstractGsDevKitUpgrade >> postLoadClassList: aListOfClassNameSymbols [
-	"formerly BootstrapApplicationPostloadClassList, list of application classes that should not be initialized during bootstrap"
-
-	postLoadClassList := aListOfClassNameSymbols
 ]
 
 { #category : 'phases' }

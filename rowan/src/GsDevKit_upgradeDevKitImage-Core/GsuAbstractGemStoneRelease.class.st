@@ -81,17 +81,27 @@ GsuAbstractGemStoneRelease >> patch: anInteger [
 
 { #category : 'prepare gsdevkit image' }
 GsuAbstractGemStoneRelease >> prepareGsDevKitImage_clearMonticelloCaches:  aGsDevKitUpgrade [
-	"Steps to prepare an upgraded gsdevkit image for immediate use of bootstrapping (when method recompile is needed)"
 
 	aGsDevKitUpgrade prepareGsDevKitImage_clearMonticelloCaches
 ]
 
 { #category : 'prepare gsdevkit image' }
 GsuAbstractGemStoneRelease >> prepareGsDevKitImage_enableSessionMethods:  aGsDevKitUpgrade [
-	"Steps to prepare an upgraded gsdevkit image for immediate use of bootstrapping (when method recompile is needed)"
 
 	aGsDevKitUpgrade log: 'Prepare gsdevkit - enableSessionMethods'.
 	aGsDevKitUpgrade prepareGsDevKitImage_enableSessionMethods
+]
+
+{ #category : 'prepare gsdevkit image' }
+GsuAbstractGemStoneRelease >> prepareGsDevKitImage_patch46217:  aGsDevKitUpgrade [
+
+	aGsDevKitUpgrade prepareGsDevKitImage_bug46217_patch
+]
+
+{ #category : 'prepare gsdevkit image' }
+GsuAbstractGemStoneRelease >> prepareGsDevKitImage_removeAllMethods:  aGsDevKitUpgrade [
+
+	aGsDevKitUpgrade prepareGsDevKitImage_removeAllMethods
 ]
 
 { #category : 'prepare image' }

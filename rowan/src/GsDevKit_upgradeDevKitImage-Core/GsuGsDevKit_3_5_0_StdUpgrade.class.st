@@ -5,9 +5,28 @@ Class {
 }
 
 { #category : 'prepare gsdevkit  image' }
+GsuGsDevKit_3_5_0_StdUpgrade >> prepareGsDevKitImage_bug46217_patch [
+
+	"Bug 46217 - during bootstrap don''t remove any classes.
+		during initial bootstrap no classes will be removed
+		during upgrade unexpected classes should not be removed during the
+		bootstrap operation"
+
+	"noop for standard upgrade"
+]
+
+{ #category : 'prepare gsdevkit  image' }
 GsuGsDevKit_3_5_0_StdUpgrade >> prepareGsDevKitImage_clearMonticelloCaches [
 
 	" clear caches - those that are unneeded or create problem during initial bootstrap load"
+
+	"noop for standard upgrade"
+]
+
+{ #category : 'prepare gsdevkit  image' }
+GsuGsDevKit_3_5_0_StdUpgrade >> prepareGsDevKitImage_removeAllMethods [
+
+	"remove all methods in GsDevKit user classes"
 
 	"noop for standard upgrade"
 ]

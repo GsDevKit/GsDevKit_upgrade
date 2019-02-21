@@ -145,6 +145,16 @@ GsuAbstractGsDevKitUpgrade >> _globalNamed: aString [
 ]
 
 { #category : 'private' }
+GsuAbstractGsDevKitUpgrade >> _prepareImage_class_bug46217_patchSource [
+
+	^  'removeFromSystem
+  "Bug 46217 - during bootstrap don''t remove any classes.
+    during initial bootstrap no classes will be removed
+    during upgrade unexpected classes should not be removed during the
+      bootstrap operation"'
+]
+
+{ #category : 'private' }
 GsuAbstractGsDevKitUpgrade >> _prepareImage_mcgemstoneplatform_bug46217_patchSource [
 
 	^'removeClassFromSystem: aClass
@@ -183,7 +193,7 @@ GsuAbstractGsDevKitUpgrade >> _prepareImage_pragmas_withPragmas_source [
 ]
 
 { #category : 'private' }
-GsuAbstractGsDevKitUpgrade >> _prepareImage_user_class_bug46o59_patchSource [
+GsuAbstractGsDevKitUpgrade >> _prepareImage_user_class_bug46059_patchSource [
 
 	^ 'removeFromSystem
 | ar |
@@ -243,8 +253,34 @@ GsuAbstractGsDevKitUpgrade >> prepareGsDevKitImage [
 	self sourceGemStoneRelease
 		prepareGsDevKitImage_enableSessionMethods: self;
 		prepareGsDevKitImage_clearMonticelloCaches: self;
+		prepareGsDevKitImage_removeAllMethods: self;
+		prepareGsDevKitImage_patch46217: self;
 		yourself.
 	self endBannerLog
+]
+
+{ #category : 'prepare gsdevkit  image' }
+GsuAbstractGsDevKitUpgrade >> prepareGsDevKitImage_bug46217_patch [
+
+	"Bug 46217 - during bootstrap don''t remove any classes.
+		during initial bootstrap no classes will be removed
+		during upgrade unexpected classes should not be removed during the
+		bootstrap operation"
+
+	self log: 'Prepare gsdevkit - patch 46217'.
+
+	GsPackageLibrary 
+	  installMonticelloPackagesHome: (GsCurrentSession currentSession objectNamed: #'UserGlobals') 
+	  during: [:globals | 
+		Class
+		  compileMethod: self _prepareImage_class_bug46217_patchSource
+		dictionaries: GsCurrentSession currentSession symbolList
+		category: '*change-notification'
+	  ].
+
+	System commit.
+
+	self log: '	46217 patched (commit)'.
 ]
 
 { #category : 'prepare gsdevkit  image' }
@@ -273,7 +309,9 @@ GsuAbstractGsDevKitUpgrade >> prepareGsDevKitImage_clearMonticelloCaches [
 	(GsCurrentSession currentSession symbolList objectNamed: #MetacelloProjectRegistration)
 	  ifNotNil: [:cl | cl _classVars at: #Registry put: nil ].
 
-	self log: '	Monticello caches cleared'.
+	System commit.
+
+	self log: '	Monticello caches cleared (commit)'.
 ]
 
 { #category : 'prepare gsdevkit  image' }
@@ -294,6 +332,24 @@ GsuAbstractGsDevKitUpgrade >> prepareGsDevKitImage_enableSessionMethods [
 	GsPackagePolicy current refreshSessionMethodDictionary. "no persistent state modified"
 
 	self log: '	session methods enambled (commit)'.
+]
+
+{ #category : 'prepare gsdevkit  image' }
+GsuAbstractGsDevKitUpgrade >> prepareGsDevKitImage_removeAllMethods [
+
+	"remove all methods in GsDevKit user classes"
+
+	self log: 'Prepare gsdevkit - remove all methods'.
+
+	self upgradeSymbolDict valuesDo: [:global |
+		global isBehavior
+			ifTrue: [ 
+				global removeAllMethods.
+				global class removeAllMethods ] ].
+
+	System commit.
+
+	self log: '	methods removed (commit)'.
 ]
 
 { #category : 'prepare gsdevkit  image' }
@@ -425,7 +481,7 @@ GsuAbstractGsDevKitUpgrade >> prepareImage_user_bug46059 [
 		installMonticelloPackagesHome: (GsCurrentSession currentSession objectNamed: #'UserGlobals') 
 		during: [:globals | 
 			Class
-			compileMethod: self _prepareImage_user_class_bug46o59_patchSource
+			compileMethod: self _prepareImage_user_class_bug46059_patchSource
 			dictionaries: GsCurrentSession currentSession symbolList
 			category: '*change-notification' ].
 ]

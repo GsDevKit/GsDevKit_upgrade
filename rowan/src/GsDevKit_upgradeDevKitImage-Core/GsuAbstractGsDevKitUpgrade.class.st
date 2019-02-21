@@ -53,13 +53,28 @@ GsuAbstractGsDevKitUpgrade class >> _installSymDictInSymbolList [
 		detect: [ :each | (each at: symbolName ifAbsent: [ nil ]) == each ]
 		ifNone: [ 
 			| theDict size |
-			theDict := self symbolDictionary ifNil: [
+			theDict := self _symbolDictionary ifNil: [
 				SymbolDictionary new
 					name: symbolName;
 					objectSecurityPolicy: symbolList objectSecurityPolicy;
 					yourself ].
 			size := System myUserProfile symbolList size.
 			System myUserProfile insertDictionary: theDict at: size + 1 ].
+]
+
+{ #category : 'private' }
+GsuAbstractGsDevKitUpgrade class >> _symbolDictionary [
+	"Install classes in a separate symbol dictionary, so the cleasses can be easily installed/removed in/from an image"
+
+	^ TheSymbolDictionary ifNil: [ TheSymbolDictionary :=	((AllUsers userWithId: 'SystemUser') objectNamed: #UserGlobals) at: self _globalName ifAbsent: [] ].
+]
+
+{ #category : 'private' }
+GsuAbstractGsDevKitUpgrade class >> _symbolDictionary: aSymbolDictionary [
+	"Install classes in a separate symbol dictionary, so the cleasses can be easily installed/removed in/from an image"
+
+	((AllUsers userWithId: 'SystemUser') objectNamed: #UserGlobals) at: self _globalName put: aSymbolDictionary.
+	TheSymbolDictionary:= aSymbolDictionary
 ]
 
 { #category : 'accessing' }
@@ -78,19 +93,14 @@ GsuAbstractGsDevKitUpgrade class >> sourceGemStoneRelease: sourceRelease [
 		resolveForUpgrade
 ]
 
-{ #category : 'accessing' }
-GsuAbstractGsDevKitUpgrade class >> symbolDictionary [
-	"Install classes in a separate symbol dictionary, so the cleasses can be easily installed/removed in/from an image"
+{ #category : 'instance creation' }
+GsuAbstractGsDevKitUpgrade class >> upgradeSymbolDict: aSymbolDict sourceGemStoneRelease: sourceRelease [
 
-	^ TheSymbolDictionary ifNil: [ TheSymbolDictionary :=	((AllUsers userWithId: 'SystemUser') objectNamed: #UserGlobals) at: self _globalName ifAbsent: [] ].
-]
-
-{ #category : 'accessing' }
-GsuAbstractGsDevKitUpgrade class >> symbolDictionary: aSymbolDictionary [
-	"Install classes in a separate symbol dictionary, so the cleasses can be easily installed/removed in/from an image"
-
-	((AllUsers userWithId: 'SystemUser') objectNamed: #UserGlobals) at: self _globalName put: aSymbolDictionary.
-	TheSymbolDictionary:= aSymbolDictionary
+	^ self new
+		upgradeUserName: self gemstone_user;
+		sourceGemStoneRelease: sourceRelease;
+		upgradeSymbolDict: aSymbolDict;
+		resolveForUpgrade
 ]
 
 { #category : 'instance creation' }

@@ -30,7 +30,7 @@ run
 		symbolDictName: dictName;
 		repository: 'tonel:$ROWAN_PROJECTS_HOME/GsDevKit_upgradeDevKitImage/rowan/src/';
 		load: #('GsDevKit_upgradeDevKitImage-Core').
-	(symbolList objectNamed: 'GsuAbstractGsDevKitUpgrade') symbolDictionary: symbolDict.
+	(symbolList objectNamed: 'GsuAbstractGsDevKitUpgrade') _symbolDictionary: symbolDict.
 	true
 %
 

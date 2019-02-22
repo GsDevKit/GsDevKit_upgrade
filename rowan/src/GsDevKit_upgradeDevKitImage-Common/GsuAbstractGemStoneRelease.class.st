@@ -6,7 +6,7 @@ Class {
 		'minor',
 		'patch'
 	],
-	#category : 'GsDevKit_upgradeDevKitImage-Core'
+	#category : 'GsDevKit_upgradeDevKitImage-Common'
 }
 
 { #category : 'private' }

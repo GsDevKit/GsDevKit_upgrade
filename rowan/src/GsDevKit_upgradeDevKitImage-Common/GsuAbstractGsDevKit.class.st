@@ -4,7 +4,8 @@ Class {
 	#instVars : [
 		'upgradeUserName',
 		'upgradeSymbolDict',
-		'upgradeSymbolDictName'
+		'upgradeSymbolDictName',
+		'bootstrapExistingConfigurationList'
 	],
 	#category : 'GsDevKit_upgradeDevKitImage-Common'
 }
@@ -37,6 +38,12 @@ GsuAbstractGsDevKit >> _gemstone_user [
 	^ self class gemstone_user
 ]
 
+{ #category : 'private' }
+GsuAbstractGsDevKit >> _globalNamed: aString [
+
+	^ GsSession currentSession objectNamed: aString
+]
+
 { #category : 'logging' }
 GsuAbstractGsDevKit >> bannerLog: aString [
 
@@ -49,6 +56,21 @@ GsuAbstractGsDevKit >> bannerLog: aString [
 GsuAbstractGsDevKit >> bannerLogDash [
 
 	self log: '--------------------'.
+]
+
+{ #category : 'accessing' }
+GsuAbstractGsDevKit >> bootstrapExistingConfigurationList [
+	"formerly BootstrapExistingConfigurationList, list of configuration names that should be removed"
+
+	^ bootstrapExistingConfigurationList
+		ifNil: [ bootstrapExistingConfigurationList := {} ]
+]
+
+{ #category : 'accessing' }
+GsuAbstractGsDevKit >> bootstrapExistingConfigurationList: configurationNames [
+	"formerly BootstrapExistingConfigurationList, list of configuration names that should be removed"
+
+	bootstrapExistingConfigurationList := configurationNames
 ]
 
 { #category : 'logging' }
@@ -88,4 +110,10 @@ GsuAbstractGsDevKit >> upgradeUserName [
 GsuAbstractGsDevKit >> upgradeUserName: aString [
 
 	upgradeUserName := aString
+]
+
+{ #category : 'accessing' }
+GsuAbstractGsDevKit >> upgradeUserProfile [
+
+	^ (AllUsers userWithId: self upgradeUserName)
 ]

@@ -26,8 +26,7 @@ Class {
 		'methodsWithPragmas',
 		'bootstrapPostLoadClassList',
 		'bootstrapRepositoryDirectory',
-		'bootstrapApplicationLoadSpecs',
-		'bootstrapExistingConfigurationList'
+		'bootstrapApplicationLoadSpecs'
 	],
 	#classVars : [
 		'TheSymbolDictionary'
@@ -144,12 +143,6 @@ GsuAbstractGsDevKitUpgrade >> _defaultTargetRelease [
 ]
 
 { #category : 'private' }
-GsuAbstractGsDevKitUpgrade >> _globalNamed: aString [
-
-	^ GsSession currentSession objectNamed: aString
-]
-
-{ #category : 'private' }
 GsuAbstractGsDevKitUpgrade >> _listUpgradeParameters [
 
 	^ #( bootstrapPostLoadClassList bootstrapApplicationLoadSpecs )
@@ -231,21 +224,6 @@ GsuAbstractGsDevKitUpgrade >> bootstrapApplicationLoadSpecs: loadSpecArray [
 	"formerly BootstrapApplicationLoadSpecs, bootstrap GLASS configuration name, version, load spec and directory path"
 
 	bootstrapApplicationLoadSpecs := loadSpecArray
-]
-
-{ #category : 'accessing' }
-GsuAbstractGsDevKitUpgrade >> bootstrapExistingConfigurationList [
-	"formerly BootstrapExistingConfigurationList, list of configuration names that should be removed"
-
-	^ bootstrapExistingConfigurationList
-		ifNil: [ bootstrapExistingConfigurationList := {} ]
-]
-
-{ #category : 'accessing' }
-GsuAbstractGsDevKitUpgrade >> bootstrapExistingConfigurationList: configurationNames [
-	"formerly BootstrapExistingConfigurationList, list of configuration names that should be removed"
-
-	bootstrapExistingConfigurationList := configurationNames
 ]
 
 { #category : 'bootstrapping' }
@@ -711,10 +689,4 @@ GsuAbstractGsDevKitUpgrade >> updateDBFHistoryStartUpgrade [
 	history add: Character lf.
 	(GsCurrentSession currentSession objectNamed:self upgradeSymbolDictName) at: #DbfSeasideHistory put: history.
 	self log: '	update dbf history for upgrade start'.
-]
-
-{ #category : 'accessing' }
-GsuAbstractGsDevKitUpgrade >> upgradeUserProfile [
-
-	^ (AllUsers userWithId: self upgradeUserName)
 ]

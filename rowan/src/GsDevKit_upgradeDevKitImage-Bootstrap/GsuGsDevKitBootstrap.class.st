@@ -17,6 +17,15 @@ GsuGsDevKitBootstrap class >> upgradeUserName: aString upgradeSymbolDictName: aS
 			yourself
 ]
 
+{ #category : 'private' }
+GsuGsDevKitBootstrap >> _bootstrap_class_removeFromSystem_patchSource [
+
+	^  'removeFromSystem
+  | ar |
+ar := System myUserProfile dictionaryAndSymbolOf: self.
+ar ifNotNil: [ (ar at: 1) removeKey: (ar at: 2) ].'
+]
+
 { #category : 'accessing' }
 GsuGsDevKitBootstrap >> bootstrapGemStoneRelease [
 
@@ -51,4 +60,25 @@ GsuGsDevKitBootstrap >> bootstrapGsDevkit [
 	self _currentUserGlobals at: #UndefinedSymbolList put: (SymbolList with: undef).
 
 	GsPackagePolicy current enable.
+
+	"patch Class>>removeFromSystem until upgrade is complete, will be repaired during load"
+	self log: '	patching patch Class>>removeFromSystem'.
+	Class
+		compileMethod: self _bootstrap_class_removeFromSystem_patchSource 
+		dictionaries: self upgradeUserProfile symbolList 
+		category: '*change-notification'.
+
+	"Remove the known list of Metacello configuration classes (they have had their
+		methods removed and need to be reloaded."
+	ClassOrganizer clearCachedOrganizer.
+	self log: '	removing configuration classes'.
+	self bootstrapExistingConfigurationList do: [:class | 
+		self log: '		', class name.
+		class removeFromSystem ].
+	self log: '	done removing configuration classes'.
+
+	"set the cache repository"
+	(self _globalNamed: 'MCCacheRepository') 
+		ifNotNil: [:mCCacheRepository | 
+			mCCacheRepository setDefault: (self _globalNamed: 'MCDictionaryRepository') new ].
 ]

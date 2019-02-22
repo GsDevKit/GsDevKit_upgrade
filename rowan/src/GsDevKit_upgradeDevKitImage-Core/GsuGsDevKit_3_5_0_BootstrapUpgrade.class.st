@@ -7,4 +7,6 @@ Class {
 { #category : 'initialization' }
 GsuGsDevKit_3_5_0_BootstrapUpgrade >> resolveForUpgrade [
 	"Receiver is already resolved"
+
+	self objectSecurityPolicy: self upgradeUserProfile defaultObjectSecurityPolicy
 ]

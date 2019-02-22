@@ -43,6 +43,10 @@ run
 				upgradeUserName: 'DataCurator'
 				upgradeSymbolDictName: #UserGlobals
 				sourceGemStoneRelease: (GsuAbstractGemStoneRelease major: 3 minor: 3 patch: 9))
+"
+				bootstrapExistingConfigurationList: #( ConfigurationOfGLASS1 );
+				yourself)
+"
 %
 commit
 

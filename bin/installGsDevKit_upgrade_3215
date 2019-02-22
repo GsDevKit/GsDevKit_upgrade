@@ -46,6 +46,7 @@ run
 			(GsuGsDevKit_3_5_0_Upgrade 
 				sourceGemStoneRelease: (GsuAbstractGemStoneRelease major: 3 minor: 2 patch: 15))
 "
+				bootstrapExistingConfigurationList: #( ConfigurationOfGLASS1 );
 				bootstrapPostLoadClassList: #( #SecureHashAlgorithm );
 				bootstrapRepositoryDirectory: GsPackageLibrary getMonticelloRepositoryDirectory;
 				yourself)

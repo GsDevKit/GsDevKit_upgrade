@@ -7,13 +7,13 @@ Class {
 { #category : 'private' }
 GsuGsDevKit_3_5_0_StdUpgrade >> _listUpgradeParameters [
 
-	^ #(  )
+	^ #( )
 ]
 
 { #category : 'private' }
 GsuGsDevKit_3_5_0_StdUpgrade >> _singletonUpgradeParameters [
 
-	^ #( upgradeUserName upgradeSymbolDictNam   )
+	^ #( upgradeUserName upgradeSymbolDictName )
 ]
 
 { #category : 'accessing' }
@@ -65,4 +65,6 @@ GsuGsDevKit_3_5_0_StdUpgrade >> prepareImage_user_clear_subscriptions [
 { #category : 'initialization' }
 GsuGsDevKit_3_5_0_StdUpgrade >> resolveForUpgrade [
 	"Receiver is already resolved"
+
+	self objectSecurityPolicy: self upgradeUserProfile defaultObjectSecurityPolicy
 ]

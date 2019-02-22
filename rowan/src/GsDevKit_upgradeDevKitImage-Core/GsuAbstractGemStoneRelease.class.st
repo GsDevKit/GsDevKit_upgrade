@@ -93,6 +93,22 @@ GsuAbstractGemStoneRelease >> prepareGsDevKitImage_enableSessionMethods:  aGsDev
 ]
 
 { #category : 'prepare gsdevkit image' }
+GsuAbstractGemStoneRelease >> prepareGsDevKitImage_existingConfigurationList:  aGsDevKitUpgrade [
+
+	aGsDevKitUpgrade log: 'Prepare gsdevkit - create existing configuration list'.
+	aGsDevKitUpgrade prepareGsDevKitImage_existingConfigurationList
+]
+
+{ #category : 'prepare gsdevkit image' }
+GsuAbstractGemStoneRelease >> prepareGsDevKitImage_patch45952:  aGsDevKitUpgrade [
+
+	"bug 45952 ... image/bootstrapMaster.topaz for 3.1.0.6 ignored BootstrapSymbolDictionaryName"
+
+	aGsDevKitUpgrade log: 'Prepare gsdevkit - patch bug 45952'.
+	aGsDevKitUpgrade prepareGsDevKitImage_patch45952
+]
+
+{ #category : 'prepare gsdevkit image' }
 GsuAbstractGemStoneRelease >> prepareGsDevKitImage_patch46217:  aGsDevKitUpgrade [
 
 	aGsDevKitUpgrade prepareGsDevKitImage_bug46217_patch

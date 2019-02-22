@@ -264,6 +264,21 @@ GsuAbstractGsDevKitUpgrade >> bootstrapApplicationLoadSpecs: loadSpecArray [
 ]
 
 { #category : 'accessing' }
+GsuAbstractGsDevKitUpgrade >> bootstrapExistingConfigurationList [
+	"formerly BootstrapExistingConfigurationList, list of configuration names that should be removed"
+
+	^ bootstrapExistingConfigurationList
+		ifNil: [ bootstrapExistingConfigurationList := {} ]
+]
+
+{ #category : 'accessing' }
+GsuAbstractGsDevKitUpgrade >> bootstrapExistingConfigurationList: configurationNames [
+	"formerly BootstrapExistingConfigurationList, list of configuration names that should be removed"
+
+	bootstrapExistingConfigurationList := configurationNames
+]
+
+{ #category : 'accessing' }
 GsuAbstractGsDevKitUpgrade >> bootstrapPostLoadClassList [
 	"formerly BootstrapApplicationPostloadClassList, list of classes that should not be initialized during bootstrap"
 
@@ -345,6 +360,8 @@ GsuAbstractGsDevKitUpgrade >> prepareGsDevKitImage [
 	self log: 'Prepare gsdevkit image'.
 	self updateDBFHistoryStartUpgrade.
 	self sourceGemStoneRelease
+		prepareGsDevKitImage_patch45952: self;
+		prepareGsDevKitImage_existingConfigurationList: self;
 		prepareGsDevKitImage_enableSessionMethods: self;
 		prepareGsDevKitImage_clearMonticelloCaches: self;
 		prepareGsDevKitImage_removeAllMethods: self;
@@ -426,6 +443,56 @@ GsuAbstractGsDevKitUpgrade >> prepareGsDevKitImage_enableSessionMethods [
 	GsPackagePolicy current refreshSessionMethodDictionary. "no persistent state modified"
 
 	self log: '	session methods enambled (commit)'.
+]
+
+{ #category : 'prepare gsdevkit  image' }
+GsuAbstractGsDevKitUpgrade >> prepareGsDevKitImage_existingConfigurationList [
+
+	"Generate list of loaded configuration classes to be removed"
+
+	self bootstrapExistingConfigurationList isEmpty ifFalse: [ "already set" ^ self ].
+	self log: '	create existing configuration list (commit)'.
+
+   self upgradeSymbolDict associationsDo: [:assoc |
+	   assoc value isBehavior
+		   ifTrue: [
+			   (assoc key asString _findString: 'ConfigurationOf' startingAt: 1 ignoreCase: false) == 1 
+				  ifTrue: [
+					  self log: '		', assoc key asString.
+					  self bootstrapExistingConfigurationList add: assoc value ] ] ].
+	System commit.
+]
+
+{ #category : 'prepare gsdevkit  image' }
+GsuAbstractGsDevKitUpgrade >> prepareGsDevKitImage_patch45952 [
+
+	"bug 45952 ... image/bootstrapMaster.topaz for 3.1.0.6 ignored BootstrapSymbolDictionaryName"
+
+	| ug |
+	ug := self _currentUserGlobals.
+	self upgradeSymbolDict == ug 
+		ifTrue: [ 
+			"not exposed to bug"
+			^ self ].
+	self upgradeSymbolDict size > 1
+		ifTrue: [
+			"not exposed to bug"
+			^ self ].
+	self 
+		log: '	BootstrapSymbolDictionary ignored during initial bootstrap of GLASS into non-UserGlobals SymbolDictionary.';
+		log: '	Transferring Behaviors from UserGlobals to ', self upgradeSymbolDictName printString;
+		log: '		BEFORE upgrading seaside image.'.
+	ug keys
+	  do: [ :key | 
+		| assoc |
+		assoc := ug associationAt: key.
+		assoc value isBehavior
+		  ifTrue: [ 
+			self upgradeSymbolDict addAssociation: assoc.
+			ug removeAssociation: assoc ].
+		self log: '	', key asString.
+		System commit ].
+	self log: '--- (commit)'
 ]
 
 { #category : 'prepare gsdevkit  image' }

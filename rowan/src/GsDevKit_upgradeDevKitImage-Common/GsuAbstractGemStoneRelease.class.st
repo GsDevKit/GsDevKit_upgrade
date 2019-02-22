@@ -43,6 +43,14 @@ GsuAbstractGemStoneRelease class >> major: major minor: minor patch: patch [
 		yourself
 ]
 
+{ #category : 'bootstrapping' }
+GsuAbstractGemStoneRelease >> bootstrapPackageFileNames [
+
+	"answer an ordered list of the Monticello packages that are needed to bootstrap GsDevKit/GLASS into image"
+
+	self subclassResponsibility: #bootstrapPackageFileNames
+]
+
 { #category : 'accessing' }
 GsuAbstractGemStoneRelease >> major [
 

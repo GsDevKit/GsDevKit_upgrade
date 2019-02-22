@@ -122,8 +122,8 @@ GsuGsDevKitBootstrap >> bootstrapMaster [
 	self bootstrapGemStoneRelease bootstrapPackageFileNames do: [:bootstrapPackageFileName |
 		GsPackageLibrary 
 			loadMCZFile: bootstrapPackageFileName
-			home: self upgradeSymbolDict
-			fromRepositoryPath: 'BootstrapRepositoryDirectory' ].
+			home: self upgradeSymbolDictName
+			fromRepositoryPath: self bootstrapRepositoryDirectory ].
 
 
 

@@ -106,6 +106,12 @@ GsuAbstractGsDevKitUpgrade class >> upgradeUserName: aString upgradeSymbolDictNa
 ]
 
 { #category : 'private' }
+GsuAbstractGsDevKitUpgrade >> _bootstrapRelease [
+
+	self subclassResponsibility: #_bootstrapRelease
+]
+
+{ #category : 'private' }
 GsuAbstractGsDevKitUpgrade >> _defaultBootstrapApplicationLoadSpecs [
 	"formerly BootstrapApplicationLoadSpecs, bootstrap GLASS configuration name, version, load spec and directory path"
 
@@ -251,7 +257,8 @@ GsuAbstractGsDevKitUpgrade >> bootstrapGsDevkit [
 
 	(GsuGsDevKitBootstrap
 		upgradeUserName: self upgradeUserName
-			upgradeSymbolDictName: self upgradeSymbolDictName) bootstrapGsDevkit
+			upgradeSymbolDictName: self upgradeSymbolDictName
+			bootstrapGemStoneRelease: self _bootstrapRelease) bootstrapGsDevkit
 ]
 
 { #category : 'accessing' }

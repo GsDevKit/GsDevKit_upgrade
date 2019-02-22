@@ -1,8 +1,33 @@
 Class {
 	#name : 'GsuGsDevKitBootstrap',
 	#superclass : 'GsuAbstractGsDevKit',
+	#instVars : [
+		'bootstrapGemStoneRelease'
+	],
 	#category : 'GsDevKit_upgradeDevKitImage-Bootstrap'
 }
+
+{ #category : 'instance creation' }
+GsuGsDevKitBootstrap class >> upgradeUserName: aString upgradeSymbolDictName: aSymbol bootstrapGemStoneRelease: bootstrapRelease [
+
+	^ (self
+			upgradeUserName: aString
+				upgradeSymbolDictName: aSymbol)
+			bootstrapGemStoneRelease: bootstrapRelease;
+			yourself
+]
+
+{ #category : 'accessing' }
+GsuGsDevKitBootstrap >> bootstrapGemStoneRelease [
+
+	^ bootstrapGemStoneRelease
+]
+
+{ #category : 'accessing' }
+GsuGsDevKitBootstrap >> bootstrapGemStoneRelease: aGsuAbstractGemStoneRelease [
+
+	^ bootstrapGemStoneRelease := aGsuAbstractGemStoneRelease
+]
 
 { #category : 'bootstrapping' }
 GsuGsDevKitBootstrap >> bootstrapGsDevkit [

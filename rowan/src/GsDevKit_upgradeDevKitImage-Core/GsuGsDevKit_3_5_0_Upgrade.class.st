@@ -5,9 +5,21 @@ Class {
 }
 
 { #category : 'private' }
+GsuGsDevKit_3_5_0_Upgrade >> _bootstrapRelease [
+
+	^ GsuGemStone_3_5_x_Release major: 3 minor: 5 patch: self _patchRelease
+]
+
+{ #category : 'private' }
 GsuGsDevKit_3_5_0_Upgrade >> _defaultTargetRelease [
 
 	^ GsuGemStone_3_5_x_Release major: 3 minor: 5
+]
+
+{ #category : 'private' }
+GsuGsDevKit_3_5_0_Upgrade >> _patchRelease [
+
+	^ 0
 ]
 
 { #category : 'private' }

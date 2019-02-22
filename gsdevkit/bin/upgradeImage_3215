@@ -1,0 +1,31 @@
+set -ex
+. defStone.env
+export vers="3.5.0_g"
+
+rm -f *.log *.out
+
+sourceStoneName="battery_3215"
+stopStone $sourceStoneName
+stopStone $GEMSTONE_NAME
+
+rm -rf $GS_HOME/server/stones/${GEMSTONE_NAME}/extents/extent0.dbf
+rm -rf $GS_HOME/server/stones/${GEMSTONE_NAME}/tranlogs/tranlog*.dbf
+
+newExtent -n -s $GS_HOME/server/stones/${sourceStoneName}/product/bin/extent0.seaside.dbf $GEMSTONE_NAME
+
+export upgradeLogDir=`pwd`/upgradeLogDir
+
+startStone -b -w 5 $GEMSTONE_NAME
+
+pushd "${upgradeLogDir}" >& /dev/null
+  # start standard upgrade
+  echo "STARTING standard upgradeImage "
+  "$GEMSTONE/bin/upgradeImage" -s $GEMSTONE_NAME << EOF
+  
+EOF
+
+popd
+
+stopStone $GEMSTONE_NAME
+cp extents/extent0.dbf snapshots/extent0_upgradeImage_3215.dbf
+

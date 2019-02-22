@@ -56,19 +56,18 @@ GsuGsDevKit_3_5_0_StdUpgrade >> prepareGsDevKitImage_recompilePragmaMethods [
 	| recompileBlock |
 	self log: 'Prepare gsdevkit - recompile pragma methods'.
 	recompileBlock := [:meth |
-		| cls categ src litVars |
-			cls := meth inClass.
-			src := meth sourceString.
-			litVars := meth _literalVariablesForRecompile.
+		| cls categ src |
+		cls := meth inClass.
+		src := meth sourceString.
 		categ := cls categoryOfSelector: meth selector.
 		cls
-		_checkCompileResult:
-		  (cls
-			compileMethod: src 
-			dictionaries: System myUserProfile symbolList 
-			category: categ 
-			environmentId: 0)
-		source: src].
+			_checkCompileResult:
+				(cls
+					compileMethod: src 
+					dictionaries: System myUserProfile symbolList 
+					category: categ 
+					environmentId: 0)
+			source: src ].
 	self log: '	recompiling method referencing ObsoletePragma...'.
 	(ClassOrganizer new referencesToObject: (ObsoleteClasses at: #ObsoletePragma))
 		do: [:method |

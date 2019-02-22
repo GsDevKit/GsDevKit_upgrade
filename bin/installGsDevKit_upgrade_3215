@@ -29,7 +29,7 @@ run
 	codeLibrarian new
 		symbolDictName: dictName;
 		repository: 'tonel:$ROWAN_PROJECTS_HOME/GsDevKit_upgradeDevKitImage/rowan/src/';
-		load: #('GsDevKit_upgradeDevKitImage-Core').
+		load: #('GsDevKit_upgradeDevKitImage-Common' 'GsDevKit_upgradeDevKitImage-Bootstrap' 'GsDevKit_upgradeDevKitImage-Core').
 	(symbolList objectNamed: 'GsuAbstractGsDevKitUpgrade') _symbolDictionary: symbolDict.
 	true
 %

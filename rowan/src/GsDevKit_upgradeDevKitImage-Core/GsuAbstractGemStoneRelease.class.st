@@ -80,6 +80,12 @@ GsuAbstractGemStoneRelease >> patch: anInteger [
 ]
 
 { #category : 'prepare gsdevkit image' }
+GsuAbstractGemStoneRelease >> prepareGsDevKitImage_bootstrapGsDevkit:  aGsDevKitUpgrade [
+
+	aGsDevKitUpgrade prepareGsDevKitImage_bootstrapGsDevkit
+]
+
+{ #category : 'prepare gsdevkit image' }
 GsuAbstractGemStoneRelease >> prepareGsDevKitImage_clearMonticelloCaches:  aGsDevKitUpgrade [
 
 	aGsDevKitUpgrade prepareGsDevKitImage_clearMonticelloCaches

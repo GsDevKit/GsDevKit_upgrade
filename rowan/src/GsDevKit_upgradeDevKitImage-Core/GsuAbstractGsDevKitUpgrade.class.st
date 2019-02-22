@@ -19,14 +19,11 @@ There are three basic phases of thed GsDevKit/GLASS upgrade process:
 "
 Class {
 	#name : 'GsuAbstractGsDevKitUpgrade',
-	#superclass : 'Object',
+	#superclass : 'GsuAbstractGsDevKit',
 	#instVars : [
-		'upgradeUserName',
 		'sourceGemStoneRelease',
 		'targetGemStoneRelease',
 		'methodsWithPragmas',
-		'upgradeSymbolDict',
-		'upgradeSymbolDictName',
 		'bootstrapPostLoadClassList',
 		'bootstrapRepositoryDirectory',
 		'bootstrapApplicationLoadSpecs',
@@ -278,6 +275,30 @@ GsuAbstractGsDevKitUpgrade >> bootstrapExistingConfigurationList: configurationN
 	bootstrapExistingConfigurationList := configurationNames
 ]
 
+{ #category : 'bootstrapping' }
+GsuAbstractGsDevKitUpgrade >> bootstrapGsDevkit [
+
+	"install GsdevKit from scratch"
+
+	"used to create extent0.seaside.dbf"
+
+	| undef |
+	self log: '	bootstrap GsdevKit'.
+
+	"Bug 46217 - during bootstrap don't remove any classes.
+		during initial bootstrap no classes will be removed
+		during upgrade unexpected classes should not be removed during the
+		bootstrap operation"
+	self _currentUserGlobals at: #'GS_BOOTSTRAP_MONTICELLO_SKIP_REMOVE_CLASS' put: true.
+
+	undef := SymbolDictionary new.
+	undef name: #UndefinedSymbols.
+	self _currentUserGlobals at: #UndefinedSymbols put: undef.
+	self _currentUserGlobals at: #UndefinedSymbolList put: (SymbolList with: undef).
+
+	GsPackagePolicy current enable.
+]
+
 { #category : 'accessing' }
 GsuAbstractGsDevKitUpgrade >> bootstrapPostLoadClassList [
 	"formerly BootstrapApplicationPostloadClassList, list of classes that should not be initialized during bootstrap"
@@ -367,8 +388,19 @@ GsuAbstractGsDevKitUpgrade >> prepareGsDevKitImage [
 		prepareGsDevKitImage_removeAllMethods: self;
 		prepareGsDevKitImage_patch46217: self;
 		prepareGsDevKitImage_recompilePragmaMethods: self;
+		prepareGsDevKitImage_bootstrapGsDevkit: self;
 		yourself.
 	self bannerLogDash
+]
+
+{ #category : 'prepare gsdevkit  image' }
+GsuAbstractGsDevKitUpgrade >> prepareGsDevKitImage_bootstrapGsDevkit [
+
+	"install GsdevKit from scratch"
+
+	self log: 'Prepare gsdevkit - bootstrap GsdevKit'.
+
+	self bootstrapGsDevkit
 ]
 
 { #category : 'prepare gsdevkit  image' }
@@ -724,39 +756,6 @@ GsuAbstractGsDevKitUpgrade >> updateDBFHistoryStartUpgrade [
 	history add: Character lf.
 	(GsCurrentSession currentSession objectNamed:self upgradeSymbolDictName) at: #DbfSeasideHistory put: history.
 	self log: '	update dbf history for upgrade start'.
-]
-
-{ #category : 'accessing' }
-GsuAbstractGsDevKitUpgrade >> upgradeSymbolDict [
-	"Formerly known as BootstrapSymbolDictionary ... the symbol dictionary where GsDevKit/GLASS is installed"
-
-	^ upgradeSymbolDict ifNil: [ upgradeSymbolDict:= (AllUsers userWithId: self upgradeUserName) symbolList objectNamed: self upgradeSymbolDictName ]
-]
-
-{ #category : 'accessing' }
-GsuAbstractGsDevKitUpgrade >> upgradeSymbolDictName [
-	"Formerly known as BootstrapSymbolDictionaryName ... the name of the symbol dictionary where GsDevKit/GLASS is installed"
-
-	^ upgradeSymbolDictName ifNil: [ #UserGlobals ]
-]
-
-{ #category : 'accessing' }
-GsuAbstractGsDevKitUpgrade >> upgradeSymbolDictName: aSymbol [
-	"Formerly known as BootstrapSymbolDictionaryName ... the name of the symbol dictionary where GsDevKit/GLASS is installed"
-
-	^ upgradeSymbolDictName := aSymbol
-]
-
-{ #category : 'accessing' }
-GsuAbstractGsDevKitUpgrade >> upgradeUserName [
-
-	^ upgradeUserName ifNil: [ upgradeUserName := self _gemstone_user ]
-]
-
-{ #category : 'accessing' }
-GsuAbstractGsDevKitUpgrade >> upgradeUserName: aString [
-
-	upgradeUserName := aString
 ]
 
 { #category : 'accessing' }

@@ -28,6 +28,14 @@ GsuGsDevKit_3_5_0_StdUpgrade >> buildString [
 ]
 
 { #category : 'prepare gsdevkit  image' }
+GsuGsDevKit_3_5_0_StdUpgrade >> prepareGsDevKitImage_bootstrapGsDevkit [
+
+	"install GsdevKit from scratch"
+
+	"noop for standard upgrade"
+]
+
+{ #category : 'prepare gsdevkit  image' }
 GsuGsDevKit_3_5_0_StdUpgrade >> prepareGsDevKitImage_bug46217_patch [
 
 	"Bug 46217 - during bootstrap don''t remove any classes.

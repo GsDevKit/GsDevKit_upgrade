@@ -26,6 +26,13 @@ ar := System myUserProfile dictionaryAndSymbolOf: self.
 ar ifNotNil: [ (ar at: 1) removeKey: (ar at: 2) ].'
 ]
 
+{ #category : 'private' }
+GsuGsDevKitBootstrap >> _bootstrap_positionableStream_original_contents_patchSource [
+
+	^  'originalContents
+	"Answer the receiver''s actual contents collection, NOT a copy. 1/29/96 sw"'
+]
+
 { #category : 'accessing' }
 GsuGsDevKitBootstrap >> bootstrapGemStoneRelease [
 
@@ -45,8 +52,7 @@ GsuGsDevKitBootstrap >> bootstrapGsDevkit [
 
 	"used to create extent0.seaside.dbf"
 
-	| undef |
-	self log: '	bootstrap GsdevKit'.
+	self log: '	bootstrap GsDevKit'.
 
 	"Bug 46217 - during bootstrap don't remove any classes.
 		during initial bootstrap no classes will be removed
@@ -54,12 +60,11 @@ GsuGsDevKitBootstrap >> bootstrapGsDevkit [
 		bootstrap operation"
 	self _currentUserGlobals at: #'GS_BOOTSTRAP_MONTICELLO_SKIP_REMOVE_CLASS' put: true.
 
-	undef := SymbolDictionary new.
-	undef name: #UndefinedSymbols.
-	self _currentUserGlobals at: #UndefinedSymbols put: undef.
-	self _currentUserGlobals at: #UndefinedSymbolList put: (SymbolList with: undef).
+	self bootstrapMaster.
+	self patchMaster.
 
-	GsPackagePolicy current enable.
+	"Bug 46217"
+	self _currentUserGlobals  removeKey: #'GS_BOOTSTRAP_MONTICELLO_SKIP_REMOVE_CLASS' ifAbsent: [].
 
 	"patch Class>>removeFromSystem until upgrade is complete, will be repaired during load"
 	self log: '	patching patch Class>>removeFromSystem'.
@@ -81,4 +86,54 @@ GsuGsDevKitBootstrap >> bootstrapGsDevkit [
 	(self _globalNamed: 'MCCacheRepository') 
 		ifNotNil: [:mCCacheRepository | 
 			mCCacheRepository setDefault: (self _globalNamed: 'MCDictionaryRepository') new ].
+
+
+
+
+
+
+	self log: '	... done bootstrap GsdevKit'.
+]
+
+{ #category : 'bootstrapping' }
+GsuGsDevKitBootstrap >> bootstrapMaster [
+	"formerly $upgradeDir/bootstrapMaster30.topaz"
+
+	| undef |
+	self log: '	bootstrap master'.
+
+	undef := SymbolDictionary new.
+	undef name: #UndefinedSymbols.
+	self _currentUserGlobals at: #UndefinedSymbols put: undef.
+	self _currentUserGlobals at: #UndefinedSymbolList put: (SymbolList with: undef).
+
+	GsPackagePolicy current enable.
+
+	"Patch for bug 44262"
+	GsPackageLibrary 
+	  installMonticelloPackagesHome: self upgradeSymbolDict
+	  during: [:ignored |
+		"put PositionableStream>>originalContents in session methods"
+		PositionableStream 
+		  compileMethod: self _bootstrap_positionableStream_original_contents_patchSource 
+		  dictionaries: GsCurrentSession currentSession symbolList 
+		  category: '*squeak'].
+
+	self bootstrapGemStoneRelease bootstrapPackageFileNames do: [:bootstrapPackageFileName |
+		GsPackageLibrary 
+			loadMCZFile: bootstrapPackageFileName
+			home: self upgradeSymbolDict
+			fromRepositoryPath: 'BootstrapRepositoryDirectory' ].
+
+
+
+	self log: '	... done bootstrap master'.
+]
+
+{ #category : 'bootstrapping' }
+GsuGsDevKitBootstrap >> patchMaster [
+	"formerly $upgradeDir/patchMaster30.topaz"
+
+	self log: '	patch master'.
+	self log: '	... done patch master'.
 ]

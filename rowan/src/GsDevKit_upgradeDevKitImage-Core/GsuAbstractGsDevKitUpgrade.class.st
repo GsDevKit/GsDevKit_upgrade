@@ -23,10 +23,7 @@ Class {
 	#instVars : [
 		'sourceGemStoneRelease',
 		'targetGemStoneRelease',
-		'methodsWithPragmas',
-		'bootstrapPostLoadClassList',
-		'bootstrapRepositoryDirectory',
-		'bootstrapApplicationLoadSpecs'
+		'methodsWithPragmas'
 	],
 	#classVars : [
 		'TheSymbolDictionary'
@@ -111,32 +108,6 @@ GsuAbstractGsDevKitUpgrade >> _bootstrapRelease [
 ]
 
 { #category : 'private' }
-GsuAbstractGsDevKitUpgrade >> _defaultBootstrapApplicationLoadSpecs [
-	"formerly BootstrapApplicationLoadSpecs, bootstrap GLASS configuration name, version, load spec and directory path"
-
-	^ {
-		'ConfigurationOfGLASS'. 
-		'1.0-beta.9.2.2'. 
-		#('default'). 
-		nil.	"nill - use bootstrapRepositoryDirectory"
-	}
-]
-
-{ #category : 'private' }
-GsuAbstractGsDevKitUpgrade >> _defaultBootstrapPostLoadClassList [
-	"formerly BootstrapApplicationPostloadClassList, list of classes that should not be initialized during bootstrap"
-
-	^ #( #SecureHashAlgorithm #MCFileTreeFileDirectoryUtils )
-]
-
-{ #category : 'private' }
-GsuAbstractGsDevKitUpgrade >> _defaultBootstrapRepositoryDirectory [
-	"formerly BootstrapRepositoryDirectory, location of Monticello bootstrap directory"
-
-	^ GsPackageLibrary getMonticelloRepositoryDirectory
-]
-
-{ #category : 'private' }
 GsuAbstractGsDevKitUpgrade >> _defaultTargetRelease [
 
 	self subclassResponsibility: #_defaultTargetRelease
@@ -211,21 +182,6 @@ GsuAbstractGsDevKitUpgrade >> _singletonUpgradeParameters [
 	^ #( upgradeUserName upgradeSymbolDictName bootstrapRepositoryDirectory )
 ]
 
-{ #category : 'accessing' }
-GsuAbstractGsDevKitUpgrade >> bootstrapApplicationLoadSpecs [
-	"formerly BootstrapApplicationLoadSpecs, bootstrap GLASS configuration name, version, load spec and directory path"
-
-	^ bootstrapApplicationLoadSpecs
-		ifNil: [ bootstrapApplicationLoadSpecs := self _defaultBootstrapApplicationLoadSpecs ]
-]
-
-{ #category : 'accessing' }
-GsuAbstractGsDevKitUpgrade >> bootstrapApplicationLoadSpecs: loadSpecArray [
-	"formerly BootstrapApplicationLoadSpecs, bootstrap GLASS configuration name, version, load spec and directory path"
-
-	bootstrapApplicationLoadSpecs := loadSpecArray
-]
-
 { #category : 'bootstrapping' }
 GsuAbstractGsDevKitUpgrade >> bootstrapGsDevkit [
 
@@ -236,39 +192,12 @@ GsuAbstractGsDevKitUpgrade >> bootstrapGsDevkit [
 	(GsuGsDevKitBootstrap
 		upgradeUserName: self upgradeUserName
 			upgradeSymbolDictName: self upgradeSymbolDictName
-			bootstrapGemStoneRelease: self _bootstrapRelease) bootstrapGsDevkit
-]
-
-{ #category : 'accessing' }
-GsuAbstractGsDevKitUpgrade >> bootstrapPostLoadClassList [
-	"formerly BootstrapApplicationPostloadClassList, list of classes that should not be initialized during bootstrap"
-
-	^ bootstrapPostLoadClassList
-		ifNil: [ bootstrapPostLoadClassList := self _defaultBootstrapPostLoadClassList ]
-]
-
-{ #category : 'accessing' }
-GsuAbstractGsDevKitUpgrade >> bootstrapPostLoadClassList: aListOfClassNameSymbols [
-	"formerly BootstrapApplicationPostloadClassList, list of application classes that should not be initialized during bootstrap"
-
-	"make sure that the _default list are included ... they are required"
-
-	bootstrapPostLoadClassList := ( aListOfClassNameSymbols, self _defaultBootstrapPostLoadClassList) asIdentitySet asArray
-]
-
-{ #category : 'accessing' }
-GsuAbstractGsDevKitUpgrade >> bootstrapRepositoryDirectory [
-	"formerly BootstrapRepositoryDirectory, location of Monticello bootstrap directory"
-
-	^ bootstrapRepositoryDirectory
-		ifNil: [ bootstrapRepositoryDirectory := self _defaultBootstrapRepositoryDirectory ]
-]
-
-{ #category : 'accessing' }
-GsuAbstractGsDevKitUpgrade >> bootstrapRepositoryDirectory: directoryPath [
-	"formerly BootstrapRepositoryDirectory, location of Monticello bootstrap directory"
-
-	bootstrapRepositoryDirectory := directoryPath
+			bootstrapGemStoneRelease: self _bootstrapRelease)
+		bootstrapPostLoadClassList: self bootstrapPostLoadClassList;
+		bootstrapRepositoryDirectory: self bootstrapRepositoryDirectory;
+		bootstrapApplicationLoadSpecs: self bootstrapApplicationLoadSpecs; 
+		bootstrapExistingConfigurationList: self bootstrapExistingConfigurationList;
+		bootstrapGsDevkit
 ]
 
 { #category : 'accessing' }

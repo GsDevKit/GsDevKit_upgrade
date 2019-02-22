@@ -5,6 +5,9 @@ Class {
 		'upgradeUserName',
 		'upgradeSymbolDict',
 		'upgradeSymbolDictName',
+		'bootstrapPostLoadClassList',
+		'bootstrapRepositoryDirectory',
+		'bootstrapApplicationLoadSpecs',
 		'bootstrapExistingConfigurationList'
 	],
 	#category : 'GsDevKit_upgradeDevKitImage-Common'
@@ -30,6 +33,32 @@ GsuAbstractGsDevKit class >> upgradeUserName: aString upgradeSymbolDictName: aSy
 GsuAbstractGsDevKit >> _currentUserGlobals [
 
 	^ GsSession currentSession objectNamed: #UserGlobals
+]
+
+{ #category : 'private' }
+GsuAbstractGsDevKit >> _defaultBootstrapApplicationLoadSpecs [
+	"formerly BootstrapApplicationLoadSpecs, bootstrap GLASS configuration name, version, load spec and directory path"
+
+	^ {
+		'ConfigurationOfGLASS'. 
+		'1.0-beta.9.2.2'. 
+		#('default'). 
+		nil.	"nill - use bootstrapRepositoryDirectory"
+	}
+]
+
+{ #category : 'private' }
+GsuAbstractGsDevKit >> _defaultBootstrapPostLoadClassList [
+	"formerly BootstrapApplicationPostloadClassList, list of classes that should not be initialized during bootstrap"
+
+	^ #( #SecureHashAlgorithm #MCFileTreeFileDirectoryUtils )
+]
+
+{ #category : 'private' }
+GsuAbstractGsDevKit >> _defaultBootstrapRepositoryDirectory [
+	"formerly BootstrapRepositoryDirectory, location of Monticello bootstrap directory"
+
+	^ GsPackageLibrary getMonticelloRepositoryDirectory
 ]
 
 { #category : 'private' }
@@ -59,6 +88,21 @@ GsuAbstractGsDevKit >> bannerLogDash [
 ]
 
 { #category : 'accessing' }
+GsuAbstractGsDevKit >> bootstrapApplicationLoadSpecs [
+	"formerly BootstrapApplicationLoadSpecs, bootstrap GLASS configuration name, version, load spec and directory path"
+
+	^ bootstrapApplicationLoadSpecs
+		ifNil: [ bootstrapApplicationLoadSpecs := self _defaultBootstrapApplicationLoadSpecs ]
+]
+
+{ #category : 'accessing' }
+GsuAbstractGsDevKit >> bootstrapApplicationLoadSpecs: loadSpecArray [
+	"formerly BootstrapApplicationLoadSpecs, bootstrap GLASS configuration name, version, load spec and directory path"
+
+	bootstrapApplicationLoadSpecs := loadSpecArray
+]
+
+{ #category : 'accessing' }
 GsuAbstractGsDevKit >> bootstrapExistingConfigurationList [
 	"formerly BootstrapExistingConfigurationList, list of configuration names that should be removed"
 
@@ -71,6 +115,38 @@ GsuAbstractGsDevKit >> bootstrapExistingConfigurationList: configurationNames [
 	"formerly BootstrapExistingConfigurationList, list of configuration names that should be removed"
 
 	bootstrapExistingConfigurationList := configurationNames
+]
+
+{ #category : 'accessing' }
+GsuAbstractGsDevKit >> bootstrapPostLoadClassList [
+	"formerly BootstrapApplicationPostloadClassList, list of classes that should not be initialized during bootstrap"
+
+	^ bootstrapPostLoadClassList
+		ifNil: [ bootstrapPostLoadClassList := self _defaultBootstrapPostLoadClassList ]
+]
+
+{ #category : 'accessing' }
+GsuAbstractGsDevKit >> bootstrapPostLoadClassList: aListOfClassNameSymbols [
+	"formerly BootstrapApplicationPostloadClassList, list of application classes that should not be initialized during bootstrap"
+
+	"make sure that the _default list are included ... they are required"
+
+	bootstrapPostLoadClassList := ( aListOfClassNameSymbols, self _defaultBootstrapPostLoadClassList) asIdentitySet asArray
+]
+
+{ #category : 'accessing' }
+GsuAbstractGsDevKit >> bootstrapRepositoryDirectory [
+	"formerly BootstrapRepositoryDirectory, location of Monticello bootstrap directory"
+
+	^ bootstrapRepositoryDirectory
+		ifNil: [ bootstrapRepositoryDirectory := self _defaultBootstrapRepositoryDirectory ]
+]
+
+{ #category : 'accessing' }
+GsuAbstractGsDevKit >> bootstrapRepositoryDirectory: directoryPath [
+	"formerly BootstrapRepositoryDirectory, location of Monticello bootstrap directory"
+
+	bootstrapRepositoryDirectory := directoryPath
 ]
 
 { #category : 'logging' }

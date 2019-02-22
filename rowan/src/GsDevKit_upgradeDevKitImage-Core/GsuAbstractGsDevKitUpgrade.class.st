@@ -77,13 +77,6 @@ GsuAbstractGsDevKitUpgrade class >> _symbolDictionary: aSymbolDictionary [
 	TheSymbolDictionary:= aSymbolDictionary
 ]
 
-{ #category : 'accessing' }
-GsuAbstractGsDevKitUpgrade class >> gemstone_user [
-
-	^ (System gemEnvironmentVariable: 'GEMSTONE_USER')
-		ifNil: [ 'DataCurator' ]
-]
-
 { #category : 'instance creation' }
 GsuAbstractGsDevKitUpgrade class >> sourceGemStoneRelease: sourceRelease [
 
@@ -105,17 +98,11 @@ GsuAbstractGsDevKitUpgrade class >> upgradeUserName: aString sourceGemStoneRelea
 { #category : 'instance creation' }
 GsuAbstractGsDevKitUpgrade class >> upgradeUserName: aString upgradeSymbolDictName: aSymbol sourceGemStoneRelease: sourceRelease [
 
-	^ self new
-		upgradeUserName: aString;
-		sourceGemStoneRelease: sourceRelease;
-		upgradeSymbolDictName: aSymbol;
-		resolveForUpgrade
-]
-
-{ #category : 'private' }
-GsuAbstractGsDevKitUpgrade >> _currentUserGlobals [
-
-	^ GsSession currentSession objectNamed: #UserGlobals
+	^ (self
+			upgradeUserName: aString
+				upgradeSymbolDictName: aSymbol)
+			sourceGemStoneRelease: sourceRelease;
+			resolveForUpgrade
 ]
 
 { #category : 'private' }
@@ -148,12 +135,6 @@ GsuAbstractGsDevKitUpgrade >> _defaultBootstrapRepositoryDirectory [
 GsuAbstractGsDevKitUpgrade >> _defaultTargetRelease [
 
 	self subclassResponsibility: #_defaultTargetRelease
-]
-
-{ #category : 'private' }
-GsuAbstractGsDevKitUpgrade >> _gemstone_user [
-
-	^ self class gemstone_user
 ]
 
 { #category : 'private' }
@@ -231,20 +212,6 @@ GsuAbstractGsDevKitUpgrade >> _singletonUpgradeParameters [
 	^ #( upgradeUserName upgradeSymbolDictName bootstrapRepositoryDirectory )
 ]
 
-{ #category : 'logging' }
-GsuAbstractGsDevKitUpgrade >> bannerLog: aString [
-
-	self bannerLogDash.
-	self log: aString.
-	self bannerLogDash.
-]
-
-{ #category : 'logging' }
-GsuAbstractGsDevKitUpgrade >> bannerLogDash [
-
-	self log: '--------------------'.
-]
-
 { #category : 'accessing' }
 GsuAbstractGsDevKitUpgrade >> bootstrapApplicationLoadSpecs [
 	"formerly BootstrapApplicationLoadSpecs, bootstrap GLASS configuration name, version, load spec and directory path"
@@ -282,21 +249,9 @@ GsuAbstractGsDevKitUpgrade >> bootstrapGsDevkit [
 
 	"used to create extent0.seaside.dbf"
 
-	| undef |
-	self log: '	bootstrap GsdevKit'.
-
-	"Bug 46217 - during bootstrap don't remove any classes.
-		during initial bootstrap no classes will be removed
-		during upgrade unexpected classes should not be removed during the
-		bootstrap operation"
-	self _currentUserGlobals at: #'GS_BOOTSTRAP_MONTICELLO_SKIP_REMOVE_CLASS' put: true.
-
-	undef := SymbolDictionary new.
-	undef name: #UndefinedSymbols.
-	self _currentUserGlobals at: #UndefinedSymbols put: undef.
-	self _currentUserGlobals at: #UndefinedSymbolList put: (SymbolList with: undef).
-
-	GsPackagePolicy current enable.
+	(GsuGsDevKitBootstrap
+		upgradeUserName: self upgradeUserName
+			upgradeSymbolDictName: self upgradeSymbolDictName) bootstrapGsDevkit
 ]
 
 { #category : 'accessing' }
@@ -340,13 +295,6 @@ GsuAbstractGsDevKitUpgrade >> buildString [
 	"
 
 	^ 'Bootstrap'
-]
-
-{ #category : 'logging' }
-GsuAbstractGsDevKitUpgrade >> log: aString [
-	"append LF to aString"
-
-	GsFile gciLogServer: aString
 ]
 
 { #category : 'logging' }

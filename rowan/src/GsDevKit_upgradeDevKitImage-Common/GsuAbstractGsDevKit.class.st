@@ -10,6 +10,54 @@ Class {
 }
 
 { #category : 'accessing' }
+GsuAbstractGsDevKit class >> gemstone_user [
+
+	^ (System gemEnvironmentVariable: 'GEMSTONE_USER')
+		ifNil: [ 'DataCurator' ]
+]
+
+{ #category : 'instance creation' }
+GsuAbstractGsDevKit class >> upgradeUserName: aString upgradeSymbolDictName: aSymbol [
+
+	^ self new
+		upgradeUserName: aString;
+		upgradeSymbolDictName: aSymbol;
+		yourself
+]
+
+{ #category : 'private' }
+GsuAbstractGsDevKit >> _currentUserGlobals [
+
+	^ GsSession currentSession objectNamed: #UserGlobals
+]
+
+{ #category : 'private' }
+GsuAbstractGsDevKit >> _gemstone_user [
+
+	^ self class gemstone_user
+]
+
+{ #category : 'logging' }
+GsuAbstractGsDevKit >> bannerLog: aString [
+
+	self bannerLogDash.
+	self log: aString.
+	self bannerLogDash.
+]
+
+{ #category : 'logging' }
+GsuAbstractGsDevKit >> bannerLogDash [
+
+	self log: '--------------------'.
+]
+
+{ #category : 'logging' }
+GsuAbstractGsDevKit >> log: aString [
+
+	GsFile gciLogServer: aString
+]
+
+{ #category : 'accessing' }
 GsuAbstractGsDevKit >> upgradeSymbolDict [
 	"Formerly known as BootstrapSymbolDictionary ... the symbol dictionary where GsDevKit/GLASS is installed"
 

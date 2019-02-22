@@ -115,6 +115,13 @@ GsuAbstractGemStoneRelease >> prepareGsDevKitImage_patch46217:  aGsDevKitUpgrade
 ]
 
 { #category : 'prepare gsdevkit image' }
+GsuAbstractGemStoneRelease >> prepareGsDevKitImage_recompilePragmaMethods:  aGsDevKitUpgrade [
+
+	aGsDevKitUpgrade log: 'Prepare gsdevkit - recompile pragma methods'.
+	aGsDevKitUpgrade prepareGsDevKitImage_recompilePragmaMethods
+]
+
+{ #category : 'prepare gsdevkit image' }
 GsuAbstractGemStoneRelease >> prepareGsDevKitImage_removeAllMethods:  aGsDevKitUpgrade [
 
 	aGsDevKitUpgrade prepareGsDevKitImage_removeAllMethods

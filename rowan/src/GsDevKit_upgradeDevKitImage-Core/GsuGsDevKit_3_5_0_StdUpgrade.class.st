@@ -47,6 +47,43 @@ GsuGsDevKit_3_5_0_StdUpgrade >> prepareGsDevKitImage_clearMonticelloCaches [
 ]
 
 { #category : 'prepare gsdevkit  image' }
+GsuGsDevKit_3_5_0_StdUpgrade >> prepareGsDevKitImage_recompilePragmaMethods [
+
+	"Methods that references the ObsoletePragma class (pre-3.4) need to be recompiled."
+
+	"Methods with pragmas need to be recompiled so that they reference the new Pragma class"
+
+	| recompileBlock |
+	self log: 'Prepare gsdevkit - recompile pragma methods'.
+	recompileBlock := [:meth |
+		| cls categ src litVars |
+			cls := meth inClass.
+			src := meth sourceString.
+			litVars := meth _literalVariablesForRecompile.
+		categ := cls categoryOfSelector: meth selector.
+		cls
+		_checkCompileResult:
+		  (cls
+			compileMethod: src 
+			dictionaries: System myUserProfile symbolList 
+			category: categ 
+			environmentId: 0)
+		source: src].
+	self log: '	recompiling method referencing ObsoletePragma...'.
+	(ClassOrganizer new referencesToObject: (ObsoleteClasses at: #ObsoletePragma))
+		do: [:method |
+			self log: '	', method inClass asString, (method inClass isMeta ifTrue: [' class'] ifFalse: ['']), '>>', method selector printString.
+			recompileBlock value: method ].
+	self log: '	recompiling methods with pragmas...'.
+	self methodsWithPragmas
+		do: [:method |
+			GsFile gciLogServer: '	', method inClass asString, (method inClass isMeta ifTrue: [' class'] ifFalse: ['']), '>>', method selector printString.
+			recompileBlock value: method ].	
+	System commit.
+	self log: '	done recompiling (commit)'.
+]
+
+{ #category : 'prepare gsdevkit  image' }
 GsuGsDevKit_3_5_0_StdUpgrade >> prepareGsDevKitImage_removeAllMethods [
 
 	"remove all methods in GsDevKit user classes"

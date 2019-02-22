@@ -366,6 +366,7 @@ GsuAbstractGsDevKitUpgrade >> prepareGsDevKitImage [
 		prepareGsDevKitImage_clearMonticelloCaches: self;
 		prepareGsDevKitImage_removeAllMethods: self;
 		prepareGsDevKitImage_patch46217: self;
+		prepareGsDevKitImage_recompilePragmaMethods: self;
 		yourself.
 	self bannerLogDash
 ]
@@ -493,6 +494,12 @@ GsuAbstractGsDevKitUpgrade >> prepareGsDevKitImage_patch45952 [
 		self log: '	', key asString.
 		System commit ].
 	self log: '--- (commit)'
+]
+
+{ #category : 'prepare gsdevkit  image' }
+GsuAbstractGsDevKitUpgrade >> prepareGsDevKitImage_recompilePragmaMethods [
+
+	"Sice all methods are removed for bootstrapping, not necessary to do this step"
 ]
 
 { #category : 'prepare gsdevkit  image' }

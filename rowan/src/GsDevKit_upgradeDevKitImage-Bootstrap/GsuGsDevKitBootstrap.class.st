@@ -33,6 +33,12 @@ GsuGsDevKitBootstrap >> _bootstrap_positionableStream_original_contents_patchSou
 	"Answer the receiver''s actual contents collection, NOT a copy. 1/29/96 sw"'
 ]
 
+{ #category : 'private' }
+GsuGsDevKitBootstrap >> _listUpgradeParameters [
+
+	^ #( bootstrapPostLoadClassList bootstrapApplicationLoadSpecs bootstrapExistingConfigurationList )
+]
+
 { #category : 'accessing' }
 GsuGsDevKitBootstrap >> bootstrapGemStoneRelease [
 
@@ -102,6 +108,8 @@ GsuGsDevKitBootstrap >> bootstrapMaster [
 	| undef |
 	self log: '	bootstrap master'.
 
+	self logBootstrapParameters.
+
 	undef := SymbolDictionary new.
 	undef name: #UndefinedSymbols.
 	self _currentUserGlobals at: #UndefinedSymbols put: undef.
@@ -119,15 +127,37 @@ GsuGsDevKitBootstrap >> bootstrapMaster [
 		  dictionaries: GsCurrentSession currentSession symbolList 
 		  category: '*squeak'].
 
+	"enable the GsPackages that were enabled during upgradeImage (this is 3.5.0 and beyond specific)"
+	self upgradeUserProfile symbolList do:[:dict | | dName |
+		dName := dict name ifNil:[ 'unnamed' ].
+		(dict at: GsPackage globalName otherwise: nil) ifNotNil:[:pkg |
+			pkg name == #SessionMethods 
+				ifFalse:[
+					pkg removeAllMethods .
+					pkg enable .
+					self log: '	', pkg name asString, ' enabled' ] ] ].
+
+	System commit.
+
 	self bootstrapGemStoneRelease bootstrapPackageFileNames do: [:bootstrapPackageFileName |
 		GsPackageLibrary 
 			loadMCZFile: bootstrapPackageFileName
 			home: self upgradeSymbolDictName
 			fromRepositoryPath: self bootstrapRepositoryDirectory ].
 
-
-
 	self log: '	... done bootstrap master'.
+]
+
+{ #category : 'logging' }
+GsuGsDevKitBootstrap >> logBootstrapParameters [
+
+	self log: 'Bootstrap parameters'.
+
+	self bannerLogDash.
+
+	self _logUpgradeParameters.
+
+	self bannerLogDash.
 ]
 
 { #category : 'bootstrapping' }

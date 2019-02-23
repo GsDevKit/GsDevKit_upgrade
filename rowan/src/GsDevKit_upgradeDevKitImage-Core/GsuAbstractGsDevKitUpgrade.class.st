@@ -114,12 +114,6 @@ GsuAbstractGsDevKitUpgrade >> _defaultTargetRelease [
 ]
 
 { #category : 'private' }
-GsuAbstractGsDevKitUpgrade >> _listUpgradeParameters [
-
-	^ #( bootstrapPostLoadClassList bootstrapApplicationLoadSpecs )
-]
-
-{ #category : 'private' }
 GsuAbstractGsDevKitUpgrade >> _prepareImage_class_bug46217_patchSource [
 
 	^  'removeFromSystem
@@ -176,12 +170,6 @@ GsuAbstractGsDevKitUpgrade >> _prepareImage_user_class_bug46059_patchSource [
   ar ifNotNil: [ (ar at: 1) removeKey: (ar at: 2) ].'
 ]
 
-{ #category : 'private' }
-GsuAbstractGsDevKitUpgrade >> _singletonUpgradeParameters [
-
-	^ #( upgradeUserName upgradeSymbolDictName bootstrapRepositoryDirectory )
-]
-
 { #category : 'bootstrapping' }
 GsuAbstractGsDevKitUpgrade >> bootstrapGsDevkit [
 
@@ -218,13 +206,7 @@ GsuAbstractGsDevKitUpgrade >> logUpgradeParameters [
 
 	self bannerLogDash.
 
-	self _singletonUpgradeParameters do: [:selectorSymbol |
-		self log: '	', selectorSymbol asString, ' : ', (self perform: selectorSymbol) ].
-
-	self _listUpgradeParameters do: [:selectorSymbol |
-		self log: '	', selectorSymbol asString, ' : '.
-		(self perform: selectorSymbol) do: [:entry |
-			self log: '		', entry printString ] ].
+	self _logUpgradeParameters.
 
 	self bannerLogDash.
 ]

@@ -73,6 +73,30 @@ GsuAbstractGsDevKit >> _globalNamed: aString [
 	^ GsSession currentSession objectNamed: aString
 ]
 
+{ #category : 'private' }
+GsuAbstractGsDevKit >> _listUpgradeParameters [
+
+	^ #( bootstrapPostLoadClassList bootstrapApplicationLoadSpecs )
+]
+
+{ #category : 'logging' }
+GsuAbstractGsDevKit >> _logUpgradeParameters [
+
+	self _singletonUpgradeParameters do: [:selectorSymbol |
+		self log: '	', selectorSymbol asString, ' : ', (self perform: selectorSymbol) ].
+
+	self _listUpgradeParameters do: [:selectorSymbol |
+		self log: '	', selectorSymbol asString, ' : '.
+		(self perform: selectorSymbol) do: [:entry |
+			self log: '		', entry printString ] ].
+]
+
+{ #category : 'private' }
+GsuAbstractGsDevKit >> _singletonUpgradeParameters [
+
+	^ #( upgradeUserName upgradeSymbolDictName bootstrapRepositoryDirectory )
+]
+
 { #category : 'logging' }
 GsuAbstractGsDevKit >> bannerLog: aString [
 

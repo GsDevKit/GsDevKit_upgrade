@@ -16,7 +16,7 @@ GsuGemStone_3_5_x_Release >> _bootstrapPackageFileNames_0 [
 		'Base-Bootstrap.v3-dkh.29.mcz'.
 		'Bootstrap.v34-dkh.261.mcz'.
 		'GemStone-ANSI-Streams-dkh.9.mcz'.
-		'GemStone-Indexing-Extensions-dkh.4.mcz'.
+		'GemStone-Indexing-Extensions-dkh.3.mcz'.
 		'Sport3.010.v3-dkh.29.mcz'.
 		'Squeak.v34-dkh.339.mcz'.
 		'Regex-Core-DaleHenrichs.3.mcz'.

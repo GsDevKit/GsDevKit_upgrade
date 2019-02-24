@@ -39,11 +39,13 @@ GsuAbstractGsDevKit >> _currentUserGlobals [
 GsuAbstractGsDevKit >> _defaultBootstrapApplicationLoadSpecs [
 	"formerly BootstrapApplicationLoadSpecs, bootstrap GLASS configuration name, version, load spec and directory path"
 
-	^ {
-		'ConfigurationOfGLASS'. 
-		'1.0-beta.9.2.2'. 
-		#('default'). 
-		nil.	"nill - use bootstrapRepositoryDirectory"
+	^{
+		 {
+				'ConfigurationOfGLASS'. 
+				'1.0-beta.9.2.2'. 
+				#('default'). 
+				nil.	"nill - use bootstrapRepositoryDirectory"
+		}.
 	}
 ]
 

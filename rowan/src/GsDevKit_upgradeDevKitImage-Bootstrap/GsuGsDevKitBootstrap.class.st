@@ -104,8 +104,6 @@ GsuGsDevKitBootstrap >> bootstrapGsDevkit [
 
 	self loadApplicationLoadSpecs.
 
-
-
 	self log: '	... done bootstrap GsdevKit'.
 ]
 

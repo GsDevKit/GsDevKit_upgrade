@@ -234,6 +234,9 @@ GsuAbstractGsDevKitUpgrade >> prepareGsDevKitImage [
 		prepareGsDevKitImage_recompilePragmaMethods: self;
 		prepareGsDevKitImage_bootstrapGsDevkit: self;
 		yourself.
+	self updateDBFHistoryFinishUpgrade.
+	System commit.
+	self log: '	finished gsdevkit image (commit)'.
 	self bannerLogDash
 ]
 
@@ -587,6 +590,19 @@ GsuAbstractGsDevKitUpgrade >> targetGemStoneRelease [
 
 	^ targetGemStoneRelease 
 		ifNil: [ targetGemStoneRelease := self _defaultTargetRelease ]
+]
+
+{ #category : 'prepare gsdevkit  image' }
+GsuAbstractGsDevKitUpgrade >> updateDBFHistoryFinishUpgrade [
+
+	| curHist |
+
+	curHist := ((GsCurrentSession currentSession objectNamed: self upgradeSymbolDictName) at: #DbfSeasideHistory ifAbsent: ['']).
+	(GsCurrentSession currentSession objectNamed: self upgradeSymbolDictName) 
+		at: #DbfSeasideHistory 
+		put: curHist, 'image upgrade for GsDevKit completed at ', DateTime now asString, Character lf .
+
+	self log: '	update dbf history for upgrade finish'.
 ]
 
 { #category : 'prepare gsdevkit  image' }

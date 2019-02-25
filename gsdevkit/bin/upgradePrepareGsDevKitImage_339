@@ -21,6 +21,7 @@ pushd "${upgradeLogDir}" >& /dev/null
 	startTopaz $GEMSTONE_NAME -lq < $GS_HOME/shared/repos/GsDevKit_upgradeDevKitImage/bin/installGsDevKit_upgrade_339
 	startTopaz $GEMSTONE_NAME -lq < $GS_HOME/shared/repos/GsDevKit_upgradeDevKitImage/bin/prepareGsDevKitImage
 	startTopaz $GEMSTONE_NAME -lq < $GS_HOME/shared/repos/GsDevKit_upgradeDevKitImage/bin/prepareGsDevKitImage_user
+	startTopaz $GEMSTONE_NAME -lq < $GS_HOME/shared/repos/GsDevKit_upgradeDevKitImage/bin/runImageTests
 popd
 
 # stopStone $GEMSTONE_NAME

@@ -3,7 +3,7 @@ iferr 2 stack
 iferr 3 exit 1
 display oops
 limit bytes 200
-set u SystemUser p swordfish
+set u DataCurator p swordfish
 login
 
 run

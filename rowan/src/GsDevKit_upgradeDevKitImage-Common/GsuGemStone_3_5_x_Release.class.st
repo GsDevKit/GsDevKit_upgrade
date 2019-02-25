@@ -12,9 +12,9 @@ GsuGemStone_3_5_x_Release >> _bootstrapPackageFileNames_0 [
 	"for 3.5.0"
 
 	^{ 
-		'Core.v3-dkh.79.mcz' .
+		'Core.v3-dkh.80.mcz' .
 		'Base-Bootstrap.v3-dkh.29.mcz'.
-		'Bootstrap.v34-dkh.261.mcz'.
+		'Bootstrap.v34-dkh.262.mcz'.
 		'GemStone-ANSI-Streams-dkh.9.mcz'.
 		'GemStone-Indexing-Extensions-dkh.3.mcz'.
 		'Sport3.010.v3-dkh.29.mcz'.
@@ -33,6 +33,7 @@ GsuGemStone_3_5_x_Release >> _bootstrapPackageFileNames_0 [
 		'Metacello-ToolBox-dkh.131.mcz'.
 		'Metacello-FileTree-dkh.29.mcz'.
 		'Metacello-GitHub-dkh.22.mcz'.
+		'Network-Url-dkh.3.mcz'.
 	}.
 ]
 

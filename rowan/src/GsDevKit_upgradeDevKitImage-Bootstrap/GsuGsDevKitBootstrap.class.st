@@ -154,59 +154,6 @@ GsuGsDevKitBootstrap >> bootstrapMaster [
 	self log: '	... done bootstrap master'.
 ]
 
-{ #category : 'bootstrapping' }
-GsuGsDevKitBootstrap >> loadApplicationLoadSpecs [
-
-	"explicitly loade each of the configuration packages lised in boolStrapApplicationLoadSpecs"
-
-	self log: '	loading bootstrap application load specs'.
-	self bootstrapApplicationLoadSpecs do: [:loadSpec |
-		| path |
-		path := (loadSpec at: 4) ifNil: [ self bootstrapRepositoryDirectory ].
-		(self _globalNamed: 'Gofer') new 
-			directory: ((self _globalNamed: 'ServerFileDirectory') on: path);
-			package: (loadSpec at: 1);
-			load ].
-	System commit.
-
-	"unload the 2.x only packages"
-	(self _globalNamed: 'PackageInfo') registerPackageName: 'GemStone-Exceptions'.
-	((self _globalNamed: 'MCWorkingCopy') forPackage: ((self _globalNamed: 'MCPackage') new name: 'GemStone-Exceptions')) unload.
-
-	"start with a fresh package registry"
-	(self _globalNamed: 'MCWorkingCopy') atClassInstVar: #registry put: nil.
-	((self _globalNamed: 'PackageOrganizer') default instVarAt: ((self _globalNamed: 'PackageOrganizer') allInstVarNames indexOfIdentical: #'packages')) removeKey: 'Monticello-Mocks' ifAbsent: [].
-
-	"Now load the entire configuration to pick up user application code and to ensure
-		that the in-memory package state is correct"
-
-	self bootstrapApplicationLoadSpecs do: [:loadSpec | 
-		| repoPath configurationClassName versionString loadList |
-		configurationClassName := loadSpec at: 1.
-		versionString := loadSpec at: 2.
-		loadList := loadSpec at: 3.
-		repoPath := (loadSpec at: 4) ifNil: [ self bootstrapRepositoryDirectory ].
-		(self _globalNamed: 'GsDeployer') bulkMigrate: [ 
-			[
-				| projectName |
-				projectName := (self _globalNamed: 'MetacelloScriptEngine') configurationProjectNameOf: configurationClassName asString.
-				(self _globalNamed: 'Metacello') new
-					configuration: projectName;
-					version: versionString;
-					repositoryOverrides: { 'server://', repoPath };
-					load: loadList ]
-						on: (self _globalNamed: 'MCPerformPostloadNotification')
-						do: [:ex |
-							(self bootstrapPostLoadClassList includes: ex postloadClass theNonMetaClass name)
-								ifTrue: [ ex resume: true ]
-								ifFalse: [ 
-									self log: '			Skip ', ex postloadClass name asString, ' initialization.'.
-									ex resume: false ]]]].
-	System commit.
-
-	self log: '	done (commit)'.
-]
-
 { #category : 'logging' }
 GsuGsDevKitBootstrap >> logBootstrapParameters [
 

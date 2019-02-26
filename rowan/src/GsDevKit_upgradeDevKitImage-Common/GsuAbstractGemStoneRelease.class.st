@@ -114,6 +114,12 @@ GsuAbstractGemStoneRelease >> prepareGsDevKitImage_existingConfigurationList:  a
 ]
 
 { #category : 'prepare gsdevkit image' }
+GsuAbstractGemStoneRelease >> prepareGsDevKitImage_loadApplicationCode:  aGsDevKitUpgrade [
+
+	aGsDevKitUpgrade prepareGsDevKitImage_loadApplicationCode
+]
+
+{ #category : 'prepare gsdevkit image' }
 GsuAbstractGemStoneRelease >> prepareGsDevKitImage_patch45952:  aGsDevKitUpgrade [
 
 	"bug 45952 ... image/bootstrapMaster.topaz for 3.1.0.6 ignored BootstrapSymbolDictionaryName"

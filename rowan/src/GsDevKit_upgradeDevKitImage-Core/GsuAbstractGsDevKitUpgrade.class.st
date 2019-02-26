@@ -236,6 +236,9 @@ GsuAbstractGsDevKitUpgrade >> prepareGsDevKitImage [
 		yourself.
 	self updateDBFHistoryFinishUpgrade.
 	System commit.
+	self sourceGemStoneRelease
+		prepareGsDevKitImage_loadApplicationCode: self;
+		yourself.		
 	self log: '	finished gsdevkit image (commit)'.
 	self bannerLogDash
 ]
@@ -341,6 +344,17 @@ GsuAbstractGsDevKitUpgrade >> prepareGsDevKitImage_existingConfigurationList [
 					  self log: '		', assoc key asString.
 					  self bootstrapExistingConfigurationList add: assoc value ] ] ].
 	System commit.
+]
+
+{ #category : 'prepare gsdevkit  image' }
+GsuAbstractGsDevKitUpgrade >> prepareGsDevKitImage_loadApplicationCode [
+	"explicitly load each of the configuration packages lised in boolStrapApplicationLoadSpecs"
+
+	"load application code"
+
+	self log: 'Prepare gsdevkit - load GsDevKit application code'.
+
+	self loadApplicationLoadSpecs
 ]
 
 { #category : 'prepare gsdevkit  image' }

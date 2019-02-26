@@ -22,7 +22,7 @@ GsuGemStone_3_5_x_Release >> _bootstrapPackageFileNames_0 [
 		'Regex-Core-DaleHenrichs.3.mcz'.
 		'Regex-Tests-Core-DaleHenrichs.5.mcz'.
 		'PackageInfo-Base.g-dkh.36.mcz'.
-		'Monticello.v3-dkh.456.mcz'.
+		'Monticello.v3-dkh.457.mcz'.
 		'GemStone-Deployment.v310-dkh.26.mcz'.
 		'Change-Notification.v3-dkh.20.mcz'.
 		'Gofer-Core.gemstone-dkh.135.mcz'.

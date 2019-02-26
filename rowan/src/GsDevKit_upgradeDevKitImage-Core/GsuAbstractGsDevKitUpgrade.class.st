@@ -491,7 +491,7 @@ GsuAbstractGsDevKitUpgrade >> prepareImage_pragmas [
 	self log: '	Old pragma class ', pragmaClass name printString, '[', pragmaClass asOop printString, '] -- will be made obsolete'.
 
 	"need to make sure that this method is used so that we can extract pragmas from old structures"
-	self log: 'Installing ...oldPragma>>'.
+	self log: '	Installing ...oldPragma>>'.
 	pragmaClass class
 		compileMethod: self _prepareImage_pragmas_withPragmas_source 
 		dictionaries: self upgradeUserProfile symbolList 
@@ -501,19 +501,21 @@ GsuAbstractGsDevKitUpgrade >> prepareImage_pragmas [
 	self log: '	GsPackagePolicy currently ', (oldPackagePolicyEnabled ifTrue: [ 'enabled.'] ifFalse: ['disabled.']).
 	GsPackagePolicy current instVarAt: 1 put: true.
 
-	Object allSubclasses
-	do: [ :cls | 
-	  {cls.
-	  (cls class)}
-		do: [ :beh | 
-		  beh allSelectors
-			do: [ :sel | 
-			  (beh compiledMethodAt: sel otherwise: nil)
-				ifNotNil: [ :meth | 
-				  (beh _pragmasForMethod: meth) isEmpty
-					ifFalse: [ 
-						self methodsWithPragmas add: meth.
-						self log: '	', beh name asString, (beh isMeta ifTrue: [' class'] ifFalse: ['']), '>>', sel printString ] ] ] ] ].
+	{ self upgradeUserName } do: [:userId |
+		self log: '	Finding methods with pragmas for user: ', userId printString.
+		((ClassOrganizer newWithRoot: Object forUserId: userId) allSubclassesOf: Object)
+			do: [ :cls | 
+			  {cls.
+			  (cls class)}
+				do: [ :beh | 
+				  beh allSelectors
+					do: [ :sel | 
+					  (beh compiledMethodAt: sel otherwise: nil)
+						ifNotNil: [ :meth | 
+						  (beh _pragmasForMethod: meth) isEmpty
+							ifFalse: [ 
+								self methodsWithPragmas add: meth.
+								self log: '		', beh name asString, (beh isMeta ifTrue: [' class'] ifFalse: ['']), '>>', sel printString ] ] ] ] ] ].
 	GsPackagePolicy current instVarAt: 1 put: oldPackagePolicyEnabled.
 	self log: '	... finished finding methods with pragmas'
 ]

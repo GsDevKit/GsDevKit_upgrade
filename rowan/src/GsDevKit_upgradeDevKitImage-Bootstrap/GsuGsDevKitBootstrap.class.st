@@ -88,19 +88,8 @@ GsuGsDevKitBootstrap >> bootstrapGsDevkit [
 		dictionaries: self upgradeUserProfile symbolList 
 		category: '*change-notification'.
 
-	"Remove the known list of Metacello configuration classes (they have had their
-		methods removed and need to be reloaded."
-	ClassOrganizer clearCachedOrganizer.
-	self log: '	removing configuration classes'.
-	self bootstrapExistingConfigurationList do: [:class | 
-		self log: '		', class name.
-		class removeFromSystem ].
-	self log: '	done removing configuration classes'.
-
-	"set the cache repository"
-	(self _globalNamed: 'MCCacheRepository') 
-		ifNotNil: [:mCCacheRepository | 
-			mCCacheRepository setDefault: (self _globalNamed: 'MCDictionaryRepository') new ].
+	"force configurations to be reloaded if needed"
+	self removeExistingConfigurations.
 
 	self loadApplicationLoadSpecs.
 

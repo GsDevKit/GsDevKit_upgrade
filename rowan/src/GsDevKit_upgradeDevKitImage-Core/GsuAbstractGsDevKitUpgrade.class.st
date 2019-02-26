@@ -354,6 +354,10 @@ GsuAbstractGsDevKitUpgrade >> prepareGsDevKitImage_loadApplicationCode [
 
 	self log: 'Prepare gsdevkit - load GsDevKit application code'.
 
+	"force configurations to be reloaded if needed"
+	self removeExistingConfigurations.
+
+	"now load application"
 	self loadApplicationLoadSpecs
 ]
 
@@ -501,22 +505,23 @@ GsuAbstractGsDevKitUpgrade >> prepareImage_pragmas [
 	self log: '	GsPackagePolicy currently ', (oldPackagePolicyEnabled ifTrue: [ 'enabled.'] ifFalse: ['disabled.']).
 	GsPackagePolicy current instVarAt: 1 put: true.
 
-	{ self upgradeUserName } do: [:userId |
-		self log: '	Finding methods with pragmas for user: ', userId printString.
-		((ClassOrganizer newWithRoot: Object forUserId: userId) allSubclassesOf: Object)
-			do: [ :cls | 
-			  {cls.
-			  (cls class)}
-				do: [ :beh | 
-				  beh allSelectors
-					do: [ :sel | 
-					  (beh compiledMethodAt: sel otherwise: nil)
-						ifNotNil: [ :meth | 
-						  (beh _pragmasForMethod: meth) isEmpty
-							ifFalse: [ 
-								self methodsWithPragmas add: meth.
-								self log: '		', beh name asString, (beh isMeta ifTrue: [' class'] ifFalse: ['']), '>>', sel printString ] ] ] ] ] ].
+	self log: '	Finding methods with pragmas for user: ', self upgradeUserName printString.
+	((ClassOrganizer newWithRoot: Object forUserId: self upgradeUserName) allSubclassesOf: Object)
+		do: [ :cls | 
+		  {cls.
+		  (cls class)}
+			do: [ :beh | 
+			  beh allSelectors
+				do: [ :sel | 
+				  (beh compiledMethodAt: sel otherwise: nil)
+					ifNotNil: [ :meth | 
+					  (beh _pragmasForMethod: meth) isEmpty
+						ifFalse: [ 
+							self methodsWithPragmas add: meth.
+							self log: '		', beh name asString, (beh isMeta ifTrue: [' class'] ifFalse: ['']), '>>', sel printString ] ] ] ] ].
+
 	GsPackagePolicy current instVarAt: 1 put: oldPackagePolicyEnabled.
+
 	self log: '	... finished finding methods with pragmas'
 ]
 

@@ -47,14 +47,6 @@ GsuGsDevKit_3_5_0_StdUpgrade >> prepareGsDevKitImage_bug46217_patch [
 ]
 
 { #category : 'prepare gsdevkit  image' }
-GsuGsDevKit_3_5_0_StdUpgrade >> prepareGsDevKitImage_clearMonticelloCaches [
-
-	" clear caches - those that are unneeded or create problem during initial bootstrap load"
-
-	"noop for standard upgrade"
-]
-
-{ #category : 'prepare gsdevkit  image' }
 GsuGsDevKit_3_5_0_StdUpgrade >> prepareGsDevKitImage_recompilePragmaMethods [
 
 	"Methods that references the ObsoletePragma class (pre-3.4) need to be recompiled."

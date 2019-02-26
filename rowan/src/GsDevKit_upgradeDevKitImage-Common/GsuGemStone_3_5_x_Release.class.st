@@ -12,9 +12,9 @@ GsuGemStone_3_5_x_Release >> _bootstrapPackageFileNames_0 [
 	"for 3.5.0"
 
 	^{ 
-		'Core.v3-dkh.80.mcz' .
+		'Core.v3-dkh.81.mcz' .
 		'Base-Bootstrap.v3-dkh.29.mcz'.
-		'Bootstrap.v34-dkh.262.mcz'.
+		'Bootstrap.v34-dkh.263.mcz'.
 		'GemStone-ANSI-Streams-dkh.9.mcz'.
 		'GemStone-Indexing-Extensions-dkh.3.mcz'.
 		'Sport3.010.v3-dkh.29.mcz'.

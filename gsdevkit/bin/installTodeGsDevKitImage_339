@@ -1,0 +1,19 @@
+set -e
+. defStone.env
+export vers="3.5.0_g"
+
+rm -f *.log *.out
+
+newExtent -s snapshotsx/extent0_preparedGsDevKitImage_339.dbf $GEMSTONE_NAME
+
+export upgradeLogDir=`pwd`/upgradeLogDir
+
+pushd "${upgradeLogDir}" >& /dev/null
+	rm -f *.log *.out
+	todeLoad $GEMSTONE_NAME
+	startTopaz $GEMSTONE_NAME -lq < $GS_HOME/shared/repos/GsDevKit_upgradeDevKitImage/bin/runImageTests
+popd
+
+stopStone $GEMSTONE_NAME
+cp extents/extent0.dbf snapshots/extent0_tode_339.dbf
+

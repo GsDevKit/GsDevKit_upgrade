@@ -4,9 +4,9 @@ export vers="3.5.0_g"
 
 rm -f *.log *.out
 
-# createStone -g battery_3215 3.2.15
+# createStone -g battery_343 3.4.3
 
-sourceStoneName="battery_3215"
+sourceStoneName="battery_343"
 
 export upgradeLogDir=`pwd`/upgradeLogDir
 

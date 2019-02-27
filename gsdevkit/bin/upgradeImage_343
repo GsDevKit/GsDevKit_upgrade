@@ -4,9 +4,9 @@ export vers="3.5.0_g"
 
 rm -f *.log *.out
 
-# createStone -g battery_3215 3.2.15
+# createStone -g battery_343 3.4.3
 
-sourceStoneName="battery_3215"
+sourceStoneName="battery_343"
 stopStone $sourceStoneName
 stopStone $GEMSTONE_NAME
 
@@ -29,5 +29,5 @@ EOF
 popd
 
 stopStone $GEMSTONE_NAME
-cp extents/extent0.dbf snapshots/extent0_upgradeImage_3215.dbf
+cp extents/extent0.dbf snapshots/extent0_upgradeImage_343.dbf
 

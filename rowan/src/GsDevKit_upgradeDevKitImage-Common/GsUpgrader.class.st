@@ -28,10 +28,63 @@ GsUpgrader class >> _createCacheSentinel: gsUpgraderCacheDirPath forVersion: gem
 ]
 
 { #category : 'private' }
-GsUpgrader class >> _upgradeGLASSCacheBaseDir: gsUpgraderCacheDirPath [
-  ^ self serverFileDirectory
-    on: gsUpgraderCacheDirPath , self _upgradeGLASSCacheBasePath
+GsUpgrader class >> _globalNamed: aString [
 
+	^ GsSession currentSession objectNamed: aString
+]
+
+{ #category : 'private' }
+GsUpgrader class >> _MCCacheRepository [
+
+	^ self _globalNamed: 'MCCacheRepository'
+]
+
+{ #category : 'private' }
+GsUpgrader class >> _MCDirectoryRepository [
+
+	^ self _globalNamed: 'MCDirectoryRepository'
+]
+
+{ #category : 'private' }
+GsUpgrader class >> _MCHttpRepository [
+
+	^ self _globalNamed: 'MCHttpRepository'
+]
+
+{ #category : 'private' }
+GsUpgrader class >> _MCPlatformSupport [
+
+	^ self _globalNamed: 'MCPlatformSupport'
+]
+
+{ #category : 'private' }
+GsUpgrader class >> _MetacelloPlatform [
+
+	^ self _globalNamed: 'MetacelloPlatform'
+]
+
+{ #category : 'private' }
+GsUpgrader class >> _MetacelloProjectRegistration [
+
+	^ self _globalNamed: 'MetacelloProjectRegistration'
+]
+
+{ #category : 'private' }
+GsUpgrader class >> _ServerFileDirectory [
+
+	^ self _globalNamed: 'ServerFileDirectory'
+]
+
+{ #category : 'private' }
+GsUpgrader class >> _Smalltalk [
+
+	^ self _globalNamed: 'Smalltalk'
+]
+
+{ #category : 'private' }
+GsUpgrader class >> _upgradeGLASSCacheBaseDir: gsUpgraderCacheDirPath [
+  ^ self _ServerFileDirectory
+    on: gsUpgraderCacheDirPath , self _upgradeGLASSCacheBasePath
 ]
 
 { #category : 'private' }
@@ -42,10 +95,9 @@ GsUpgrader class >> _upgradeGLASSCacheBasePath [
 
 { #category : 'private' }
 GsUpgrader class >> _upgradeGLASSCacheDir: gsUpgraderCacheDirPath [
-  ^ self serverFileDirectory
+  ^ self _ServerFileDirectory
     on:
       gsUpgraderCacheDirPath , self _upgradeGLASSCacheBasePath , '/package-cache'
-
 ]
 
 { #category : 'private' }
@@ -55,16 +107,15 @@ GsUpgrader class >> _upgradeGLASSCachingInto: gsUpgraderCacheDirPath forVersion:
   | oldCache newCache cacheDir |
   cacheDir := self _upgradeGLASSCacheDir: gsUpgraderCacheDirPath.
   cacheDir assureExistence.
-  oldCache := self mCCacheRepository default.
+  oldCache := self _MCCacheRepository default.
   [ 
-  newCache := self mCCacheRepository new directory: cacheDir.
-  self mCCacheRepository setDefault: newCache.
+  newCache := self _MCCacheRepository new directory: cacheDir.
+  self _MCCacheRepository setDefault: newCache.
   self new
     gsUpgraderCacheDirPath: gsUpgraderCacheDirPath;
     upgradeGLASS ]
-    ensure: [ self mCCacheRepository setDefault: oldCache ].
+    ensure: [ self _MCCacheRepository setDefault: oldCache ].
   self _createCacheSentinel: gsUpgraderCacheDirPath forVersion: gemstoneVersion
-
 ]
 
 { #category : 'private' }
@@ -91,13 +142,12 @@ GsUpgrader class >> _upgradeGLASSLoadingFrom: gsUpgraderCacheDirPath forVersion:
   "use <repoPath> as repositoryOverrides for loads."
 
   | repo |
-  repo := self mCDirectoryRepository new
+  repo := self _MCDirectoryRepository new
     directory: (self _upgradeGLASSCacheDir: gsUpgraderCacheDirPath).
   self new
     gsUpgraderCacheDirPath: gsUpgraderCacheDirPath;
     repositoryOverride: repo;
     upgradeGLASS
-
 ]
 
 { #category : 'batch support' }
@@ -249,19 +299,18 @@ GsUpgrader >> configurationVersionReportOn: strm [
 
 { #category : 'private' }
 GsUpgrader >> deploy: aBlock [
-  (self smalltalk at: #'GsDeployer' ifAbsent: [  ])
+  (self _Smalltalk at: #'GsDeployer' ifAbsent: [  ])
     ifNil: [ 
       | oldAutoCommit oldAutoMigrate |
-      oldAutoCommit := self mCPlatformSupport autoCommit.
-      oldAutoMigrate := self mCPlatformSupport autoMigrate.
-      self mCPlatformSupport autoCommit: true.
-      self mMCPlatformSupport autoMigrate: true.
-      [ self mCPlatformSupport commitOnAlmostOutOfMemoryDuring: aBlock ]
+      oldAutoCommit := self _MCPlatformSupport autoCommit.
+      oldAutoMigrate := self _MCPlatformSupport autoMigrate.
+      self _MCPlatformSupport autoCommit: true.
+      self _MCPlatformSupport autoMigrate: true.
+      [ self _MCPlatformSupport commitOnAlmostOutOfMemoryDuring: aBlock ]
         ensure: [ 
-          self mCPlatformSupport autoCommit: oldAutoCommit.
-          self mCPlatformSupport autoMigrate: oldAutoMigrate ] ]
+          self _MCPlatformSupport autoCommit: oldAutoCommit.
+          self _MCPlatformSupport autoMigrate: oldAutoMigrate ] ]
     ifNotNil: [ :deployerClass | deployerClass deploy: aBlock ]
-
 ]
 
 { #category : 'testing' }
@@ -284,9 +333,8 @@ GsUpgrader >> glass1Locked [
 
 { #category : 'testing' }
 GsUpgrader >> glass1Present [
-  self smalltalk at: #'BaselineOfGLASS1' ifPresent: [ :ignored | ^ true ].
+  self _Smalltalk at: #'BaselineOfGLASS1' ifPresent: [ :ignored | ^ true ].
   ^ false
-
 ]
 
 { #category : 'private' }
@@ -300,15 +348,14 @@ GsUpgrader >> goferBlockForUrl: aRepoUrl [
   ^ repositoryOverride
     ifNil: [ 
       [ 
-      (self smalltalk at: #'Gofer') new
+      (self _Smalltalk at: #'Gofer') new
         url: aRepoUrl;
         yourself ] ]
     ifNotNil: [ 
       [ 
-      (self smalltalk at: #'Gofer') new
+      (self _Smalltalk at: #'Gofer') new
         repository: repositoryOverride;
         yourself ] ]
-
 ]
 
 { #category : 'testing' }
@@ -364,9 +411,8 @@ GsUpgrader >> gsDevKitLocked [
 
 { #category : 'testing' }
 GsUpgrader >> gsDevKitPresent [
-  self smalltalk at: #'BaselineOfGsDevKit' ifPresent: [ :ignored | ^ true ].
+  self _Smalltalk at: #'BaselineOfGsDevKit' ifPresent: [ :ignored | ^ true ].
   ^ false
-
 ]
 
 { #category : 'private' }
@@ -393,7 +439,7 @@ GsUpgrader >> ifNeededDownloadMetacelloPreviewFor: metacelloPreviewStableVersion
   path := gsUpgraderCacheDirPath
     , '/caches/upgradeGLASS/metacelloPreview/metacello-work-'
     , metacelloPreviewStableVersionString.
-  (self serverFileDirectory on: path) exists
+  (self _ServerFileDirectory on: path) exists
     ifTrue: [ 
       "already downloaded"
       ^ self ].
@@ -401,16 +447,15 @@ GsUpgrader >> ifNeededDownloadMetacelloPreviewFor: metacelloPreviewStableVersion
     , metacelloPreviewStableVersionString , '.zip'.
   pid := (System gemVersionReport at: 'processId') printString.
   zipFileName := '/tmp/gsUpgrader-' , pid , '.zip'.
-  sel := (self metacelloPlatform current respondsTo: #'downloadFile:to:')
+  sel := (self _MetacelloPlatform current respondsTo: #'downloadFile:to:')
     ifTrue: [ 
       "older versions of Metacello in base image of older versions of GemStone"
       #'downloadFile:to:' ]
     ifFalse: [ #'downloadBasicFile:to:' ].
-  self metacelloPlatform current perform: sel with: zipUrl with: zipFileName.	"avoid sentButNotImplemented test errors"
-  self metacelloPlatform current
+  self _MetacelloPlatform current perform: sel with: zipUrl with: zipFileName.	"avoid sentButNotImplemented test errors"
+  self _MetacelloPlatform current
     extractRepositoryFrom: zipFileName
     to: gsUpgraderCacheDirPath , '/caches/upgradeGLASS/metacelloPreview'
-
 ]
 
 { #category : 'private' }
@@ -517,18 +562,17 @@ GsUpgrader >> loadMetacelloPreview [
       self metacelloBootstrap10beta311Loaded
         ifFalse: [ self loadMetacelloBootstrap10beta311 ].
       self log: 'Loading Metacello Preview'.
-      (self smalltalk at: #'Gofer') new
+      (self _Smalltalk at: #'Gofer') new
         url: 'http://seaside.gemtalksystems.com/ss/metacello';
         package: 'ConfigurationOfMetacello';
         load.	"load the Metacello Preview"
-      ((self smalltalk at: #'ConfigurationOfMetacello') project
+      ((self _Smalltalk at: #'ConfigurationOfMetacello') project
         version: #'previewBootstrap') load.
-      (self smalltalk at: #'Metacello') new
+      (self _Smalltalk at: #'Metacello') new
         configuration: 'MetacelloPreview';
         version: #'stable';
         repository: self metacelloPreviewRepositoryDescription;
         load ]
-
 ]
 
 { #category : 'locking' }
@@ -581,8 +625,7 @@ GsUpgrader >> metacelloBootstrap10beta311Loaded [
 
 { #category : 'private' }
 GsUpgrader >> metacelloClass [
-  ^ self smalltalk at: #'Metacello'
-
+  ^ self _Smalltalk at: #'Metacello'
 ]
 
 { #category : 'testing' }
@@ -676,19 +719,18 @@ GsUpgrader >> patchForGsDevKitIssue60 [
 
   | protocol |
   protocol := 'GsDevKit Issue60 patch'.
-  self smalltalk
+  self _Smalltalk
     at: #'HTTPSocket'
     ifPresent: [ :cls | 
       self log: 'Installing patchForGsDevKitIssue60: ' , cls name asString.
       cls compile: self patchForGsDevKitIssue60Source1 classified: protocol ].
-  self smalltalk
+  self _Smalltalk
     at: #'MCPlatformSupport'
     ifPresent: [ :cls | 
       self log: 'Installing patchForGsDevKitIssue60: ' , cls name asString , ' class'.
       cls class
         compile: self patchForGsDevKitIssue60Source2
         classified: protocol ]
-
 ]
 
 { #category : 'patching' }
@@ -788,17 +830,16 @@ GsUpgrader >> projectReportOn: strm [
 GsUpgrader >> projectVersion: configurationClassName [
   ^ self metacelloPreviewLoaded
     ifTrue: [ 
-      (self metacelloProjectRegistration
+      (self _MetacelloProjectRegistration
         projectSpecForClassNamed: configurationClassName
         ifAbsent: [ ^ nil ]) version asMetacelloVersionNumber ]
-    ifFalse: [ (self smalltalk at: configurationClassName) project currentVersion ]
-
+    ifFalse: [ (self _Smalltalk at: configurationClassName) project currentVersion ]
 ]
 
 { #category : 'private' }
 GsUpgrader >> refreshGLASSConfigurations: repository [
   [ 
-  (self smalltalk at: #'Gofer') new
+  (self _Smalltalk at: #'Gofer') new
     repository: repository;
     package: 'ConfigurationOfGofer';
     package: 'ConfigurationOfMetacello';
@@ -813,21 +854,19 @@ GsUpgrader >> refreshGLASSConfigurations: repository [
     do: [ :ex | 
       self log: ex description.
       ex resume ]
-
 ]
 
 { #category : 'private' }
 GsUpgrader >> registrationFor: className [
-  self smalltalk
+  self _Smalltalk
     at: className
     ifPresent: [ :ignored | 
-      self smalltalk
+      self _Smalltalk
         at: #'MetacelloProjectRegistration'
         ifPresent: [ :cls | 
           (cls registrationForClassNamed: className ifAbsent: [  ])
             ifNotNil: [ :registration | ^ registration ] ] ].
   ^ nil
-
 ]
 
 { #category : 'accessing' }
@@ -853,16 +892,15 @@ GsUpgrader >> repositoryOverrides [
 
 { #category : 'private' }
 GsUpgrader >> standardBaselineLoaded: baselineClassName [
-  self smalltalk
+  self _Smalltalk
     at: baselineClassName
     ifPresent: [ :ignored | 
-      self smalltalk
+      self _Smalltalk
         at: #'MetacelloProjectRegistration'
         ifPresent: [ :cls | 
           (cls registrationForClassNamed: baselineClassName ifAbsent: [  ])
             ifNotNil: [ :registration | ^ registration loadedInImage ] ] ].
   ^ false
-
 ]
 
 { #category : 'private' }
@@ -970,9 +1008,9 @@ GsUpgrader >> upgradeGLASS: alternateConfigurationRepositoryDirectoryPathOrNil f
             log:
               'Using alternate repository: '
                 , alternateConfigurationRepositoryDirectoryPathOrNil printString.
-          self mCDirectoryRepository new
+          self _MCDirectoryRepository new
             directory:
-              (self serverFileDirectory on: alternateConfigurationRepositoryDirectoryPathOrNil) ]
+              (self _ServerFileDirectory on: alternateConfigurationRepositoryDirectoryPathOrNil) ]
         ifNil: [ 
           usingAlternate := false.
           repositoryOverride ~~ nil
@@ -983,12 +1021,12 @@ GsUpgrader >> upgradeGLASS: alternateConfigurationRepositoryDirectoryPathOrNil f
               self
                 log:
                   'Using default repository: http://seaside.gemtalksystems.com/ss/MetacelloRepository'.
-              self mCHttpRepository
+              self _MCHttpRepository
                 location:
                   'http://seaside.gemtalksystems.com/ss/MetacelloRepository'
                 user: ''
                 password: '' ] ].
-      (self smalltalk at: #'Gofer') new
+      (self _Smalltalk at: #'Gofer') new
         package: 'ConfigurationOfGLASS';
         repository: repository;
         load.
@@ -998,20 +1036,20 @@ GsUpgrader >> upgradeGLASS: alternateConfigurationRepositoryDirectoryPathOrNil f
             ifFalse: [ self loadMetacelloBootstrap10beta311 ].
           [ 
           self refreshGLASSConfigurations: repository.
-          ((self smalltalk at: #'ConfigurationOfMetacello') project
+          ((self _Smalltalk at: #'ConfigurationOfMetacello') project
             version: #'previewBootstrap')
             repositoryOverrides: self repositoryOverrides;
             load.
-          ((self smalltalk at: #'ConfigurationOfGLASS') project
+          ((self _Smalltalk at: #'ConfigurationOfGLASS') project
             version: '1.0-beta.9.2')
             repositoryOverrides: self repositoryOverrides;
             load: #('Core' 'Monticello').
           self patchForGsDevKitIssue60.	"re-apply patch"
-          ((self smalltalk at: #'ConfigurationOfGLASS') project
+          ((self _Smalltalk at: #'ConfigurationOfGLASS') project
             version: '1.0-beta.9.2')
             repositoryOverrides: self repositoryOverrides;
             load ]
-            on: (self smalltalk at: #'MetacelloSkipDirtyPackageLoad')
+            on: (self _Smalltalk at: #'MetacelloSkipDirtyPackageLoad')
             do: [ :ex | ex resume: false ] ]
         ifFalse: [ 
           "explicitly load Metacello #previewBootstrap"
@@ -1024,7 +1062,7 @@ GsUpgrader >> upgradeGLASS: alternateConfigurationRepositoryDirectoryPathOrNil f
             value
             package: 'ConfigurationOfMetacello';
             load.
-          ((self smalltalk at: #'ConfigurationOfMetacello') project
+          ((self _Smalltalk at: #'ConfigurationOfMetacello') project
             version: #'previewBootstrap')
             repositoryOverrides: self repositoryOverrides;
             load ].
@@ -1033,28 +1071,28 @@ GsUpgrader >> upgradeGLASS: alternateConfigurationRepositoryDirectoryPathOrNil f
         value
         package: 'ConfigurationOfMetacelloPreview';
         load.	" explicitly load ConfigurationOfMetacelloPreview"
-      metacelloPreviewStableVersionString := ((self smalltalk
+      metacelloPreviewStableVersionString := ((self _Smalltalk
         at: #'ConfigurationOfMetacelloPreview') project version: #'stable')
         versionString.
       repositoryOverride
         ifNil: [ 
-          ((self smalltalk at: #'ConfigurationOfGLASS') project version: '1.0-beta.9.3') load.
+          ((self _Smalltalk at: #'ConfigurationOfGLASS') project version: '1.0-beta.9.3') load.
           gsUpgraderCacheDirPath
             ifNotNil: [ self ifNeededDownloadMetacelloPreviewFor: metacelloPreviewStableVersionString ] ]
         ifNotNil: [ 
           "Load MetacelloPreview separately -- repositoryOverrides does not apply to Metacello Preview"
-          ((self smalltalk at: #'ConfigurationOfGLASS') project
+          ((self _Smalltalk at: #'ConfigurationOfGLASS') project
             version: '1.0-beta.9.3')
             repositoryOverrides: self repositoryOverrides;
             load:
                 #('Core' 'Monticello' 'Metacello' 'Gofer' 'Release Support' 'OB' 'Metacello Tools' 'Gofer Project Loader').
           gsUpgraderCacheDirPath
             ifNil: [ 
-              ((self smalltalk at: #'ConfigurationOfMetacelloPreview') project version: #'stable')
+              ((self _Smalltalk at: #'ConfigurationOfMetacelloPreview') project version: #'stable')
                 load ]
             ifNotNil: [ 
               self ifNeededDownloadMetacelloPreviewFor: metacelloPreviewStableVersionString.
-              (self smalltalk at: #'Metacello') new
+              (self _Smalltalk at: #'Metacello') new
                 baseline: 'Metacello';
                 repository:
                     'filetree://' , gsUpgraderCacheDirPath
@@ -1070,7 +1108,6 @@ GsUpgrader >> upgradeGLASS: alternateConfigurationRepositoryDirectoryPathOrNil f
             repository:
                 'http://seaside.gemtalksystems.com/ss/MetacelloRepository';
             register ] ]
-
 ]
 
 { #category : 'upgrading' }
@@ -1108,10 +1145,9 @@ GsUpgrader >> upgradeGofer [
     do: [ :ex | 
       self log: ex description.
       ex resume ].
-  ((self smalltalk at: #'ConfigurationOfGofer') project version: #'stable')
+  ((self _Smalltalk at: #'ConfigurationOfGofer') project version: #'stable')
     repositoryOverrides: self repositoryOverrides;
     load
-
 ]
 
 { #category : 'upgrading' }

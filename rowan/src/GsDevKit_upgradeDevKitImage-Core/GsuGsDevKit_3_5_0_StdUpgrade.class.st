@@ -90,6 +90,16 @@ GsuGsDevKit_3_5_0_StdUpgrade >> prepareGsDevKitImage_removeAllMethods [
 	"noop for standard upgrade"
 ]
 
+{ #category : 'prepare gsdevkit  image' }
+GsuGsDevKit_3_5_0_StdUpgrade >> prepareGsDevKitImage_resetExistingGlobalState [
+
+	"Reset and/or initialize any classes that may have invalid state carried over"
+
+	self log: 'Prepare gsdevkit - reset existing global state'.
+
+	(self _globalNamed: 'MCMockPackageInfo') initialize
+]
+
 { #category : 'prepare image user' }
 GsuGsDevKit_3_5_0_StdUpgrade >> prepareImage_user_clear_subscriptions [
 	"no need to clear subscriptions during standard upgrade, because class initialization 

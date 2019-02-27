@@ -233,6 +233,7 @@ GsuAbstractGsDevKitUpgrade >> prepareGsDevKitImage [
 		prepareGsDevKitImage_patch46217: self;
 		prepareGsDevKitImage_recompilePragmaMethods: self;
 		prepareGsDevKitImage_bootstrapGsDevkit: self;
+		prepareGsDevKitImage_resetExistingGlobalState: self;
 		yourself.
 	self updateDBFHistoryFinishUpgrade.
 	System commit.
@@ -300,7 +301,7 @@ GsuAbstractGsDevKitUpgrade >> prepareGsDevKitImage_clearMonticelloCaches [
 	"wipe out the default MCRepositoryGroup"
 	(self _globalNamed: 'MCRepositoryGroup') atClassInstVar: #default put: nil.
 	"Wipe out the Metacello registry ... if it exists"
-	(GsCurrentSession currentSession symbolList objectNamed: #MetacelloProjectRegistration)
+	(self _globalNamed: #MetacelloProjectRegistration)
 	  ifNotNil: [:cl | cl _classVars at: #Registry put: nil ].
 
 	System commit.
@@ -415,6 +416,14 @@ GsuAbstractGsDevKitUpgrade >> prepareGsDevKitImage_removeAllMethods [
 	System commit.
 
 	self log: '	methods removed (commit)'.
+]
+
+{ #category : 'prepare gsdevkit  image' }
+GsuAbstractGsDevKitUpgrade >> prepareGsDevKitImage_resetExistingGlobalState [
+
+	"Reset and/or initialize any classes that may have invalid state carried over"
+
+	"noop for bootstrap (default)"
 ]
 
 { #category : 'prepare gsdevkit  image' }

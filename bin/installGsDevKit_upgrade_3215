@@ -9,7 +9,7 @@ login
 
 run
 	"Install upgrade support code"
-	| codeLibrarian symbolName session symbolList symbolDict dictName |
+	| codeLibrarian symbolName session symbolList symbolDict dictName symDictSlot |
 	dictName := 'Upgrade_GsDevKit_SymDict'.
 	symbolName := dictName asSymbol.
 	session := GsCurrentSession currentSession.
@@ -17,13 +17,13 @@ run
 	symbolDict := symbolList
 		detect: [ :each | (each at: symbolName ifAbsent: [ nil ]) == each ]
 		ifNone: [ 
-			| newDict size |
+			| newDict |
 			newDict := SymbolDictionary new
 				name: symbolName;
 				objectSecurityPolicy: symbolList objectSecurityPolicy;
 				yourself.
-			size := System myUserProfile symbolList size.
-			System myUserProfile insertDictionary: newDict at: size + 1.
+			symDictSlot := System myUserProfile symbolList size.
+			System myUserProfile insertDictionary: newDict at: symDictSlot + 1.
 			newDict ].
 	codeLibrarian := (AllUsers userWithId: 'CodeLibrarianUser') symbolList objectNamed: #CodeLibrarian.
 	codeLibrarian new
@@ -44,13 +44,15 @@ run
 		at: #GsDevKit_Image_Upgrade
 		put: 
 			(GsuGsDevKit_3_5_0_Upgrade 
-				sourceGemStoneRelease: (GsuAbstractGemStoneRelease major: 3 minor: 2 patch: 15))
+				sourceGemStoneRelease: (GsuAbstractGemStoneRelease major: 3 minor: 2 patch: 15)).
 "
 				bootstrapExistingConfigurationList: #( ConfigurationOfGLASS1 );
 				bootstrapPostLoadClassList: #( #SecureHashAlgorithm );
 				bootstrapRepositoryDirectory: GsPackageLibrary getMonticelloRepositoryDirectory;
-				yourself)
+				yourself).
 "
+	System myUserProfile removeDictionaryAt: (System myUserProfile symbolList size).
+	true
 %
 
 commit

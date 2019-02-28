@@ -9,7 +9,7 @@ login
 
 run
 	"Install upgrade support code"
-	| codeLibrarian symbolName session symbolList symbolDict dictName |
+	| codeLibrarian symbolName session symbolList symbolDict dictName symDictSlot |
 	dictName := 'Upgrade_GsDevKit_SymDict'.
 	symbolName := dictName asSymbol.
 	session := GsCurrentSession currentSession.
@@ -17,13 +17,13 @@ run
 	symbolDict := symbolList
 		detect: [ :each | (each at: symbolName ifAbsent: [ nil ]) == each ]
 		ifNone: [ 
-			| newDict size |
+			| newDict |
 			newDict := SymbolDictionary new
 				name: symbolName;
 				objectSecurityPolicy: symbolList objectSecurityPolicy;
 				yourself.
-			size := System myUserProfile symbolList size.
-			System myUserProfile insertDictionary: newDict at: size + 1.
+			symDictSlot := System myUserProfile symbolList size.
+			System myUserProfile insertDictionary: newDict at: symDictSlot + 1.
 			newDict ].
 	codeLibrarian := (AllUsers userWithId: 'CodeLibrarianUser') symbolList objectNamed: #CodeLibrarian.
 	codeLibrarian new
@@ -42,11 +42,13 @@ run
 			(GsuGsDevKit_3_5_0_Upgrade
 				upgradeUserName: 'DataCurator'
 				upgradeSymbolDictName: #UserGlobals
-				sourceGemStoneRelease: (GsuAbstractGemStoneRelease major: 3 minor: 4 patch: 3))
+				sourceGemStoneRelease: (GsuAbstractGemStoneRelease major: 3 minor: 4 patch: 3)).
 "
 				bootstrapExistingConfigurationList: #( ConfigurationOfGLASS1 );
-				yourself)
+				yourself).
 "
+	System myUserProfile removeDictionaryAt: (System myUserProfile symbolList size).
+	true
 %
 commit
 

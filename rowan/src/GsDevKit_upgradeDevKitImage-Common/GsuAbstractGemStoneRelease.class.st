@@ -175,7 +175,24 @@ GsuAbstractGemStoneRelease >> prepareImage_pragmasFor: aGsDevKitUpgrade [
 		so we need to collect all of the methods that have pragmas and then recompile them 
 		to use the new Pragma class ... when we are ready. "
 
+	"Part 1: set the stage for pragma upgrade"
+
 	aGsDevKitUpgrade log: 'Prepare image - pragmas'.
+
+	"noop by default"
+]
+
+{ #category : 'prepare image system user pragma' }
+GsuAbstractGemStoneRelease >> prepareImage_systemuserPragmaFor: aGsDevKitUpgrade [
+	"In 3.4.0, the Pragma class is in the base, and the old Pragma class is be obsoleted,
+		so we need to collect all of the methods that have pragmas and then recompile them 
+		to use the new Pragma class ... when we are ready. "
+
+	"Part 3: make pragma class obsolete"
+
+	aGsDevKitUpgrade log: 'Prepare image - system user pragmas'.
+
+	"noop by default"
 ]
 
 { #category : 'perpare image user' }
@@ -193,6 +210,20 @@ GsuAbstractGemStoneRelease >> prepareImage_userPatches: aGsDevKitUpgrade [
 	aGsDevKitUpgrade 
 		log: 'Prepare image user - patches';
 		prepareImage_user_bug46059
+]
+
+{ #category : 'prepare image user pragma' }
+GsuAbstractGemStoneRelease >> prepareImage_userPragmaFor: aGsDevKitUpgrade [
+	"In 3.4.0, the Pragma class is in the base, and the old Pragma class is be obsoleted,
+		so we need to collect all of the methods that have pragmas and then recompile them 
+		to use the new Pragma class ... when we are ready. "
+
+	"Part 2: collect methods that refrence the obsolete pragma class or have pragmas that 
+		need to be recomputed and need to be recompiled"
+
+	aGsDevKitUpgrade log: 'Prepare image - user pragmas'.
+
+	"noop by default"
 ]
 
 { #category : 'initialization' }

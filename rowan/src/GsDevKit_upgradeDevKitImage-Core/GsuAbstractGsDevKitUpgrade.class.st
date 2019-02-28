@@ -221,6 +221,8 @@ GsuAbstractGsDevKitUpgrade >> methodsWithPragmas [
 GsuAbstractGsDevKitUpgrade >> prepareGsDevKitImage [
 	"formerly done by $GEMSTONE/upgrade/prepareSeasideImage"
 
+	"run as gsdevkit user"
+
 	self prepareGsDevKitImageBanner.
 	self log: 'Prepare gsdevkit image'.
 	self updateDBFHistoryStartUpgrade.
@@ -436,6 +438,8 @@ GsuAbstractGsDevKitUpgrade >> prepareGsDevKitImageBanner [
 GsuAbstractGsDevKitUpgrade >> prepareImage [
 	"prepare image for upgrade"
 
+	"run as system user"
+
 	self prepareImageBanner.
 	self log: 'Prepare image'.
 	self sourceGemStoneRelease 
@@ -485,6 +489,55 @@ GsuAbstractGsDevKitUpgrade >> prepareImage_patches [
 	"noop by default"
 ]
 
+{ #category : 'phases' }
+GsuAbstractGsDevKitUpgrade >> prepareImage_pragma [
+	"prepare pragmas for upgrade"
+
+	"run as system user"
+
+	"Part 1: set the stage for pragma upgrade"
+
+	self prepareImagePragmaBanner.
+	self log: 'Prepare image pragma'.
+	self sourceGemStoneRelease 
+		prepareImage_pragmaFor: self;
+		yourself.
+	self bannerLogDash
+]
+
+{ #category : 'phases' }
+GsuAbstractGsDevKitUpgrade >> prepareImage_pragma_systemuser [
+	"make old pragma class obsolete"
+
+	"run as system user"
+
+	"Part 3: make pragma class obsolete"
+
+	self prepareImagePragmaSystemUserBanner.
+	self log: 'Prepare image system user pragma'.
+	self sourceGemStoneRelease 
+		prepareImage_systemuserPragmaFor: self;
+		yourself.
+	self bannerLogDash
+]
+
+{ #category : 'phases' }
+GsuAbstractGsDevKitUpgrade >> prepareImage_pragma_user [
+	"prepare pragmas for upgrade"
+
+	"run as gsdevkit user"
+
+	"Part 2: collect methods that refrence the obsolete pragma class or have pragmas that 
+		need to be recomputed and need to be recompiled"
+
+	self prepareImagePragmaUserBanner.
+	self log: 'Prepare image user pragma'.
+	self sourceGemStoneRelease 
+		prepareImage_userPragmaFor: self;
+		yourself.
+	self bannerLogDash
+]
+
 { #category : 'prepare image' }
 GsuAbstractGsDevKitUpgrade >> prepareImage_pragmas [
 	"In 3.4.0, the Pragma class is in the base, and the old Pragma class is be obsoleted,
@@ -495,6 +548,35 @@ GsuAbstractGsDevKitUpgrade >> prepareImage_pragmas [
 		before all methods reloaded"
 
 	"For 3.3.x we'll need to recompile all methods that have pragmas, so that new structure is used"
+
+	"Part 1: set the stage for pragma upgrade"
+
+	| pragmaClass |
+
+	"need to make sure that this method is used so that we can extract pragmas from old structures"
+	self log: '	Installing ...Pragma>>withPragmasIn:do:'.
+	(pragmaClass := self upgradeSymbolDict at: #Pragma ifAbsent: [])
+		ifNil: [ ^ self log: '	No Pragma class found in ', self upgradeSymbolDict name asString, ' symbol dictionary' ].
+	self log: '	Old pragma class ', pragmaClass name printString, '[', pragmaClass asOop printString, '] -- will be made obsolete'.
+	pragmaClass class
+		compileMethod: self _prepareImage_pragmas_withPragmas_source 
+		dictionaries: self upgradeUserProfile symbolList 
+		category: 'Updatting the Method Dictionary -- during upgrade'.
+]
+
+{ #category : 'prepare image pragma user' }
+GsuAbstractGsDevKitUpgrade >> prepareImage_pragmas_user [
+	"In 3.4.0, the Pragma class is in the base, and the old Pragma class is be obsoleted,
+		so we need to collect all of the methods that have pragmas and then recompile them 
+		to use the new Pragma class ... when we are ready. "
+
+	"For 3.2.x, all methods need to be recompiled ... pragma data structures should be destroyed 
+		before all methods reloaded"
+
+	"For 3.3.x we'll need to recompile all methods that have pragmas, so that new structure is used"
+
+	"Part 2: collect methods that refrence the obsolete pragma class or have pragmas that 
+		need to be recomputed and need to be recompiled"
 
 	| pragmaClass oldPackagePolicyEnabled |
 
@@ -541,6 +623,8 @@ GsuAbstractGsDevKitUpgrade >> prepareImage_pragmas [
 { #category : 'phases' }
 GsuAbstractGsDevKitUpgrade >> prepareImage_user [
 	"prepare image for upgrade"
+
+	"run as gsdevkit user"
 
 	self prepareImageUserBanner.
 	self log: 'Prepare image user'.
@@ -592,6 +676,27 @@ GsuAbstractGsDevKitUpgrade >> prepareImage_user_clear_subscriptions [
 GsuAbstractGsDevKitUpgrade >> prepareImageBanner [
 
 	self bannerLog: 'Starting ', self buildString, ' GsDevKit upgrade: prepare image as ', System myUserProfile userId.
+	self logUpgradeParameters
+]
+
+{ #category : 'prepare image' }
+GsuAbstractGsDevKitUpgrade >> prepareImagePragmaBanner [
+
+	self bannerLog: 'Starting ', self buildString, ' GsDevKit pragma upgrade (part 1): prepare image pragma as ', System myUserProfile userId.
+	self logUpgradeParameters
+]
+
+{ #category : 'prepare image user' }
+GsuAbstractGsDevKitUpgrade >> prepareImagePragmaSystemUserBanner [
+
+	self bannerLog: 'Starting ', self buildString, ' GsDevKit pragma upgrade (part 3): prepare image pragma system user as ', System myUserProfile userId.
+	self logUpgradeParameters
+]
+
+{ #category : 'prepare image pragma user' }
+GsuAbstractGsDevKitUpgrade >> prepareImagePragmaUserBanner [
+
+	self bannerLog: 'Starting ', self buildString, ' GsDevKit pragma upgrade (part 2): prepare image pragma user as ', System myUserProfile userId.
 	self logUpgradeParameters
 ]
 

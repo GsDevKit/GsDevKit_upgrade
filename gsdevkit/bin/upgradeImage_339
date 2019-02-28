@@ -1,4 +1,8 @@
-set -ex
+#
+# with no args, will use extent0.seaside.dbf from the sourceStone product/bin
+# with arg, will use extent name in local snapshots directory
+#
+set -e
 . defStone.env
 export vers="3.5.0_g"
 
@@ -13,7 +17,13 @@ stopStone $GEMSTONE_NAME
 rm -rf $GS_HOME/server/stones/${GEMSTONE_NAME}/extents/extent0.dbf
 rm -rf $GS_HOME/server/stones/${GEMSTONE_NAME}/tranlogs/tranlog*.dbf
 
-newExtent -n -s $GS_HOME/server/stones/${sourceStoneName}/product/bin/extent0.seaside.dbf $GEMSTONE_NAME
+if [ "$1"x = "x" ] ; then
+	upgradeExtent=$GS_HOME/server/stones/${sourceStoneName}/product/bin/extent0.seaside.dbf
+else
+  	upgradeExtent=snapshots/${1}
+fi
+
+newExtent -n -s $upgradeExtent $GEMSTONE_NAME
 
 export upgradeLogDir=`pwd`/upgradeLogDir
 

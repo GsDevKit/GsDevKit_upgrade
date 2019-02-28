@@ -1,0 +1,23 @@
+#
+#	login as .topazini user (DataCurator?)
+#
+iferr 1 stk
+iferr 2 stack
+iferr 3 exit 1
+display oops
+limit bytes 200
+login
+
+run
+	(((AllUsers userWithId: 'SystemUser') 
+		objectNamed: #UserGlobals) 
+			at: #'GsDevKit_Image_Upgrade')
+				prepareImage_pragma_user
+%
+
+commit
+
+errorCount
+
+exit 
+

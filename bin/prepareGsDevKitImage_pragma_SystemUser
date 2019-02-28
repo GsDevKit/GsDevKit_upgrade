@@ -1,0 +1,21 @@
+#
+#	login as SystemUser to to prepareImage work
+#
+iferr 1 stk
+iferr 2 stack
+iferr 3 exit 1
+display oops
+limit bytes 200
+set u SystemUser p swordfish
+login
+
+run
+	GsDevKit_Image_Upgrade prepareImage_pragma_systemuser
+%
+
+commit
+
+errorCount
+
+exit 
+

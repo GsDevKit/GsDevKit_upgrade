@@ -515,14 +515,18 @@ GsuAbstractGsDevKitUpgrade >> prepareImage_pragmas [
 	GsPackagePolicy current instVarAt: 1 put: true.
 
 	self log: '	Finding methods with pragmas for user: ', self upgradeUserName printString.
+	self log: '		Pragma ', (self _globalNamed: 'Pragma') asOop printString.
+	self log: '		System myUserProfile: ', System myUserProfile userId.
 	((ClassOrganizer newWithRoot: Object forUserId: self upgradeUserName) allSubclassesOf: Object)
 		do: [ :cls | 
 		  {cls.
 		  (cls class)}
 			do: [ :beh | 
-			  beh allSelectors
+				| methodDict |
+				methodDict :=  beh _fullMethodDictEnv0.
+			  methodDict keys
 				do: [ :sel | 
-				  (beh compiledMethodAt: sel otherwise: nil)
+				  (methodDict at: sel otherwise: nil)
 					ifNotNil: [ :meth | 
 					  (beh _pragmasForMethod: meth) isEmpty
 						ifFalse: [ 

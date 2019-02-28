@@ -26,6 +26,6 @@ pushd "${upgradeLogDir}" >& /dev/null
 	startTopaz $GEMSTONE_NAME -lq < $GS_HOME/shared/repos/GsDevKit_upgradeDevKitImage/bin/runImageTests
 popd
 
-# stopStone $GEMSTONE_NAME
-# cp extents/extent0.dbf snapshots/extent0_preparedGsDevKitImage_3215.dbf
+ stopStone $GEMSTONE_NAME
+ cp extents/extent0.dbf snapshots/extent0_preparedGsDevKitImage_3215.dbf
 

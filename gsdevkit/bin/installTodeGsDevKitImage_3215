@@ -13,7 +13,7 @@ pushd "${upgradeLogDir}" >& /dev/null
 	todeLoad $GEMSTONE_NAME
 
 	stopStone $GEMSTONE_NAME
-	cp ../extents/extent0.dbf ../snapshots/extent0_tode_3215.dbf
+	cp ../extents/extent0.dbf ../snapshots/extent0_postUpgrade_tode_3215.dbf
 	startStone $GEMSTONE_NAME
 
 	startTopaz $GEMSTONE_NAME -lq < $GS_HOME/shared/repos/GsDevKit_upgradeDevKitImage/bin/runImageTests

@@ -1,0 +1,28 @@
+# expect to be logged in
+
+run
+	"Install upgrade support code"
+	| codeLibrarian symbolName session symbolList symbolDict dictName symDictSlot |
+	dictName := 'Upgrade_GsDevKit_SymDict'.
+	symbolName := dictName asSymbol.
+	session := GsCurrentSession currentSession.
+	symbolList := session symbolList.
+	symbolDict := symbolList
+		detect: [ :each | (each at: symbolName ifAbsent: [ nil ]) == each ]
+		ifNone: [ 
+			| newDict |
+			newDict := SymbolDictionary new
+				name: symbolName;
+				objectSecurityPolicy: symbolList objectSecurityPolicy;
+				yourself.
+			symDictSlot := System myUserProfile symbolList size.
+			System myUserProfile insertDictionary: newDict at: symDictSlot + 1.
+			newDict ].
+	codeLibrarian := (AllUsers userWithId: 'CodeLibrarianUser') symbolList objectNamed: #CodeLibrarian.
+	codeLibrarian new
+		symbolDictName: dictName;
+		repository: 'tonel:$ROWAN_PROJECTS_HOME/GsDevKit_upgradeDevKitImage/rowan/src/';
+		load: #('GsDevKit_upgradeDevKitImage-Common' 'GsDevKit_upgradeDevKitImage-Bootstrap' 'GsDevKit_upgradeDevKitImage-Core').
+	(symbolList objectNamed: 'GsuAbstractGsDevKitUpgrade') _symbolDictionary: symbolDict.
+	true
+%

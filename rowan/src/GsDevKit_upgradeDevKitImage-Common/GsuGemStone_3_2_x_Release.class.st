@@ -36,7 +36,7 @@ GsuGemStone_3_2_x_Release >> prepareImage_systemuserPragmaFor: aGsDevKitUpgrade 
 	"Part 3: make pragma class obsolete"
 
 	super prepareImage_systemuserPragmaFor: aGsDevKitUpgrade.
-	aGsDevKitUpgrade 	aGsDevKitUpgrade prepareImage_makeClassObsolete: 'Pragma' in: aGsDevKitUpgrade upgradeSymbolDict
+	aGsDevKitUpgrade prepareImage_makeClassObsolete: 'Pragma' in: aGsDevKitUpgrade upgradeSymbolDict
 ]
 
 { #category : 'prepare image user' }

@@ -114,6 +114,30 @@ GsuAbstractGsDevKitUpgrade >> _defaultTargetRelease [
 ]
 
 { #category : 'private' }
+GsuAbstractGsDevKitUpgrade >> _prepareImage_behavior_compileMethod_Category_patchSource [
+
+	^  'compileMethod: source category: cat
+  | errorString |
+  [ 
+  self
+    compileMethod: source
+    category: cat
+    using: GsSession currentSession symbolList ]
+    onException: CompileError
+    do: [ :ex | 
+      errorString := GsNMethod
+        _sourceWithErrors: ex errorDetails
+        fromString: ex sourceString ].
+  errorString
+    ifNotNil: [ 
+      self
+        error:
+          ''Compile error in Class: '' , self name printString , '' method: '' , errorString.	"if user continues from the error, we return the errorString"
+      ^ errorString ].
+  ^ nil	"return nil to indicate no errors"'
+]
+
+{ #category : 'private' }
 GsuAbstractGsDevKitUpgrade >> _prepareImage_class_bug46217_patchSource [
 
 	^  'removeFromSystem
@@ -233,6 +257,7 @@ GsuAbstractGsDevKitUpgrade >> prepareGsDevKitImage [
 		prepareGsDevKitImage_clearMonticelloCaches: self;
 		prepareGsDevKitImage_removeAllMethods: self;
 		prepareGsDevKitImage_patch46217: self;
+		prepareGsDevKitImage_patch_compileMethodCategory: self;
 		prepareGsDevKitImage_recompilePragmaMethods: self;
 		prepareGsDevKitImage_bootstrapGsDevkit: self;
 		prepareGsDevKitImage_resetExistingGlobalState: self;
@@ -269,10 +294,10 @@ GsuAbstractGsDevKitUpgrade >> prepareGsDevKitImage_bug46217_patch [
 	GsPackageLibrary 
 	  installMonticelloPackagesHome: (GsCurrentSession currentSession objectNamed: #'UserGlobals') 
 	  during: [:globals | 
-		Class
+		(Class
 		  compileMethod: self _prepareImage_class_bug46217_patchSource
 		dictionaries: GsCurrentSession currentSession symbolList
-		category: '*change-notification'
+		category: '*change-notification') ifNotNil: [:ar | self error: 'did not compile' ].
 	  ].
 
 	System commit.
@@ -362,6 +387,13 @@ GsuAbstractGsDevKitUpgrade >> prepareGsDevKitImage_loadApplicationCode [
 
 	"now load application"
 	self loadApplicationLoadSpecs
+]
+
+{ #category : 'prepare gsdevkit  image' }
+GsuAbstractGsDevKitUpgrade >> prepareGsDevKitImage_patch_compileMethodCategory [
+	"patch only needed suring standard upgrade ..."
+
+	"noop"
 ]
 
 { #category : 'prepare gsdevkit  image' }
@@ -460,10 +492,10 @@ GsuAbstractGsDevKitUpgrade >> prepareImage_bug46217_patch [
 	symbolDict := package symbolDict.
 	class := symbolDict at: #'MCGemStonePlatform'.
 	theSymbolList := GsCurrentSession currentSession symbolList.
-	class
+	(class
 		compileMethod: self _prepareImage_mcgemstoneplatform_bug46217_patchSource 
 		dictionaries: theSymbolList
-		category:  'patch bug 46217'
+		category:  'patch bug 46217') ifNotNil: [:ar | self error: 'did not compile' ].
 ]
 
 { #category : 'prepare image' }
@@ -558,10 +590,10 @@ GsuAbstractGsDevKitUpgrade >> prepareImage_pragmas [
 	(pragmaClass := self upgradeSymbolDict at: #Pragma ifAbsent: [])
 		ifNil: [ ^ self log: '	No Pragma class found in ', self upgradeSymbolDict name asString, ' symbol dictionary' ].
 	self log: '	Old pragma class ', pragmaClass name printString, '[', pragmaClass asOop printString, '] -- will be made obsolete'.
-	pragmaClass class
+	(pragmaClass class
 		compileMethod: self _prepareImage_pragmas_withPragmas_source 
 		dictionaries: self upgradeUserProfile symbolList 
-		category: 'Updatting the Method Dictionary -- during upgrade'.
+		category: 'Updatting the Method Dictionary -- during upgrade') ifNotNil: [:ar | self error: 'did not compile' ].
 ]
 
 { #category : 'prepare image pragma user' }
@@ -587,10 +619,10 @@ GsuAbstractGsDevKitUpgrade >> prepareImage_pragmas_user [
 
 	"need to make sure that this method is used so that we can extract pragmas from old structures"
 	self log: '	Installing ...oldPragma>>'.
-	pragmaClass class
+	(pragmaClass class
 		compileMethod: self _prepareImage_pragmas_withPragmas_source 
 		dictionaries: self upgradeUserProfile symbolList 
-		category: 'Updatting the Method Dictionary -- during upgrade'. 
+		category: 'Updatting the Method Dictionary -- during upgrade') ifNotNil: [:ar | self error: 'did not compile' ].
 
 	oldPackagePolicyEnabled := GsPackagePolicy current instVarAt: 1.
 	self log: '	GsPackagePolicy currently ', (oldPackagePolicyEnabled ifTrue: [ 'enabled.'] ifFalse: ['disabled.']).
@@ -645,10 +677,10 @@ GsuAbstractGsDevKitUpgrade >> prepareImage_user_bug46059 [
 	GsPackageLibrary 
 		installMonticelloPackagesHome: (GsCurrentSession currentSession objectNamed: #'UserGlobals') 
 		during: [:globals | 
-			Class
+			(Class
 			compileMethod: self _prepareImage_user_class_bug46059_patchSource
 			dictionaries: GsCurrentSession currentSession symbolList
-			category: '*change-notification' ].
+			category: '*change-notification') ifNotNil: [:ar | self error: 'did not compile' ]. ].
 ]
 
 { #category : 'prepare image user' }

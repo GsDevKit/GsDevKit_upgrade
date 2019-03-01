@@ -47,6 +47,54 @@ GsuGsDevKit_3_5_0_StdUpgrade >> prepareGsDevKitImage_bug46217_patch [
 ]
 
 { #category : 'prepare gsdevkit  image' }
+GsuGsDevKit_3_5_0_StdUpgrade >> prepareGsDevKitImage_clearMonticelloCaches [
+
+	" clear caches - those that are unneeded or create problem during initial bootstrap load"
+
+	self log: 'Prepare gsdevkit - clear Monticello caches'.
+
+	"MCDefinition clearInstances"
+	(self _globalNamed: 'MCDefinition') _classVars at: #Instances put: nil.
+	"MCMethodDefinition shutdown"
+	(self _globalNamed: 'MCMethodDefinition') _classVars at: #Definitions put: nil.
+	"MethodVersionHistory reset"
+	self _currentUserGlobals removeKey: #MethodVersionHistory_UniqueInstance ifAbsent: [].
+	"clear out PackageOrganizer default class instance variable"
+	(self _globalNamed: 'PackageOrganizer') atClassInstVar: #default put: nil.
+	"clear out McCacheRepository default class instance variable"
+	(self _globalNamed: 'MCCacheRepository') atClassInstVar: #default put: nil.
+	"wipe out the working copy registry ... will be redefined later"
+	(self _globalNamed: 'MCPackageManager') atClassInstVar: #registry put: nil.
+	(self _globalNamed: 'MCWorkingCopy') atClassInstVar: #registry put: nil.
+	"wipe out the default MCRepositoryGroup"
+	(self _globalNamed: 'MCRepositoryGroup') atClassInstVar: #default put: nil.
+	"Wipe out the Metacello registry ... if it exists"
+
+	true ifTrue: [ ^ self ].
+
+	(self _globalNamed: #MetacelloProjectRegistration)
+	  ifNotNil: [:cl | cl _classVars at: #Registry put: nil ].
+
+	System commit.
+
+	self log: '	Monticello caches cleared (commit)'.
+]
+
+{ #category : 'prepare gsdevkit  image' }
+GsuGsDevKit_3_5_0_StdUpgrade >> prepareGsDevKitImage_patch_compileMethodCategory [
+	"patch only needed suring standard upgrade ..."
+
+	"will be overridden when Core package loaded"
+
+	self log: '		Patching ...Behavior>>compileMethod:category:'.
+
+	(Behavior
+		compileMethod: self _prepareImage_behavior_compileMethod_Category_patchSource 
+		dictionaries: self upgradeUserProfile symbolList 
+		category: '*core-squeak') ifNotNil: [:ar | self error: 'did not compile' ].
+]
+
+{ #category : 'prepare gsdevkit  image' }
 GsuGsDevKit_3_5_0_StdUpgrade >> prepareGsDevKitImage_recompilePragmaMethods [
 
 	"Methods that references the ObsoletePragma class (pre-3.4) need to be recompiled."

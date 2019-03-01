@@ -81,6 +81,12 @@ GsuAbstractGemStoneRelease >> patch [
 	^ patch ifNil: [ 0 ]
 ]
 
+{ #category : 'prepare gsdevkit image' }
+GsuAbstractGemStoneRelease >> patch_compileMethodCategory:  aGsDevKitUpgrade [
+
+	aGsDevKitUpgrade patch_compileMethodCategory
+]
+
 { #category : 'accessing' }
 GsuAbstractGemStoneRelease >> patch: anInteger [
 
@@ -117,6 +123,12 @@ GsuAbstractGemStoneRelease >> prepareGsDevKitImage_existingConfigurationList:  a
 GsuAbstractGemStoneRelease >> prepareGsDevKitImage_loadApplicationCode:  aGsDevKitUpgrade [
 
 	aGsDevKitUpgrade prepareGsDevKitImage_loadApplicationCode
+]
+
+{ #category : 'prepare gsdevkit image' }
+GsuAbstractGemStoneRelease >> prepareGsDevKitImage_patch_compileMethodCategory:  aGsDevKitUpgrade [
+
+	aGsDevKitUpgrade prepareGsDevKitImage_patch_compileMethodCategory
 ]
 
 { #category : 'prepare gsdevkit image' }

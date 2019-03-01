@@ -83,10 +83,10 @@ GsuGsDevKitBootstrap >> bootstrapGsDevkit [
 
 	"patch Class>>removeFromSystem until upgrade is complete, will be repaired during load"
 	self log: '	patching patch Class>>removeFromSystem'.
-	Class
+	(Class
 		compileMethod: self _bootstrap_class_removeFromSystem_patchSource 
 		dictionaries: self upgradeUserProfile symbolList 
-		category: '*change-notification'.
+		category: '*change-notification') ifNotNil: [:ar | self error: 'did not compile' ].
 
 	"force configurations to be reloaded if needed"
 	self removeExistingConfigurations.
@@ -117,10 +117,10 @@ GsuGsDevKitBootstrap >> bootstrapMaster [
 	  installMonticelloPackagesHome: self upgradeSymbolDict
 	  during: [:ignored |
 		"put PositionableStream>>originalContents in session methods"
-		PositionableStream 
+		(PositionableStream 
 		  compileMethod: self _bootstrap_positionableStream_original_contents_patchSource 
 		  dictionaries: GsCurrentSession currentSession symbolList 
-		  category: '*squeak'].
+		  category: '*squeak') ifNotNil: [:ar | self error: 'did not compile' ] ].
 
 	"enable the GsPackages that were enabled during upgradeImage (this is 3.5.0 and beyond specific)"
 	self upgradeUserProfile symbolList do:[:dict | | dName |

@@ -65,10 +65,10 @@ GsuGsDevKit_3_5_0_Upgrade >> prepareImage_patches [
 
 	super prepareImage_patches.
 	self log: '	patch Behavior >> _primitiveCompileMethod:symbolList:category:oldLitVars:intoMethodDict:intoCategories:intoPragmas:environmentId:'.
-	Behavior
+	(Behavior
 		compileMethod: self _prepareImage_behavior_patchSource 
 		dictionaries: self upgradeUserProfile symbolList 
-		category:  '*Core35x'
+		category:  '*Core35x') ifNotNil: [:ar | self error: 'did not compile' ]
 ]
 
 { #category : 'initialization' }

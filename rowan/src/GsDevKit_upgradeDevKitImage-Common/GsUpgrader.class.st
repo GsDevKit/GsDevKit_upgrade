@@ -28,60 +28,6 @@ GsUpgrader class >> _createCacheSentinel: gsUpgraderCacheDirPath forVersion: gem
 ]
 
 { #category : 'private' }
-GsUpgrader class >> _globalNamed: aString [
-
-	^ GsSession currentSession objectNamed: aString
-]
-
-{ #category : 'private' }
-GsUpgrader class >> _MCCacheRepository [
-
-	^ self _globalNamed: 'MCCacheRepository'
-]
-
-{ #category : 'private' }
-GsUpgrader class >> _MCDirectoryRepository [
-
-	^ self _globalNamed: 'MCDirectoryRepository'
-]
-
-{ #category : 'private' }
-GsUpgrader class >> _MCHttpRepository [
-
-	^ self _globalNamed: 'MCHttpRepository'
-]
-
-{ #category : 'private' }
-GsUpgrader class >> _MCPlatformSupport [
-
-	^ self _globalNamed: 'MCPlatformSupport'
-]
-
-{ #category : 'private' }
-GsUpgrader class >> _MetacelloPlatform [
-
-	^ self _globalNamed: 'MetacelloPlatform'
-]
-
-{ #category : 'private' }
-GsUpgrader class >> _MetacelloProjectRegistration [
-
-	^ self _globalNamed: 'MetacelloProjectRegistration'
-]
-
-{ #category : 'private' }
-GsUpgrader class >> _ServerFileDirectory [
-
-	^ self _globalNamed: 'ServerFileDirectory'
-]
-
-{ #category : 'private' }
-GsUpgrader class >> _Smalltalk [
-
-	^ self _globalNamed: 'Smalltalk'
-]
-
-{ #category : 'private' }
 GsUpgrader class >> _upgradeGLASSCacheBaseDir: gsUpgraderCacheDirPath [
   ^ self _ServerFileDirectory
     on: gsUpgraderCacheDirPath , self _upgradeGLASSCacheBasePath
@@ -262,6 +208,60 @@ GsUpgrader class >> upgradeMetacello [
 
   self new upgradeMetacello
 
+]
+
+{ #category : 'private' }
+GsUpgrader >> _globalNamed: aString [
+
+	^ GsSession currentSession objectNamed: aString
+]
+
+{ #category : 'private' }
+GsUpgrader >> _MCCacheRepository [
+
+	^ self _globalNamed: 'MCCacheRepository'
+]
+
+{ #category : 'private' }
+GsUpgrader >> _MCDirectoryRepository [
+
+	^ self _globalNamed: 'MCDirectoryRepository'
+]
+
+{ #category : 'private' }
+GsUpgrader >> _MCHttpRepository [
+
+	^ self _globalNamed: 'MCHttpRepository'
+]
+
+{ #category : 'private' }
+GsUpgrader >> _MCPlatformSupport [
+
+	^ self _globalNamed: 'MCPlatformSupport'
+]
+
+{ #category : 'private' }
+GsUpgrader >> _MetacelloPlatform [
+
+	^ self _globalNamed: 'MetacelloPlatform'
+]
+
+{ #category : 'private' }
+GsUpgrader >> _MetacelloProjectRegistration [
+
+	^ self _globalNamed: 'MetacelloProjectRegistration'
+]
+
+{ #category : 'private' }
+GsUpgrader >> _ServerFileDirectory [
+
+	^ self _globalNamed: 'ServerFileDirectory'
+]
+
+{ #category : 'private' }
+GsUpgrader >> _Smalltalk [
+
+	^ self _globalNamed: 'Smalltalk'
 ]
 
 { #category : 'reporting' }

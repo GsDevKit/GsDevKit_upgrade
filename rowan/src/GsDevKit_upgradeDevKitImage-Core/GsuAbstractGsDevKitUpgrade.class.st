@@ -207,7 +207,7 @@ GsuAbstractGsDevKitUpgrade >> bootstrapGsDevkit [
 			bootstrapGemStoneRelease: self _bootstrapRelease)
 		bootstrapPostLoadClassList: self bootstrapPostLoadClassList;
 		bootstrapRepositoryDirectory: self bootstrapRepositoryDirectory;
-		bootstrapApplicationLoadSpecs: self bootstrapApplicationLoadSpecs; 
+		bootstrapApplicationLoadSpecs: bootstrapApplicationLoadSpecs; 
 		bootstrapExistingConfigurationList: self bootstrapExistingConfigurationList;
 		bootstrapGsDevkit
 ]

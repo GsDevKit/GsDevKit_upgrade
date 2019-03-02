@@ -39,6 +39,21 @@ GsuGsDevKitBootstrap >> _listUpgradeParameters [
 	^ #( bootstrapPostLoadClassList bootstrapApplicationLoadSpecs bootstrapExistingConfigurationList )
 ]
 
+{ #category : 'private' }
+GsuGsDevKitBootstrap >> _removeClassNamed: className [
+
+	self log: '	Attempt to remove ', className printString.
+	(self _globalNamed: className)
+		ifNotNil: [:theClass | 
+			theClass subclasses isEmpty
+				ifTrue: [
+					(System myUserProfile dictionariesAndSymbolsOf: theClass ) 
+						do: [:ar | 
+							(ar at: 1) removeKey: (ar at: 2).
+							self log: '		remove class named ', (ar at: 2) printString, ' from symbol dictionary ', (ar at: 1) name printString ] ]
+				ifFalse: [ self log: '		DID NOT remove class named: ', className printString ] ]
+]
+
 { #category : 'accessing' }
 GsuGsDevKitBootstrap >> bootstrapGemStoneRelease [
 
@@ -121,6 +136,12 @@ GsuGsDevKitBootstrap >> bootstrapMaster [
 		  compileMethod: self _bootstrap_positionableStream_original_contents_patchSource 
 		  dictionaries: GsCurrentSession currentSession symbolList 
 		  category: '*squeak') ifNotNil: [:ar | self error: 'did not compile' ] ].
+
+	"removing list of classes in GLASS1 packages, but not GLASS bootstrap packages ... classes will 
+		be re-added and all methods will be recomplied that may have referenced these classes"
+	#( 'GsFailedMethodCompilationDuringCopyMethodToNewClass' 'GsNonmigratingDeployer' )
+		do: [:className |
+			self _removeClassNamed: className ].
 
 	"enable the GsPackages that were enabled during upgradeImage (this is 3.5.0 and beyond specific)"
 	self upgradeUserProfile symbolList do:[:dict | | dName |

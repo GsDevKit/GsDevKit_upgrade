@@ -132,6 +132,7 @@ GsuAbstractGsDevKit >> _reloadProjectNamed: projectName [
 	projectSpec notNil
 		ifTrue: [ 
 			self log: '		Reloading Project ', projectName printString.
+			self bannerLogDash.
 			repoSpec := projectSpec repositorySpecs first.
 			metacello := (self _globalNamed: 'Metacello') image baseline: projectName ]
 		ifFalse: [ self error: 'Project spec not found for ', projectName printString ].
@@ -139,8 +140,6 @@ GsuAbstractGsDevKit >> _reloadProjectNamed: projectName [
 		deploy: [ 
 		metacello copy get.
 		metacello copy load ].
-	self bannerLogDash.
-	self bannerLogDash.
 ]
 
 { #category : 'private' }
@@ -280,6 +279,9 @@ GsuAbstractGsDevKit >> loadApplicationLoadSpecs [
 									ifFalse: [ 
 										self log: '			Skip ', ex postloadClass name asString, ' initialization.'.
 										ex resume: false ] ] ].
+	self bannerLogDash.
+	self bannerLogDash.
+
 	System commit.
 
 	self log: '	done (commit)'.

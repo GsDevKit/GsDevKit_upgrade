@@ -247,6 +247,8 @@ GsuAbstractGsDevKitUpgrade >> prepareGsDevKitImage [
 
 	"run as gsdevkit user"
 
+	self log: 'ZipArchive association  [', ((System myUserProfile objectNamed: 'UserGlobals') associationAt: #ZipArchive otherwise: nil) asOop printString, ']'.
+
 	self prepareGsDevKitImageBanner.
 	self log: 'Prepare gsdevkit image'.
 	self updateDBFHistoryStartUpgrade.
@@ -268,7 +270,9 @@ GsuAbstractGsDevKitUpgrade >> prepareGsDevKitImage [
 		prepareGsDevKitImage_loadApplicationCode: self;
 		yourself.		
 	self log: '	finished gsdevkit image (commit)'.
-	self bannerLogDash
+	self bannerLogDash.
+
+	self log: 'ZipArchive association  [', ((System myUserProfile objectNamed: 'UserGlobals') associationAt: #ZipArchive otherwise: nil) asOop printString, ']'.
 ]
 
 { #category : 'prepare gsdevkit  image' }
@@ -472,13 +476,17 @@ GsuAbstractGsDevKitUpgrade >> prepareImage [
 
 	"run as system user"
 
+	self log: 'ZipArchive association  [', ((System myUserProfile objectNamed: 'UserGlobals') associationAt: #ZipArchive otherwise: nil) asOop printString, ']'.
+
 	self prepareImageBanner.
 	self log: 'Prepare image'.
 	self sourceGemStoneRelease 
 		prepareImage_pragmasFor: self;
 		prepareImage_makeClassesObsolete: self;
 		prepareImage_patches: self.
-	self bannerLogDash
+	self bannerLogDash.
+
+	self log: 'ZipArchive association  [', ((System myUserProfile objectNamed: 'UserGlobals') associationAt: #ZipArchive otherwise: nil) asOop printString, ']'.
 ]
 
 { #category : 'prepare image' }
@@ -529,12 +537,16 @@ GsuAbstractGsDevKitUpgrade >> prepareImage_pragma [
 
 	"Part 1: set the stage for pragma upgrade"
 
+	self log: 'ZipArchive association  [', ((System myUserProfile objectNamed: 'UserGlobals') associationAt: #ZipArchive otherwise: nil) asOop printString, ']'.
+
 	self prepareImagePragmaBanner.
 	self log: 'Prepare image pragma'.
 	self sourceGemStoneRelease 
 		prepareImage_pragmaFor: self;
 		yourself.
-	self bannerLogDash
+	self bannerLogDash.
+
+	self log: 'ZipArchive association  [', ((System myUserProfile objectNamed: 'UserGlobals') associationAt: #ZipArchive otherwise: nil) asOop printString, ']'.
 ]
 
 { #category : 'phases' }
@@ -545,12 +557,16 @@ GsuAbstractGsDevKitUpgrade >> prepareImage_pragma_systemuser [
 
 	"Part 3: make pragma class obsolete"
 
+	self log: 'ZipArchive association  [', ((System myUserProfile objectNamed: 'UserGlobals') associationAt: #ZipArchive otherwise: nil) asOop printString, ']'.
+
 	self prepareImagePragmaSystemUserBanner.
 	self log: 'Prepare image system user pragma'.
 	self sourceGemStoneRelease 
 		prepareImage_systemuserPragmaFor: self;
 		yourself.
-	self bannerLogDash
+	self bannerLogDash.
+
+	self log: 'ZipArchive association  [', ((System myUserProfile objectNamed: 'UserGlobals') associationAt: #ZipArchive otherwise: nil) asOop printString, ']'.
 ]
 
 { #category : 'phases' }
@@ -562,12 +578,16 @@ GsuAbstractGsDevKitUpgrade >> prepareImage_pragma_user [
 	"Part 2: collect methods that refrence the obsolete pragma class or have pragmas that 
 		need to be recomputed and need to be recompiled"
 
+	self log: 'ZipArchive association  [', ((System myUserProfile objectNamed: 'UserGlobals') associationAt: #ZipArchive otherwise: nil) asOop printString, ']'.
+
 	self prepareImagePragmaUserBanner.
 	self log: 'Prepare image user pragma'.
 	self sourceGemStoneRelease 
 		prepareImage_userPragmaFor: self;
 		yourself.
-	self bannerLogDash
+	self bannerLogDash.
+
+	self log: 'ZipArchive association  [', ((System myUserProfile objectNamed: 'UserGlobals') associationAt: #ZipArchive otherwise: nil) asOop printString, ']'.
 ]
 
 { #category : 'prepare image' }
@@ -658,13 +678,17 @@ GsuAbstractGsDevKitUpgrade >> prepareImage_user [
 
 	"run as gsdevkit user"
 
+	self log: 'ZipArchive association  [', ((System myUserProfile objectNamed: 'UserGlobals') associationAt: #ZipArchive otherwise: nil) asOop printString, ']'.
+
 	self prepareImageUserBanner.
 	self log: 'Prepare image user'.
 	self sourceGemStoneRelease 
 		prepareImage_userPatches: self;
 		prepareImage_user_clear_subscriptions: self;
 		yourself.
-	self bannerLogDash
+	self bannerLogDash.
+
+	self log: 'ZipArchive association  [', ((System myUserProfile objectNamed: 'UserGlobals') associationAt: #ZipArchive otherwise: nil) asOop printString, ']'.
 ]
 
 { #category : 'prepare image user' }

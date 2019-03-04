@@ -78,7 +78,7 @@ GsuAbstractGsDevKit >> _defaultBootstrapApplicationLoadSpecs [
 GsuAbstractGsDevKit >> _defaultBootstrapPostLoadClassList [
 	"formerly BootstrapApplicationPostloadClassList, list of classes that should not be initialized during bootstrap"
 
-	^ #( #SecureHashAlgorithm #MCFileTreeFileDirectoryUtils )
+	^ { #SecureHashAlgorithm . #MCFileTreeFileDirectoryUtils  }
 ]
 
 { #category : 'private' }
@@ -256,9 +256,10 @@ GsuAbstractGsDevKit >> loadApplicationLoadSpecs [
 		that the in-memory package state is correct"
 
 	self bootstrapApplicationLoadSpecs do: [:loadSpec | 
-		[ loadSpec size = 1
+		loadSpec size = 1
 			ifTrue: [ self _reloadProjectNamed: (loadSpec at: 1) ]
 			ifFalse: [
+				[
 				| repoPath configurationClassName versionString loadList |
 				configurationClassName := loadSpec at: 1.
 				versionString := loadSpec at: 2.
@@ -272,14 +273,16 @@ GsuAbstractGsDevKit >> loadApplicationLoadSpecs [
 						configuration: projectName;
 						version: versionString;
 						repositoryOverrides: { 'server://', repoPath };
-						load: loadList ] ] ]
+						load: loadList ] ]
 							on: (self _globalNamed: 'MCPerformPostloadNotification')
 							do: [:ex |
 								(self bootstrapPostLoadClassList includes: ex postloadClass theNonMetaClass name)
-									ifTrue: [ ex resume: true ]
-									ifFalse: [ 
+									ifTrue: [ 
 										self log: '			Skip ', ex postloadClass name asString, ' initialization.'.
-										ex resume: false ] ] ].
+										ex resume: false ]
+									ifFalse: [ 
+										self log: '			Perform ', ex postloadClass name asString, ' initialization.'.
+										ex resume: true ] ] ] ].
 	self bannerLogDash.
 	self bannerLogDash.
 

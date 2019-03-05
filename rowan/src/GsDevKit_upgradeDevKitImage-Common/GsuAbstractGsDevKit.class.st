@@ -39,11 +39,7 @@ GsuAbstractGsDevKit >> _currentUserGlobals [
 GsuAbstractGsDevKit >> _defaultBootstrapApplicationLoadSpecs [
 	"formerly BootstrapApplicationLoadSpecs, bootstrap GLASS configuration name, version, load spec and directory path"
 
-	| gsUpgrader |
-	gsUpgrader := ((((AllUsers userWithId: 'SystemUser') 
-		objectNamed: #UserGlobals) 
-			at: #'GsDevKit_Upgrade_Cache') at: #GsUpgrader) new.
-	gsUpgrader glass1Loaded
+	self _glass1Loaded
 		ifTrue: [
 			self log: '	load BaselineOfMetacello BaselineOfGLASS1'.
 			"first update Metacello and then update GLASS1"
@@ -55,7 +51,7 @@ GsuAbstractGsDevKit >> _defaultBootstrapApplicationLoadSpecs [
 					'GLASS1'. 
 				}.
 			} ].
-	gsUpgrader gsDevKitLoaded
+	self _gsDevKitLoaded
 		ifTrue: [
 			self log: '	load BaselineOfGsDevKit'.
 			^{	"assume that GsDevKit needs to be reloaded"
@@ -89,15 +85,42 @@ GsuAbstractGsDevKit >> _defaultBootstrapRepositoryDirectory [
 ]
 
 { #category : 'private' }
+GsuAbstractGsDevKit >> _deploy: aBlock [
+	(self _globalNamed: #'GsDeployer' ifAbsent: [  ])
+	ifNil: [ 
+		| oldAutoCommit oldAutoMigrate platformSupportClass |
+		platformSupportClass := self _globalNamed: 'MCPlatformSupport'.
+		oldAutoCommit := platformSupportClass autoCommit.
+		oldAutoMigrate := platformSupportClass autoMigrate.
+		platformSupportClass autoCommit: true.
+		platformSupportClass autoMigrate: true.
+		[ platformSupportClass commitOnAlmostOutOfMemoryDuring: aBlock ]
+			ensure: [ 
+				platformSupportClass autoCommit: oldAutoCommit.
+				platformSupportClass autoMigrate: oldAutoMigrate ] ]
+	ifNotNil: [ :deployerClass | deployerClass deploy: aBlock ]
+]
+
+{ #category : 'private' }
 GsuAbstractGsDevKit >> _gemstone_user [
 
 	^ self class gemstone_user
 ]
 
 { #category : 'private' }
+GsuAbstractGsDevKit >> _glass1Loaded [
+  ^ self _standardBaselineLoaded: 'BaselineOfGLASS1'
+]
+
+{ #category : 'private' }
 GsuAbstractGsDevKit >> _globalNamed: aString [
 
 	^ GsSession currentSession objectNamed: aString
+]
+
+{ #category : 'private' }
+GsuAbstractGsDevKit >> _gsDevKitLoaded [
+  ^ self _standardBaselineLoaded: 'BaselineOfGsDevKit'
 ]
 
 { #category : 'private' }
@@ -137,8 +160,8 @@ GsuAbstractGsDevKit >> _reloadProjectNamed: projectName [
 			repoSpec := projectSpec repositorySpecs first.
 			metacello := (self _globalNamed: 'Metacello') image baseline: projectName ]
 		ifFalse: [ self error: 'Project spec not found for ', projectName printString ].
-	GsUpgrader new
-		deploy: [ 
+	self
+		_deploy: [ 
 		metacello copy get.
 		metacello copy load ].
 ]
@@ -147,6 +170,24 @@ GsuAbstractGsDevKit >> _reloadProjectNamed: projectName [
 GsuAbstractGsDevKit >> _singletonUpgradeParameters [
 
 	^ #( upgradeUserName upgradeSymbolDictName bootstrapRepositoryDirectory )
+]
+
+{ #category : 'private' }
+GsuAbstractGsDevKit >> _standardBaselineLoaded: baselineClassName [
+self log: '_standardBaselineLoaded: ', baselineClassName.
+	(self _globalNamed: baselineClassName)
+		ifNotNil: [ 
+self log: '	baseline class present'.
+		(self _globalNamed: 'MetacelloProjectRegistration')
+			ifNotNil: [ :cls | 
+self log: '	MetacelloProjectRegistration class present'.
+				(cls registrationForClassNamed: baselineClassName ifAbsent: [  self log: '	no registration'. nil])
+					ifNotNil: [ :registration | 
+| res | 
+res := registration loadedInImage.
+self log: '	registration loaded: ', res prinString.
+^res ] ] ].
+	^ false
 ]
 
 { #category : 'logging' }

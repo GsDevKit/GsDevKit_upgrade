@@ -108,7 +108,9 @@ GsuAbstractGemStoneRelease >> prepareGsDevKitImage_bootstrapGsDevkit:  aGsDevKit
 { #category : 'prepare gsdevkit image' }
 GsuAbstractGemStoneRelease >> prepareGsDevKitImage_clearMonticelloCaches:  aGsDevKitUpgrade [
 
-	aGsDevKitUpgrade prepareGsDevKitImage_clearMonticelloCaches
+	aGsDevKitUpgrade 
+		prepareGsDevKitImage_clearMonticelloCaches;
+		prepareGsDevKitImage_clearMetacelloCaches
 ]
 
 { #category : 'prepare gsdevkit image' }

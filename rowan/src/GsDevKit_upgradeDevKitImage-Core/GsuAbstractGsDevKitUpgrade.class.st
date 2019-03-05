@@ -108,6 +108,15 @@ GsuAbstractGsDevKitUpgrade >> _bootstrapRelease [
 ]
 
 { #category : 'private' }
+GsuAbstractGsDevKitUpgrade >> _clearMetacelloCaches [
+
+	"Wipe out the Metacello registry ... if it exists"
+
+	(self _globalNamed: #MetacelloProjectRegistration)
+	  ifNotNil: [:cl | cl _classVars at: #Registry put: nil ].
+]
+
+{ #category : 'private' }
 GsuAbstractGsDevKitUpgrade >> _defaultTargetRelease [
 
 	self subclassResponsibility: #_defaultTargetRelease
@@ -304,6 +313,20 @@ GsuAbstractGsDevKitUpgrade >> prepareGsDevKitImage_bug46217_patch [
 	System commit.
 
 	self log: '	46217 patched (commit)'.
+]
+
+{ #category : 'prepare gsdevkit  image' }
+GsuAbstractGsDevKitUpgrade >> prepareGsDevKitImage_clearMetacelloCaches [
+
+	" clear caches - those that are unneeded or create problem during initial bootstrap load"
+
+	self log: 'Prepare gsdevkit - clear Metacello caches'.
+
+	self _clearMetacelloCaches.
+
+	System commit.
+
+	self log: '	Metacello caches cleared (commit)'.
 ]
 
 { #category : 'prepare gsdevkit  image' }

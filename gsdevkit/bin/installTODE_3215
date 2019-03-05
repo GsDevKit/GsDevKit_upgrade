@@ -1,0 +1,21 @@
+set -e
+. defStone.env
+export vers="3.5.0_g"
+
+rm -f *.log *.out
+
+# createStone -g battery_3215 3.2.15
+
+sourceStoneName="battery_3215"
+sourceStoneDir="$GS_HOME/server/stones/${sourceStoneName}"
+
+newExtent -s ${sourceStoneDir}/product/bin/extent0.seaside.dbf $sourceStoneName
+
+todeLoad $sourceStoneName
+
+stopStone $sourceStoneName
+cp ${sourceStoneDir}/extents/extent0.dbf snapshots/extent0_TODE_3215.dbf
+startStone $sourceStoneName
+
+startTopaz $sourceStoneName -lq < $GS_HOME/shared/repos/GsDevKit_upgradeDevKitImage/bin/runImageTests
+

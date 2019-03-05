@@ -1,0 +1,46 @@
+# arg1 is the content id: GLASS, GLASS1, TODE
+# arg2 is the GemStone version id: 3215, 339, 343
+#
+# Sequence:
+#
+#	createStone battery_339 3.3.9
+# installImage GLASS1 339 
+#	upgradeImage GLASS1 339 GLASS1
+# upgradePreGsDevKitImage GLASS1 339
+#
+set -e
+. defStone.env
+export vers="3.5.0_g"
+
+rm -f *.log *.out
+
+contents="$1"	# GLASS, GLASS1, TODE
+version="$2"	# 3215, 339, 343
+
+sourceStoneName="battery_${version}"
+stopStone $sourceStoneName
+stopStone $GEMSTONE_NAME
+
+rm -rf $GS_HOME/server/stones/${GEMSTONE_NAME}/extents/extent0.dbf
+rm -rf $GS_HOME/server/stones/${GEMSTONE_NAME}/tranlogs/tranlog*.dbf
+
+upgradeExtent=snapshots/extent0_${contents}_${version}.dbf
+
+newExtent -n -s $upgradeExtent $GEMSTONE_NAME
+
+export upgradeLogDir=`pwd`/upgradeLogDir
+
+startStone -b -w 5 $GEMSTONE_NAME
+
+pushd "${upgradeLogDir}" >& /dev/null
+  # start standard upgrade
+  echo "STARTING standard upgradeImage "
+  "$GEMSTONE/bin/upgradeImage" -s $GEMSTONE_NAME << EOF
+  
+EOF
+
+popd
+
+stopStone $GEMSTONE_NAME
+cp extents/extent0.dbf snapshots/extent0_upgradedImage_${contents}_${version}.dbf
+

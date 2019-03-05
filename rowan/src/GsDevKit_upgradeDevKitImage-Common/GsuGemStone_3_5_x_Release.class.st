@@ -12,7 +12,8 @@ GsuGemStone_3_5_x_Release >> _bootstrapPackageFileNames_0 [
 	"for 3.5.0"
 
 	^{ 
-		'Core.v3-dkh.81.mcz' .
+		'Core.v3-dkh.82.mcz' .
+		'GemStone-Compression-dkh.1.mcz' .
 		'Base-Bootstrap.v3-dkh.29.mcz'.
 		'Bootstrap.v34-dkh.263.mcz'.
 		'GemStone-ANSI-Streams-dkh.9.mcz'.

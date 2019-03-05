@@ -81,7 +81,10 @@ GsuGsDevKitBootstrap >> bootstrapGsDevkit [
 		bootstrap operation"
 	self _currentUserGlobals at: #'GS_BOOTSTRAP_MONTICELLO_SKIP_REMOVE_CLASS' put: true.
 
+self debugLog.
+
 	self bootstrapMaster.
+self debugLog.
 	self patchMaster.
 
 	"Bug 46217"
@@ -96,6 +99,8 @@ GsuGsDevKitBootstrap >> bootstrapGsDevkit [
 	(self _globalNamed: 'GsDeployer') bulkMigrate: [].
 	self log: '	done bulkMigrate'.
 
+self debugLog.
+
 	"patch Class>>removeFromSystem until upgrade is complete, will be repaired during load"
 	self log: '	patching patch Class>>removeFromSystem'.
 	(Class
@@ -103,11 +108,16 @@ GsuGsDevKitBootstrap >> bootstrapGsDevkit [
 		dictionaries: self upgradeUserProfile symbolList 
 		category: '*change-notification') ifNotNil: [:ar | self error: 'did not compile' ].
 
+self debugLog.
+
 	"force configurations to be reloaded if needed"
 	self removeExistingConfigurations.
 
+self debugLog.
+
 	self loadApplicationLoadSpecs.
 
+self debugLog.
 	self log: '	... done bootstrap GsdevKit'.
 ]
 
@@ -127,6 +137,8 @@ GsuGsDevKitBootstrap >> bootstrapMaster [
 
 	GsPackagePolicy current enable.
 
+self debugLog.
+
 	"Patch for bug 44262"
 	GsPackageLibrary 
 	  installMonticelloPackagesHome: self upgradeSymbolDict
@@ -137,13 +149,17 @@ GsuGsDevKitBootstrap >> bootstrapMaster [
 		  dictionaries: GsCurrentSession currentSession symbolList 
 		  category: '*squeak') ifNotNil: [:ar | self error: 'did not compile' ] ].
 
+self debugLog.
+
 	"removing list of classes in GLASS1 packages, but not GLASS bootstrap packages ... classes will 
 		be re-added and all methods will be recomplied that may have referenced these classes"
 	#( 'GsFailedMethodCompilationDuringCopyMethodToNewClass' 'GsNonmigratingDeployer' )
 		do: [:className |
 			self _removeClassNamed: className ].
 
-	"enable the GsPackages that were enabled during upgradeImage (this is 3.5.0 and beyond specific)"
+self debugLog.
+
+	"enable the GsPackages that were disabled during upgradeImage (this is 3.5.0 and beyond specific)"
 	self upgradeUserProfile symbolList do:[:dict | | dName |
 		dName := dict name ifNil:[ 'unnamed' ].
 		(dict at: GsPackage globalName otherwise: nil) ifNotNil:[:pkg |
@@ -155,11 +171,14 @@ GsuGsDevKitBootstrap >> bootstrapMaster [
 
 	System commit.
 
+self debugLog.
+
 	self bootstrapGemStoneRelease bootstrapPackageFileNames do: [:bootstrapPackageFileName |
 		GsPackageLibrary 
 			loadMCZFile: bootstrapPackageFileName
 			home: self upgradeSymbolDictName
-			fromRepositoryPath: self bootstrapRepositoryDirectory ].
+			fromRepositoryPath: self bootstrapRepositoryDirectory.
+self debugLog. ].
 
 	self log: '	... done bootstrap master'.
 ]

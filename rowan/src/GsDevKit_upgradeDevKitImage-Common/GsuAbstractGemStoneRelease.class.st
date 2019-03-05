@@ -51,6 +51,25 @@ GsuAbstractGemStoneRelease >> bootstrapPackageFileNames [
 	self subclassResponsibility: #bootstrapPackageFileNames
 ]
 
+{ #category : 'debugging' }
+GsuAbstractGemStoneRelease >> debugLog [
+
+	| assoc |
+	assoc := (System myUserProfile objectNamed: 'UserGlobals') associationAt: #ZipFileConstants otherwise: nil.
+	self log: 'ZipFileConstants association  [',  assoc asOop printString, ']'.
+	assoc 
+		ifNil: [ self log: 'association value is nil.' ]
+		ifNotNil: [ 
+			self log: '	ZipFileConstants class  [',assoc value asOop printString, ']'.
+			self log: '	#name: ', assoc value _classVars name asString ].
+]
+
+{ #category : 'debugging' }
+GsuAbstractGemStoneRelease >> log: aString [
+
+	GsFile gciLogServer: aString
+]
+
 { #category : 'accessing' }
 GsuAbstractGemStoneRelease >> major [
 

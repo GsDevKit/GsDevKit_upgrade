@@ -4,7 +4,8 @@ RwProjectLoadConfiguration {
 	#projectName : 'GsDevKit_upgrade',
 	#version : '0.1.0',
 	#definedGroupNames : {
-		'core' : [ ]
+		'core' : [ ],
+		'tools' : [ 'core' ]
 		},
 	#configurationNames : [ 
 		'Bootstrap'
@@ -17,6 +18,25 @@ RwProjectLoadConfiguration {
 				#packageNames : [
 					'GsDevKit_upgrade-Core'
 				]
+			},
+			'tools' : {
+				#packageNames : [
+					'GsDevKit_upgrade-Tools',
+					'GsDevKit_upgrade-ToolExtensions'
+				]
+			}
+		}
+	},
+	#conditionalPackageMapSpecs : {
+		'gemstone' : {
+			'SystemUser' : {
+				#defaultSymbolDictName : 'UserGlobals',
+				#packageNameToPlatformPropertiesMap : {
+					'GsDevKit_upgrade-ToolExtensions' : { 'symbolDictName' : 'RowanTools' }
+					}
+			},
+			'allusers' : {
+				#defaultSymbolDictName : 'UserGlobals'
 			}
 		}
 	}

@@ -1,3 +1,27 @@
+### Rowan topaz filein creation script
+```smalltalk
+| 	projectSetDefinition visitor repositoryRootPath projectsHome projectRoot specUrlString projectDefinition projectSetModification |
+
+projectsHome := FileSystem disk / '$GS_HOME/shared/repos'.
+projectRoot := projectsHome / 'GsDevKit_upgradeDevKitImage'.
+specUrlString :=  'file:' , projectRoot fullName, '/rowan/specs/GsDevKit_upgrade_v2.0.ston'.
+projectDefinition := RwComponentProjectDefinition newForUrl: specUrlString.
+projectDefinition projectHome: projectsHome.
+Rowan projectTools read 
+	readProjectSetForComponentProjectDefinition: projectDefinition.
+projectSetDefinition := (RwProjectSetDefinition new)
+	addProject: projectDefinition;
+	yourself.
+
+repositoryRootPath := projectRoot / 'topaz'.
+repositoryRootPath ensureCreateDirectory.
+projectSetModification := projectSetDefinition compareAgainstBase: RwProjectSetDefinition new.
+visitor := RwGsModificationTopazWriterVisitor new
+	repositoryRootPath: repositoryRootPath;
+	topazFilename: 'GsDevKit_upgrade';
+	yourself.
+visitor visit: projectSetModification.
+```
 ### Rowan project creation script
 ```smalltalk
 "Create GsDevKit_upgradeDevKitImage project"

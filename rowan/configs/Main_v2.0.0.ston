@@ -1,5 +1,5 @@
 RwComponentLoadConfiguration {
-	#name : 'Main',
+	#name : 'Main_v2.0',
 	#comment : '',
 	#projectName : 'GsDevKit_upgradeDevKitImage',
 	#version : '0.1.0',

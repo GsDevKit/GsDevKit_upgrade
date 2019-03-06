@@ -1,0 +1,31 @@
+# arg1 is the content id: GLASS, GLASS1, TODE
+# arg2 is the GemStone version id: 3215, 339, 343
+#
+# Sequence:
+#
+#	createStone battery_339 3.3.9
+# installImage GLASS1 339 
+#	upgradeImage GLASS1 339 GLASS1
+# upgradePreGsDevKitImage GLASS1 339
+#	---
+#	installTODE GLASS1 339
+#
+set -e
+. defStone.env
+export vers="3.5.0_g"
+
+rm -f *.log *.out
+
+contents="$1"	# GLASS, GLASS1, TODE
+version="$2"	# 3215, 339, 343
+
+newExtent -s snapshots/extent0_preparedGsDevKitImage_${contents}_${version}.dbf $GEMSTONE_NAME
+
+todeLoad $GEMSTONE_NAME
+
+stopStone $GEMSTONE_NAME
+cp extents/extent0.dbf snapshots/extent0_upgradedTODE_${contents}_${version}.dbf
+startStone $GEMSTONE_NAME
+
+startTopaz $GEMSTONE_NAME -lq < $GS_HOME/shared/repos/GsDevKit_upgradeDevKitImage/bin/runImageTests
+

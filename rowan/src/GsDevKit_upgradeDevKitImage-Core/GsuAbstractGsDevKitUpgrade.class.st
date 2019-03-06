@@ -652,7 +652,7 @@ GsuAbstractGsDevKitUpgrade >> prepareImage_pragmas_user [
 	self log: '	Finding methods with pragmas for user: ', self upgradeUserName printString.
 	self log: '		Pragma ', (self _globalNamed: 'Pragma') asOop printString.
 	self log: '		System myUserProfile: ', System myUserProfile userId.
-	((ClassOrganizer newWithRoot: Object forUserId: self upgradeUserName) allSubclassesOf: Object)
+	(((ClassOrganizer newWithRoot: Object forUserId: self upgradeUserName) allSubclassesOf: Object), { Object })
 		do: [ :cls | 
 		  {cls.
 		  (cls class)}

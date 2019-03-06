@@ -39,6 +39,18 @@ GsuAbstractGsDevKit >> _currentUserGlobals [
 GsuAbstractGsDevKit >> _defaultBootstrapApplicationLoadSpecs [
 	"formerly BootstrapApplicationLoadSpecs, bootstrap GLASS configuration name, version, load spec and directory path"
 
+	self _todeLoaded
+		ifTrue: [
+			self log: '	load BaselineOfMetacello BaselineOfTode'.
+			"first update Metacello and then update Tode"
+			^{
+				{
+					'Metacello'. 
+				}.
+				{
+					'Tode'. 
+				}.
+			} ].
 	self _glass1Loaded
 		ifTrue: [
 			self log: '	load BaselineOfMetacello BaselineOfGLASS1'.
@@ -188,6 +200,11 @@ res := registration loadedInImage.
 self log: '	registration loaded: ', res printString.
 ^res ] ] ].
 	^ false
+]
+
+{ #category : 'private' }
+GsuAbstractGsDevKit >> _todeLoaded [
+  ^ self _standardBaselineLoaded: 'BaselineOfTode'
 ]
 
 { #category : 'logging' }

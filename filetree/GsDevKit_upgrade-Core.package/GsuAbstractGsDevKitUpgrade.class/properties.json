@@ -1,0 +1,14 @@
+{
+	"category" : "GsDevKit_upgrade-Core",
+	"classvars" : [
+		"TheSymbolDictionary"
+	],
+	"instvars" : [
+		"sourceGemStoneRelease",
+		"targetGemStoneRelease",
+		"methodsWithPragmas"
+	],
+	"name" : "GsuAbstractGsDevKitUpgrade",
+	"super" : "GsuAbstractGsDevKit",
+	"type" : "normal"
+}

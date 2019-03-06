@@ -1,0 +1,4 @@
+prepare gsdevkit image
+prepareGsDevKitImage_resetExistingGlobalState:  aGsDevKitUpgrade
+
+	aGsDevKitUpgrade prepareGsDevKitImage_resetExistingGlobalState

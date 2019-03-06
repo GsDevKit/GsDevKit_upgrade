@@ -1,0 +1,4 @@
+private
+_defaultTargetRelease
+
+	self subclassResponsibility: #_defaultTargetRelease

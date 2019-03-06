@@ -1,0 +1,5 @@
+private
+_defaultBootstrapRepositoryDirectory
+	"formerly BootstrapRepositoryDirectory, location of Monticello bootstrap directory"
+
+	^ GsPackageLibrary getMonticelloRepositoryDirectory

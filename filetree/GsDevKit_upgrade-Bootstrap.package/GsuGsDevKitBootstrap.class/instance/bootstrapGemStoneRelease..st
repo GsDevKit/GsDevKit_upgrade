@@ -1,0 +1,4 @@
+accessing
+bootstrapGemStoneRelease: aGsuAbstractGemStoneRelease
+
+	^ bootstrapGemStoneRelease := aGsuAbstractGemStoneRelease

@@ -1,0 +1,6 @@
+{
+	"category" : "GsDevKit_upgrade-Common",
+	"name" : "GsuGemStone_2_4_x_Release",
+	"super" : "GsuAbstractGemStoneRelease",
+	"type" : "normal"
+}

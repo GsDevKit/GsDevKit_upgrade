@@ -1,0 +1,11 @@
+{
+	"category" : "GsDevKit_upgrade-Common",
+	"instvars" : [
+		"major",
+		"minor",
+		"patch"
+	],
+	"name" : "GsuAbstractGemStoneRelease",
+	"super" : "Object",
+	"type" : "normal"
+}

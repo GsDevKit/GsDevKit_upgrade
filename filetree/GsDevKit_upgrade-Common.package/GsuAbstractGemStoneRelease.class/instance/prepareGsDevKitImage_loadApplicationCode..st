@@ -1,0 +1,4 @@
+prepare gsdevkit image
+prepareGsDevKitImage_loadApplicationCode:  aGsDevKitUpgrade
+
+	aGsDevKitUpgrade prepareGsDevKitImage_loadApplicationCode

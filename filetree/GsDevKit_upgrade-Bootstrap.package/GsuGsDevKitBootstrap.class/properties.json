@@ -1,0 +1,9 @@
+{
+	"category" : "GsDevKit_upgrade-Bootstrap",
+	"instvars" : [
+		"bootstrapGemStoneRelease"
+	],
+	"name" : "GsuGsDevKitBootstrap",
+	"super" : "GsuAbstractGsDevKit",
+	"type" : "normal"
+}

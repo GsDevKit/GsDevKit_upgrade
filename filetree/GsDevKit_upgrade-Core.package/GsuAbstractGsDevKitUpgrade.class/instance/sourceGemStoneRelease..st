@@ -1,0 +1,4 @@
+accessing
+sourceGemStoneRelease: aGsuGemStoneRelease
+
+	sourceGemStoneRelease := aGsuGemStoneRelease

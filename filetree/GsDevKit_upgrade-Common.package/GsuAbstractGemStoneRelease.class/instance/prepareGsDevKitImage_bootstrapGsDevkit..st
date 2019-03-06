@@ -1,0 +1,4 @@
+prepare gsdevkit image
+prepareGsDevKitImage_bootstrapGsDevkit:  aGsDevKitUpgrade
+
+	aGsDevKitUpgrade prepareGsDevKitImage_bootstrapGsDevkit

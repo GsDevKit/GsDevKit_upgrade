@@ -1,0 +1,4 @@
+prepare gsdevkit image
+patch_compileMethodCategory:  aGsDevKitUpgrade
+
+	aGsDevKitUpgrade patch_compileMethodCategory

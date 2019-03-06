@@ -1,0 +1,4 @@
+logging
+bannerLogDash
+
+	self log: '--------------------'.

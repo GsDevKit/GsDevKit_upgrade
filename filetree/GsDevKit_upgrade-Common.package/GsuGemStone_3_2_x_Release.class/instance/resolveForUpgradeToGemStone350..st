@@ -1,0 +1,4 @@
+initialization
+resolveForUpgradeToGemStone350: aGsuGsDevKit_3_5_0_Upgrade
+
+	^ aGsuGsDevKit_3_5_0_Upgrade asBootstrapUpgrade

@@ -1,0 +1,4 @@
+prepare gsdevkit image
+prepareGsDevKitImage_removeAllMethods:  aGsDevKitUpgrade
+
+	aGsDevKitUpgrade prepareGsDevKitImage_removeAllMethods

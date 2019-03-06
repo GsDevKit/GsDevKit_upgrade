@@ -7,25 +7,13 @@ Class {
 { #category : 'private' }
 GsuGsDevKit_3_5_0_StdUpgrade >> _clearMetacelloCaches [
 
-	"Metacello caches used in calculating default values for application load specs"
+	"Metacello caches used in calculating default values for application load specs, so cache
+		application load specs before clearing the Metacello cache"
 
-| gsUpgrader |
-
-self log: '	caching appliction load specs, before clearing caches'.
-self _glass1Loaded 
-ifTrue: [self log: 'GLASS1 loaded']
-ifFalse: [ self log: 'GLASS1 not loaded' ].
-self log: 'GsUpgrader:'.
-GsUpgrader new glass1Loaded
-	ifTrue: [ self log: '	true'] ifFalse: [ self log: '	false'].
-       gsUpgrader := ((((AllUsers userWithId: 'SystemUser') 
-               objectNamed: #UserGlobals) 
-                       at: #'GsDevKit_Upgrade_Cache') at: #GsUpgrader) new.
-self log: 'GsUpgrader (Allusers):'.
-       self log: '		', gsUpgrader glass1Loaded printString.
-
-false ifTrue: [ 	self bootstrapApplicationLoadSpecs.
-	super _clearMetacelloCaches].
+	self _glass1Loaded
+		ifFalse: [ 
+			self bootstrapApplicationLoadSpecs.
+			super _clearMetacelloCaches ].
 ]
 
 { #category : 'private' }

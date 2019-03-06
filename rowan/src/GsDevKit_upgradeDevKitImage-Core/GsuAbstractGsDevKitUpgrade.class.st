@@ -351,9 +351,6 @@ GsuAbstractGsDevKitUpgrade >> prepareGsDevKitImage_clearMonticelloCaches [
 	(self _globalNamed: 'MCWorkingCopy') atClassInstVar: #registry put: nil.
 	"wipe out the default MCRepositoryGroup"
 	(self _globalNamed: 'MCRepositoryGroup') atClassInstVar: #default put: nil.
-	"Wipe out the Metacello registry ... if it exists"
-	(self _globalNamed: #MetacelloProjectRegistration)
-	  ifNotNil: [:cl | cl _classVars at: #Registry put: nil ].
 
 	System commit.
 

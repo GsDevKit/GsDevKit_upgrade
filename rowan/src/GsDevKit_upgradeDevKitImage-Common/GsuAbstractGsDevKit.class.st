@@ -86,7 +86,7 @@ GsuAbstractGsDevKit >> _defaultBootstrapRepositoryDirectory [
 
 { #category : 'private' }
 GsuAbstractGsDevKit >> _deploy: aBlock [
-	(self _globalNamed: #'GsDeployer' ifAbsent: [  ])
+	(self _globalNamed: #'GsDeployer')
 	ifNil: [ 
 		| oldAutoCommit oldAutoMigrate platformSupportClass |
 		platformSupportClass := self _globalNamed: 'MCPlatformSupport'.
@@ -185,7 +185,7 @@ self log: '	MetacelloProjectRegistration class present'.
 					ifNotNil: [ :registration | 
 | res | 
 res := registration loadedInImage.
-self log: '	registration loaded: ', res prinString.
+self log: '	registration loaded: ', res printString.
 ^res ] ] ].
 	^ false
 ]

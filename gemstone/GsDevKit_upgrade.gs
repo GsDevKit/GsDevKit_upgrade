@@ -9,7 +9,7 @@ doit
 	poolDictionaries: #()
 	inDictionary: UserGlobals
 	options: #())
-		category: 'GsDevKit_upgradeDevKitImage-Common';
+		category: 'GsDevKit_upgrade-Common';
 		comment: '';
 		immediateInvariant.
 true.
@@ -24,7 +24,7 @@ doit
 	poolDictionaries: #()
 	inDictionary: UserGlobals
 	options: #())
-		category: 'GsDevKit_upgradeDevKitImage-Common';
+		category: 'GsDevKit_upgrade-Common';
 		comment: '';
 		immediateInvariant.
 true.
@@ -39,7 +39,7 @@ doit
 	poolDictionaries: #()
 	inDictionary: UserGlobals
 	options: #())
-		category: 'GsDevKit_upgradeDevKitImage-Common';
+		category: 'GsDevKit_upgrade-Common';
 		comment: '';
 		immediateInvariant.
 true.
@@ -54,7 +54,7 @@ doit
 	poolDictionaries: #()
 	inDictionary: UserGlobals
 	options: #())
-		category: 'GsDevKit_upgradeDevKitImage-Common';
+		category: 'GsDevKit_upgrade-Common';
 		comment: '';
 		immediateInvariant.
 true.
@@ -69,7 +69,7 @@ doit
 	poolDictionaries: #()
 	inDictionary: UserGlobals
 	options: #())
-		category: 'GsDevKit_upgradeDevKitImage-Common';
+		category: 'GsDevKit_upgrade-Common';
 		comment: '';
 		immediateInvariant.
 true.
@@ -84,7 +84,7 @@ doit
 	poolDictionaries: #()
 	inDictionary: UserGlobals
 	options: #())
-		category: 'GsDevKit_upgradeDevKitImage-Common';
+		category: 'GsDevKit_upgrade-Common';
 		comment: '';
 		immediateInvariant.
 true.
@@ -99,7 +99,7 @@ doit
 	poolDictionaries: #()
 	inDictionary: UserGlobals
 	options: #())
-		category: 'GsDevKit_upgradeDevKitImage-Common';
+		category: 'GsDevKit_upgrade-Common';
 		comment: '';
 		immediateInvariant.
 true.
@@ -114,7 +114,7 @@ doit
 	poolDictionaries: #()
 	inDictionary: UserGlobals
 	options: #())
-		category: 'GsDevKit_upgradeDevKitImage-Common';
+		category: 'GsDevKit_upgrade-Common';
 		comment: '';
 		immediateInvariant.
 true.
@@ -129,7 +129,7 @@ doit
 	poolDictionaries: #()
 	inDictionary: UserGlobals
 	options: #())
-		category: 'GsDevKit_upgradeDevKitImage-Common';
+		category: 'GsDevKit_upgrade-Common';
 		comment: '';
 		immediateInvariant.
 true.
@@ -144,7 +144,7 @@ doit
 	poolDictionaries: #()
 	inDictionary: UserGlobals
 	options: #())
-		category: 'GsDevKit_upgradeDevKitImage-Core';
+		category: 'GsDevKit_upgrade-Core';
 		comment: 'I am the abstract upgrade driver for upgading GsDevKit/GLASS repositories.
 
 I am invoked after the repository has undergone the standard 
@@ -175,7 +175,7 @@ doit
 	poolDictionaries: #()
 	inDictionary: UserGlobals
 	options: #())
-		category: 'GsDevKit_upgradeDevKitImage-Core';
+		category: 'GsDevKit_upgrade-Core';
 		comment: '';
 		immediateInvariant.
 true.
@@ -190,7 +190,7 @@ doit
 	poolDictionaries: #()
 	inDictionary: UserGlobals
 	options: #())
-		category: 'GsDevKit_upgradeDevKitImage-Core';
+		category: 'GsDevKit_upgrade-Core';
 		comment: '';
 		immediateInvariant.
 true.
@@ -205,7 +205,7 @@ doit
 	poolDictionaries: #()
 	inDictionary: UserGlobals
 	options: #())
-		category: 'GsDevKit_upgradeDevKitImage-Core';
+		category: 'GsDevKit_upgrade-Core';
 		comment: '';
 		immediateInvariant.
 true.
@@ -220,7 +220,7 @@ doit
 	poolDictionaries: #()
 	inDictionary: UserGlobals
 	options: #())
-		category: 'GsDevKit_upgradeDevKitImage-Core';
+		category: 'GsDevKit_upgrade-Core';
 		comment: '';
 		immediateInvariant.
 true.
@@ -235,7 +235,7 @@ doit
 	poolDictionaries: #()
 	inDictionary: UserGlobals
 	options: #())
-		category: 'GsDevKit_upgradeDevKitImage-Core';
+		category: 'GsDevKit_upgrade-Core';
 		comment: '';
 		immediateInvariant.
 true.
@@ -250,7 +250,7 @@ doit
 	poolDictionaries: #()
 	inDictionary: UserGlobals
 	options: #())
-		category: 'GsDevKit_upgradeDevKitImage-Core';
+		category: 'GsDevKit_upgrade-Core';
 		comment: '';
 		immediateInvariant.
 true.
@@ -265,7 +265,7 @@ doit
 	poolDictionaries: #()
 	inDictionary: UserGlobals
 	options: #())
-		category: 'GsDevKit_upgradeDevKitImage-Bootstrap';
+		category: 'GsDevKit_upgrade-Bootstrap';
 		comment: '';
 		immediateInvariant.
 true.

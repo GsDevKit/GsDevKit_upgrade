@@ -1,5 +1,6 @@
  RwComponentSpecification{
 	#specName : 'GsDevKit_upgrade_v2.0',
+	#projectName : 'GsDevKit_upgrade',
 	#version : '0.3.0',
 	#projectUrl : 'https://github.com/GsDevKit/GsDevKit_upgrade',
 	#configsPath : 'rowan/configs',

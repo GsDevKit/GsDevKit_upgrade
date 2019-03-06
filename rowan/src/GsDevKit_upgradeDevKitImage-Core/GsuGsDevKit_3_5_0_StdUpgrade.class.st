@@ -12,6 +12,7 @@ GsuGsDevKit_3_5_0_StdUpgrade >> _clearMetacelloCaches [
 
 	self _glass1Loaded
 		ifFalse: [ 
+			"GLASS needs to have the caches cleared, since stale repository entries can cause trouble"
 			self bootstrapApplicationLoadSpecs.
 			super _clearMetacelloCaches ].
 ]

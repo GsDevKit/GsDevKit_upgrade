@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'bootstrapGemStoneRelease'
 	],
-	#category : 'GsDevKit_upgradeDevKitImage-Bootstrap'
+	#category : 'GsDevKit_upgrade-Bootstrap'
 }
 
 { #category : 'instance creation' }

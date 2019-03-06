@@ -1,7 +1,7 @@
 RwProjectLoadConfiguration {
 	#name : 'Main',
 	#comment : 'Support for upgrading GsDevKit/GLASS images ... post upgradeImage operations',
-	#projectName : 'GsDevKit_upgradeDevKitImage',
+	#projectName : 'GsDevKit_upgrade',
 	#version : '0.1.0',
 	#definedGroupNames : {
 		'core' : [ ]
@@ -15,7 +15,7 @@ RwProjectLoadConfiguration {
 		] : {
 			'core' : {
 				#packageNames : [
-					'GsDevKit_upgradeDevKitImage-Core'
+					'GsDevKit_upgrade-Core'
 				]
 			}
 		}

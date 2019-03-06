@@ -1,9 +1,11 @@
+### Url for cloning project in Rowan
+`file:$ROWAN_PROJECTS_HOME/GsDevKit_upgrade/rowan/specs/GsDevKit_upgrade.ston`
 ### Rowan topaz filein creation script
 ```smalltalk
 | 	projectSetDefinition visitor repositoryRootPath projectsHome projectRoot specUrlString projectDefinition projectSetModification |
 
 projectsHome := FileSystem disk / '$GS_HOME/shared/repos'.
-projectRoot := projectsHome / 'GsDevKit_upgradeDevKitImage'.
+projectRoot := projectsHome / 'GsDevKit_upgradeDev'.
 specUrlString :=  'file:' , projectRoot fullName, '/rowan/specs/GsDevKit_upgrade_v2.0.ston'.
 projectDefinition := RwComponentProjectDefinition newForUrl: specUrlString.
 projectDefinition projectHome: projectsHome.
@@ -13,7 +15,7 @@ projectSetDefinition := (RwProjectSetDefinition new)
 	addProject: projectDefinition;
 	yourself.
 
-repositoryRootPath := projectRoot / 'topaz'.
+repositoryRootPath := projectRoot / 'gemstone'.
 repositoryRootPath ensureCreateDirectory.
 projectSetModification := projectSetDefinition compareAgainstBase: RwProjectSetDefinition new.
 visitor := RwGsModificationTopazWriterVisitor new
@@ -24,12 +26,12 @@ visitor visit: projectSetModification.
 ```
 ### Rowan project creation script
 ```smalltalk
-"Create GsDevKit_upgradeDevKitImage project"
+"Create GsDevKit_upgrade project"
 
 	| projectUrl projectName configurationNames groupNames comment projectHome
 		cpd packageName |
 
-	projectName := 'GsDevKit_upgradeDevKitImage'.
+	projectName := 'GsDevKit_upgrade'.
 	configurationNames := #( 'Main' ).
 	groupNames := #( 'core' ).
 	projectUrl := 'https://github.com/GsDevKit/', projectName.

@@ -1,7 +1,7 @@
 Class {
 	#name : 'GsuGemStone_3_2_x_Release',
 	#superclass : 'GsuAbstractGemStoneRelease',
-	#category : 'GsDevKit_upgradeDevKitImage-Common'
+	#category : 'GsDevKit_upgrade-Common'
 }
 
 { #category : 'prepare image' }

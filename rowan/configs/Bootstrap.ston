@@ -1,7 +1,7 @@
 RwProjectLoadConfiguration {
 	#name : 'Bootstrap',
 	#comment : 'Support for bootstrapping GsDevKit/GLASS code into extent0.dbf. Used to create extent0.seaside.dbf',
-	#projectName : 'GsDevKit_upgradeDevKitImage',
+	#projectName : 'GsDevKit_upgrade',
 	#version : '0.1.0',
 	#definedGroupNames : {
 		'core' : [ ]
@@ -12,8 +12,8 @@ RwProjectLoadConfiguration {
 		] : {
 			'core' : {
 				#packageNames : [
-					'GsDevKit_upgradeDevKitImage-Common',
-					'GsDevKit_upgradeDevKitImage-Bootstrap'
+					'GsDevKit_upgrade-Common',
+					'GsDevKit_upgrade-Bootstrap'
 				]
 			}
 		}

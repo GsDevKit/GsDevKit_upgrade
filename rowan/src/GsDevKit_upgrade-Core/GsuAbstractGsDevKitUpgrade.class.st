@@ -28,7 +28,7 @@ Class {
 	#classVars : [
 		'TheSymbolDictionary'
 	],
-	#category : 'GsDevKit_upgradeDevKitImage-Core'
+	#category : 'GsDevKit_upgrade-Core'
 }
 
 { #category : 'private' }

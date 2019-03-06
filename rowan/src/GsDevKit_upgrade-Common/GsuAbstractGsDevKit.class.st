@@ -10,7 +10,7 @@ Class {
 		'bootstrapApplicationLoadSpecs',
 		'bootstrapExistingConfigurationList'
 	],
-	#category : 'GsDevKit_upgradeDevKitImage-Common'
+	#category : 'GsDevKit_upgrade-Common'
 }
 
 { #category : 'accessing' }

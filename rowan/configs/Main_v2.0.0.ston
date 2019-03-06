@@ -1,7 +1,7 @@
 RwComponentLoadConfiguration {
 	#name : 'Main_v2.0',
 	#comment : '',
-	#projectName : 'GsDevKit_upgradeDevKitImage',
+	#projectName : 'GsDevKit_upgrade',
 	#version : '0.1.0',
 	#conditionalPackages : {
 		[
@@ -9,7 +9,7 @@ RwComponentLoadConfiguration {
 		] : {
 			'core' : {
 				#packageNames : [
-					'GsDevKit_upgradeDevKitImage-Core'
+					'GsDevKit_upgrade-Core'
 				]
 			}
 		}

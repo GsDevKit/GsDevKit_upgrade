@@ -30,7 +30,7 @@ GsuGsDevKitUpgradeDeploymentTools >> _projectName [
 GsuGsDevKitUpgradeDeploymentTools >> _projectSetFor: specName [
 
 	^ (RwProjectSetDefinition new)
-		addProject: self _projectDefinitionFor: specName;
+		addProject: (self _projectDefinitionFor: specName);
 		yourself.
 ]
 
@@ -54,7 +54,6 @@ GsuGsDevKitUpgradeDeploymentTools >> deployFiletreeRepository: deploymentName sp
 	projectDefinition
 		packagesPath: deploymentName;
 		yourself.
-self halt.
 	deploymentDir := self _projectsHome / self _projectName/ 'filetree'.
 	deploymentDir ensureCreateDirectory.
 	projectSetDefinition :=  (RwProjectSetDefinition new)

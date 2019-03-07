@@ -48,7 +48,7 @@ run
 	UserGlobals
 		at: #GsDevKit_Image_Upgrade
 		put: 
-			((GsuAbstractGsDevKitUpgrade 'DataCurator')
+			((GsuAbstractGsDevKitUpgrade upgradeUserName: 'DataCurator')
 				bootstrapRepositoryDirectory: GsPackageLibrary getMonticelloRepositoryDirectory
 				yourself).
 

@@ -1,9 +1,18 @@
-# expect to be logged in
+#
+#	login as SystemUser to to prepareImage work
+#
+iferr 1 stk
+iferr 2 stack
+iferr 3 exit 1
+display oops
+limit bytes 200
+set u SystemUser p swordfish
+login
 
 run
 	"Install upgrade support code"
-	| codeLibrarian symbolName session symbolList symbolDict dictName symDictSlot |
-	dictName := 'Upgrade_GsDevKit_SymDict'.
+	| symbolName session symbolList symbolDict dictName symDictSlot |
+	dictName := 'GsDevKit_Upgrade_SymDict_private'.
 	symbolName := dictName asSymbol.
 	session := GsCurrentSession currentSession.
 	symbolList := session symbolList.
@@ -18,11 +27,37 @@ run
 			symDictSlot := System myUserProfile symbolList size.
 			System myUserProfile insertDictionary: newDict at: symDictSlot + 1.
 			newDict ].
-	codeLibrarian := (AllUsers userWithId: 'CodeLibrarianUser') symbolList objectNamed: #CodeLibrarian.
-	codeLibrarian new
-		symbolDictName: dictName;
-		repository: 'tonel:$ROWAN_PROJECTS_HOME/GsDevKit_upgradeDevKitImage/rowan/src/';
-		load: #('GsDevKit_upgradeDevKitImage-Common' 'GsDevKit_upgradeDevKitImage-Bootstrap' 'GsDevKit_upgradeDevKitImage-Core').
-	(symbolList objectNamed: 'GsuAbstractGsDevKitUpgrade') _symbolDictionary: symbolDict.
+	UserGlobals at: dictName asSymbol put: symbolDict.
 	true
 %
+
+commit
+
+! expects symbol dictionary named GsuAbstractGsDevKitUpgrade to exist (at the moment)
+input $GS_HOME/shared/repos/GsDevKit_upgrade/gemstone/GsDevKit_upgrade.gs
+ 
+run
+	(GsDevKit_Upgrade_SymDict_private at: #'GsuAbstractGsDevKitUpgrade') _symbolDictionary: GsDevKit_Upgrade_SymDict_private.
+	UserGlobals removeKey: GsDevKit_Upgrade_SymDict_private name.
+	true
+%
+commit
+
+run
+	
+	UserGlobals
+		at: #GsDevKit_Image_Upgrade
+		put: 
+			((GsuAbstractGsDevKitUpgrade 'DataCurator')
+				bootstrapRepositoryDirectory: GsPackageLibrary getMonticelloRepositoryDirectory
+				yourself).
+
+	System myUserProfile removeDictionaryAt: (System myUserProfile symbolList size).
+	true
+%
+commit
+
+errorCount
+
+exit 
+

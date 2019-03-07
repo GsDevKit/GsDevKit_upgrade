@@ -7,7 +7,7 @@ doit
 	classVars: #(  )
 	classInstVars: #(  )
 	poolDictionaries: #()
-	inDictionary: UserGlobals
+	inDictionary: GsDevKit_Upgrade_SymDict_private
 	options: #())
 		category: 'GsDevKit_upgrade-Common';
 		comment: '';
@@ -22,7 +22,7 @@ doit
 	classVars: #(  )
 	classInstVars: #(  )
 	poolDictionaries: #()
-	inDictionary: UserGlobals
+	inDictionary: GsDevKit_Upgrade_SymDict_private
 	options: #())
 		category: 'GsDevKit_upgrade-Common';
 		comment: '';
@@ -37,7 +37,7 @@ doit
 	classVars: #(  )
 	classInstVars: #(  )
 	poolDictionaries: #()
-	inDictionary: UserGlobals
+	inDictionary: GsDevKit_Upgrade_SymDict_private
 	options: #())
 		category: 'GsDevKit_upgrade-Common';
 		comment: '';
@@ -52,7 +52,7 @@ doit
 	classVars: #(  )
 	classInstVars: #(  )
 	poolDictionaries: #()
-	inDictionary: UserGlobals
+	inDictionary: GsDevKit_Upgrade_SymDict_private
 	options: #())
 		category: 'GsDevKit_upgrade-Common';
 		comment: '';
@@ -67,7 +67,7 @@ doit
 	classVars: #(  )
 	classInstVars: #(  )
 	poolDictionaries: #()
-	inDictionary: UserGlobals
+	inDictionary: GsDevKit_Upgrade_SymDict_private
 	options: #())
 		category: 'GsDevKit_upgrade-Common';
 		comment: '';
@@ -82,7 +82,7 @@ doit
 	classVars: #(  )
 	classInstVars: #(  )
 	poolDictionaries: #()
-	inDictionary: UserGlobals
+	inDictionary: GsDevKit_Upgrade_SymDict_private
 	options: #())
 		category: 'GsDevKit_upgrade-Common';
 		comment: '';
@@ -97,7 +97,7 @@ doit
 	classVars: #(  )
 	classInstVars: #(  )
 	poolDictionaries: #()
-	inDictionary: UserGlobals
+	inDictionary: GsDevKit_Upgrade_SymDict_private
 	options: #())
 		category: 'GsDevKit_upgrade-Common';
 		comment: '';
@@ -112,7 +112,7 @@ doit
 	classVars: #(  )
 	classInstVars: #(  )
 	poolDictionaries: #()
-	inDictionary: UserGlobals
+	inDictionary: GsDevKit_Upgrade_SymDict_private
 	options: #())
 		category: 'GsDevKit_upgrade-Common';
 		comment: '';
@@ -127,7 +127,7 @@ doit
 	classVars: #(  )
 	classInstVars: #(  )
 	poolDictionaries: #()
-	inDictionary: UserGlobals
+	inDictionary: GsDevKit_Upgrade_SymDict_private
 	options: #())
 		category: 'GsDevKit_upgrade-Common';
 		comment: '';
@@ -142,7 +142,7 @@ doit
 	classVars: #( TheSymbolDictionary )
 	classInstVars: #(  )
 	poolDictionaries: #()
-	inDictionary: UserGlobals
+	inDictionary: GsDevKit_Upgrade_SymDict_private
 	options: #())
 		category: 'GsDevKit_upgrade-Core';
 		comment: 'I am the abstract upgrade driver for upgading GsDevKit/GLASS repositories.
@@ -173,7 +173,7 @@ doit
 	classVars: #(  )
 	classInstVars: #(  )
 	poolDictionaries: #()
-	inDictionary: UserGlobals
+	inDictionary: GsDevKit_Upgrade_SymDict_private
 	options: #())
 		category: 'GsDevKit_upgrade-Core';
 		comment: '';
@@ -188,7 +188,7 @@ doit
 	classVars: #(  )
 	classInstVars: #(  )
 	poolDictionaries: #()
-	inDictionary: UserGlobals
+	inDictionary: GsDevKit_Upgrade_SymDict_private
 	options: #())
 		category: 'GsDevKit_upgrade-Core';
 		comment: '';
@@ -203,7 +203,7 @@ doit
 	classVars: #(  )
 	classInstVars: #(  )
 	poolDictionaries: #()
-	inDictionary: UserGlobals
+	inDictionary: GsDevKit_Upgrade_SymDict_private
 	options: #())
 		category: 'GsDevKit_upgrade-Core';
 		comment: '';
@@ -218,7 +218,7 @@ doit
 	classVars: #(  )
 	classInstVars: #(  )
 	poolDictionaries: #()
-	inDictionary: UserGlobals
+	inDictionary: GsDevKit_Upgrade_SymDict_private
 	options: #())
 		category: 'GsDevKit_upgrade-Core';
 		comment: '';
@@ -233,7 +233,7 @@ doit
 	classVars: #(  )
 	classInstVars: #(  )
 	poolDictionaries: #()
-	inDictionary: UserGlobals
+	inDictionary: GsDevKit_Upgrade_SymDict_private
 	options: #())
 		category: 'GsDevKit_upgrade-Core';
 		comment: '';
@@ -248,7 +248,7 @@ doit
 	classVars: #(  )
 	classInstVars: #(  )
 	poolDictionaries: #()
-	inDictionary: UserGlobals
+	inDictionary: GsDevKit_Upgrade_SymDict_private
 	options: #())
 		category: 'GsDevKit_upgrade-Core';
 		comment: '';
@@ -263,7 +263,7 @@ doit
 	classVars: #(  )
 	classInstVars: #(  )
 	poolDictionaries: #()
-	inDictionary: UserGlobals
+	inDictionary: GsDevKit_Upgrade_SymDict_private
 	options: #())
 		category: 'GsDevKit_upgrade-Bootstrap';
 		comment: '';

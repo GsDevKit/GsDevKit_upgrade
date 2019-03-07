@@ -12,7 +12,7 @@ GsuGsDevKitUpgradeDeploymentTools >> _defaultDeploySpecName [
 
 { #category : 'private' }
 GsuGsDevKitUpgradeDeploymentTools >> _projectDefinitionFor: specName [
-	| projectRoot specUrlString projectDefinition |
+	| projectRoot specUrlString projectDefinition packageNameToPlatformPropertiesMap |
 
 	projectRoot := self _projectsHome / self _projectName.
 	specUrlString :=  'file:' , projectRoot fullName,  '/rowan/specs/', specName.
@@ -20,6 +20,10 @@ GsuGsDevKitUpgradeDeploymentTools >> _projectDefinitionFor: specName [
 	projectDefinition projectHome: self _projectsHome.
 	Rowan projectTools read 
 		readProjectSetForComponentProjectDefinition: projectDefinition.
+	packageNameToPlatformPropertiesMap := projectDefinition projectRef packageNameToPlatformPropertiesMap.
+	projectDefinition packageNames do: [:packageName |
+		"nasty hack for current deployment ..."
+		packageNameToPlatformPropertiesMap at: packageName put: 'GsDevKit_Upgrade_SymDict_private' ].
 	^ projectDefinition
 		packageFormat: 'filetree';
 		projectHome: self _projectsHome;

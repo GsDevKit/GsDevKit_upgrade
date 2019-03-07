@@ -5,6 +5,12 @@ Class {
 }
 
 { #category : 'private' }
+GsuGsDevKitUpgradeDeploymentTools >> _defaultDeploySpecName [
+
+	^  'GsDevKit_upgrade_deploy.ston'
+]
+
+{ #category : 'private' }
 GsuGsDevKitUpgradeDeploymentTools >> _projectDefinitionFor: specName [
 	| projectRoot specUrlString projectDefinition |
 
@@ -43,7 +49,7 @@ GsuGsDevKitUpgradeDeploymentTools >> _projectsHome [
 { #category : 'filetree' }
 GsuGsDevKitUpgradeDeploymentTools >> deployFiletreeRepository [
 
-	^ self deployFiletreeRepository: 'filetree' specName: 'GsDevKit_upgrade_v2.0.ston'
+	^ self deployFiletreeRepository: 'filetree' specName: self _defaultDeploySpecName
 ]
 
 { #category : 'filetree' }
@@ -67,7 +73,7 @@ GsuGsDevKitUpgradeDeploymentTools >> deployFiletreeRepository: deploymentName sp
 { #category : 'topaz' }
 GsuGsDevKitUpgradeDeploymentTools >> deployTopazFilein [
 
-	^ self deployTopazFilein: 'GsDevKit_upgrade' spec: 'GsDevKit_upgrade_v2.0.ston'
+	^ self deployTopazFilein: self _projectName spec: self _defaultDeploySpecName
 ]
 
 { #category : 'topaz' }

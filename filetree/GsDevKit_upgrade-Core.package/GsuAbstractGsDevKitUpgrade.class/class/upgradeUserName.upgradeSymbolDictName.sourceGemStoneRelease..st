@@ -1,8 +1,9 @@
 instance creation
 upgradeUserName: aString upgradeSymbolDictName: aSymbol sourceGemStoneRelease: sourceRelease
 
-	^ (self
-			upgradeUserName: aString
-				upgradeSymbolDictName: aSymbol)
-			sourceGemStoneRelease: sourceRelease;
-			resolveForUpgrade
+	^ (self new
+			upgradeUserName: aString;
+			upgradeSymbolDictName: aSymbol;
+			yourself)
+				sourceGemStoneRelease: sourceRelease;
+				resolveForUpgrade

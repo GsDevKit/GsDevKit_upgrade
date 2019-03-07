@@ -1,0 +1,6 @@
+{
+	"category" : "GsDevKit_upgrade-Core",
+	"name" : "GsuGsDevKit_3_5_x_BootstrapUpgrade",
+	"super" : "GsuGsDevKit_3_5_x_Upgrade",
+	"type" : "normal"
+}

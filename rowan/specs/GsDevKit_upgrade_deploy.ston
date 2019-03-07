@@ -1,0 +1,22 @@
+ RwComponentSpecification{
+	#specName : 'GsDevKit_deploy',
+	#projectName : 'GsDevKit_upgrade',
+	#version : '0.3.0',
+	#projectUrl : 'https://github.com/GsDevKit/GsDevKit_upgrade',
+	#configsPath : 'rowan/configs',
+	#specsPath : 'rowan/specs',
+	#repoSpec : RwGitRepositorySpecification {
+		#committish : 'master',
+		#committishType : 'branch',
+		#remoteUrl : 'git@github.com:GsDevKit/GsDevKit_upgrade.git '
+	},
+	#repoPath : 'rowan/src',
+	#projectsPath : 'rowan/projects',
+	#defaultConfigurationNames : [
+		'Main'
+	],
+	#defaultGroupNames : [
+		'core'
+	],
+	#comment : 'Intended for use when deploying filetree and gemstone source'
+}

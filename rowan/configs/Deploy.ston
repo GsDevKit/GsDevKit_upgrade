@@ -1,0 +1,16 @@
+ RwComponentLoadConfiguration{
+	#name : 'Deploy',
+	#comment : 'Support for upgrading GsDevKit/GLASS images ... post upgradeImage operations. To be used with Rowan v2.x',
+	#projectName : 'GsDevKit_upgrade',
+	#version : '0.1.0',
+	#configurationNames : [ 
+		'Main'
+		],
+	#conditionalPackageMapSpecs : {
+		'gemstone' : {
+			'SystemUser' : {
+				#defaultSymbolDictName : 'GsDevKit_Upgrade_SymDict_private',
+			}
+		}
+	}
+}

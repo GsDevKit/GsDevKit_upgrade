@@ -30,13 +30,9 @@ RwProjectLoadConfiguration {
 	#conditionalPackageMapSpecs : {
 		'gemstone' : {
 			'SystemUser' : {
-				#defaultSymbolDictName : 'UserGlobals',
 				#packageNameToPlatformPropertiesMap : {
 					'GsDevKit_upgrade-ToolExtensions' : { 'symbolDictName' : 'RowanTools' }
-					}
-			},
-			'allusers' : {
-				#defaultSymbolDictName : 'UserGlobals'
+				}
 			}
 		}
 	}

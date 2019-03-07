@@ -168,7 +168,7 @@ true.
 
 doit
 (GsuAbstractGsDevKitUpgrade
-	subclass: 'GsuGsDevKit_3_2_0_BootstrapUpgrade'
+	subclass: 'GsuGsDevKit_3_2_x_BootstrapUpgrade'
 	instVarNames: #(  )
 	classVars: #(  )
 	classInstVars: #(  )
@@ -183,7 +183,7 @@ true.
 
 doit
 (GsuAbstractGsDevKitUpgrade
-	subclass: 'GsuGsDevKit_3_3_0_BootstrapUpgrade'
+	subclass: 'GsuGsDevKit_3_3_x_BootstrapUpgrade'
 	instVarNames: #(  )
 	classVars: #(  )
 	classInstVars: #(  )
@@ -198,7 +198,7 @@ true.
 
 doit
 (GsuAbstractGsDevKitUpgrade
-	subclass: 'GsuGsDevKit_3_4_0_BootstrapUpgrade'
+	subclass: 'GsuGsDevKit_3_4_x_BootstrapUpgrade'
 	instVarNames: #(  )
 	classVars: #(  )
 	classInstVars: #(  )
@@ -213,7 +213,7 @@ true.
 
 doit
 (GsuAbstractGsDevKitUpgrade
-	subclass: 'GsuGsDevKit_3_5_0_Upgrade'
+	subclass: 'GsuGsDevKit_3_5_x_Upgrade'
 	instVarNames: #(  )
 	classVars: #(  )
 	classInstVars: #(  )
@@ -227,8 +227,8 @@ true.
 %
 
 doit
-(GsuGsDevKit_3_5_0_Upgrade
-	subclass: 'GsuGsDevKit_3_5_0_BootstrapUpgrade'
+(GsuGsDevKit_3_5_x_Upgrade
+	subclass: 'GsuGsDevKit_3_5_x_BootstrapUpgrade'
 	instVarNames: #(  )
 	classVars: #(  )
 	classInstVars: #(  )
@@ -242,8 +242,8 @@ true.
 %
 
 doit
-(GsuGsDevKit_3_5_0_Upgrade
-	subclass: 'GsuGsDevKit_3_5_0_StdUpgrade'
+(GsuGsDevKit_3_5_x_Upgrade
+	subclass: 'GsuGsDevKit_3_5_x_StdUpgrade'
 	instVarNames: #(  )
 	classVars: #(  )
 	classInstVars: #(  )
@@ -834,16 +834,6 @@ gemstone_user
 		ifNil: [ 'DataCurator' ]
 %
 
-category: 'instance creation'
-classmethod: GsuAbstractGsDevKit
-upgradeUserName: aString upgradeSymbolDictName: aSymbol
-
-	^ self new
-		upgradeUserName: aString;
-		upgradeSymbolDictName: aSymbol;
-		yourself
-%
-
 !		Instance methods for 'GsuAbstractGsDevKit'
 
 category: 'logging'
@@ -1282,6 +1272,15 @@ sourceGemStoneRelease: sourceRelease
 
 category: 'instance creation'
 classmethod: GsuAbstractGsDevKitUpgrade
+upgradeUserName: aString
+
+	^ self
+		upgradeUserName: aString 
+		upgradeSymbolDictName: nil
+%
+
+category: 'instance creation'
+classmethod: GsuAbstractGsDevKitUpgrade
 upgradeUserName: aString sourceGemStoneRelease: sourceRelease
 
 	^ self 
@@ -1292,13 +1291,52 @@ upgradeUserName: aString sourceGemStoneRelease: sourceRelease
 
 category: 'instance creation'
 classmethod: GsuAbstractGsDevKitUpgrade
+upgradeUserName: aString upgradeSymbolDictName: aSymbol 
+
+	^ self _calculateUpgradeClass
+		upgradeUserName: aString 
+		upgradeSymbolDictName: aSymbol 
+		sourceGemStoneRelease: self _calculatePreviousRelease
+%
+
+category: 'instance creation'
+classmethod: GsuAbstractGsDevKitUpgrade
 upgradeUserName: aString upgradeSymbolDictName: aSymbol sourceGemStoneRelease: sourceRelease
 
-	^ (self
-			upgradeUserName: aString
-				upgradeSymbolDictName: aSymbol)
-			sourceGemStoneRelease: sourceRelease;
-			resolveForUpgrade
+	^ (self new
+			upgradeUserName: aString;
+			upgradeSymbolDictName: aSymbol;
+			yourself)
+				sourceGemStoneRelease: sourceRelease;
+				resolveForUpgrade
+%
+
+category: 'private'
+classmethod: GsuAbstractGsDevKitUpgrade
+_calculatePreviousRelease
+
+	| previousGemStoneVersionInt |
+	previousGemStoneVersionInt := GsPackagePolicy perform: #'_previousVersion'.
+	previousGemStoneVersionInt = 35
+		ifTrue: [ ^ GsuGemStone_3_5_x_Release ].
+	previousGemStoneVersionInt = 34
+		ifTrue: [ ^ GsuGemStone_3_4_x_Release ].
+	previousGemStoneVersionInt = 33
+		ifTrue: [ ^ GsuGemStone_3_3_x_Release ].
+	previousGemStoneVersionInt = 32
+		ifTrue: [ ^ GsuGemStone_3_2_x_Release ].
+	self error: 'Upgrades from GemStone versions earlier than 3.2.0', ' are not currently supported.'
+%
+
+category: 'private'
+classmethod: GsuAbstractGsDevKitUpgrade
+_calculateUpgradeClass
+
+	| currentGemStoneVersionInt |
+	currentGemStoneVersionInt := GsPackagePolicy perform: #'_originVersion'.
+	currentGemStoneVersionInt = 35
+		ifTrue: [ ^ GsuGsDevKit_3_5_x_Upgrade ].
+	self error: 'Upgrades to ', (System gemVersionReport at: 'gsVersion') printString, ' are not currently supported.'
 %
 
 category: 'private'
@@ -2108,36 +2146,36 @@ _prepareImage_user_class_bug46059_patchSource
   ar ifNotNil: [ (ar at: 1) removeKey: (ar at: 2) ].'
 %
 
-! Class implementation for 'GsuGsDevKit_3_5_0_Upgrade'
+! Class implementation for 'GsuGsDevKit_3_5_x_Upgrade'
 
-!		Instance methods for 'GsuGsDevKit_3_5_0_Upgrade'
+!		Instance methods for 'GsuGsDevKit_3_5_x_Upgrade'
 
 category: 'initialization'
-method: GsuGsDevKit_3_5_0_Upgrade
+method: GsuGsDevKit_3_5_x_Upgrade
 asBootstrapUpgrade
 
 	"All application methods in upgraded repository must be recompiled"
 
 	"postLoadClassList is used in the bootstrap case"
 
-	^ (GsuGsDevKit_3_5_0_BootstrapUpgrade upgradeUserName: self upgradeUserName sourceGemStoneRelease: self sourceGemStoneRelease)
+	^ (GsuGsDevKit_3_5_x_BootstrapUpgrade upgradeUserName: self upgradeUserName sourceGemStoneRelease: self sourceGemStoneRelease)
 			bootstrapPostLoadClassList: self bootstrapPostLoadClassList;
 			yourself
 %
 
 category: 'initialization'
-method: GsuGsDevKit_3_5_0_Upgrade
+method: GsuGsDevKit_3_5_x_Upgrade
 asStandardUpgrade
 
 	"Application methods in upgraded repository do NOT need to recompiled"
 
 	"postLoadClassList is not used in standard upgrade case"
 
-	^ GsuGsDevKit_3_5_0_StdUpgrade upgradeUserName: self upgradeUserName sourceGemStoneRelease: self sourceGemStoneRelease
+	^ GsuGsDevKit_3_5_x_StdUpgrade upgradeUserName: self upgradeUserName sourceGemStoneRelease: self sourceGemStoneRelease
 %
 
 category: 'prepare image'
-method: GsuGsDevKit_3_5_0_Upgrade
+method: GsuGsDevKit_3_5_x_Upgrade
 prepareImage_patches
 
 	"Needed for installing GsdevKit/GLASS - should be run as System User"
@@ -2151,7 +2189,7 @@ prepareImage_patches
 %
 
 category: 'initialization'
-method: GsuGsDevKit_3_5_0_Upgrade
+method: GsuGsDevKit_3_5_x_Upgrade
 resolveForUpgrade
 	"determine which concrete upgrade class to use, base on source GemStone version"
 
@@ -2160,28 +2198,28 @@ resolveForUpgrade
 %
 
 category: 'private'
-method: GsuGsDevKit_3_5_0_Upgrade
+method: GsuGsDevKit_3_5_x_Upgrade
 _bootstrapRelease
 
 	^ GsuGemStone_3_5_x_Release major: 3 minor: 5 patch: self _patchRelease
 %
 
 category: 'private'
-method: GsuGsDevKit_3_5_0_Upgrade
+method: GsuGsDevKit_3_5_x_Upgrade
 _defaultTargetRelease
 
 	^ GsuGemStone_3_5_x_Release major: 3 minor: 5
 %
 
 category: 'private'
-method: GsuGsDevKit_3_5_0_Upgrade
+method: GsuGsDevKit_3_5_x_Upgrade
 _patchRelease
 
 	^ 0
 %
 
 category: 'private'
-method: GsuGsDevKit_3_5_0_Upgrade
+method: GsuGsDevKit_3_5_x_Upgrade
 _prepareImage_behavior_patchSource
 
 	^ '_primitiveCompileMethod: sourceString symbolList: aSymbolList category: categorySymbol oldLitVars: litVarArray intoMethodDict: aMethodDict intoCategories: aCategDict intoPragmas: ignored environmentId: environmentId
@@ -2195,24 +2233,24 @@ _prepareImage_behavior_patchSource
     environmentId: environmentId'
 %
 
-! Class implementation for 'GsuGsDevKit_3_5_0_BootstrapUpgrade'
+! Class implementation for 'GsuGsDevKit_3_5_x_BootstrapUpgrade'
 
-!		Instance methods for 'GsuGsDevKit_3_5_0_BootstrapUpgrade'
+!		Instance methods for 'GsuGsDevKit_3_5_x_BootstrapUpgrade'
 
 category: 'initialization'
-method: GsuGsDevKit_3_5_0_BootstrapUpgrade
+method: GsuGsDevKit_3_5_x_BootstrapUpgrade
 resolveForUpgrade
 	"Receiver is already resolved"
 
 	self objectSecurityPolicy: self upgradeUserProfile defaultObjectSecurityPolicy
 %
 
-! Class implementation for 'GsuGsDevKit_3_5_0_StdUpgrade'
+! Class implementation for 'GsuGsDevKit_3_5_x_StdUpgrade'
 
-!		Instance methods for 'GsuGsDevKit_3_5_0_StdUpgrade'
+!		Instance methods for 'GsuGsDevKit_3_5_x_StdUpgrade'
 
 category: 'accessing'
-method: GsuGsDevKit_3_5_0_StdUpgrade
+method: GsuGsDevKit_3_5_x_StdUpgrade
 buildString
 
 	" 
@@ -2224,7 +2262,7 @@ buildString
 %
 
 category: 'prepare gsdevkit  image'
-method: GsuGsDevKit_3_5_0_StdUpgrade
+method: GsuGsDevKit_3_5_x_StdUpgrade
 prepareGsDevKitImage_bootstrapGsDevkit
 
 	"install GsdevKit from scratch"
@@ -2233,7 +2271,7 @@ prepareGsDevKitImage_bootstrapGsDevkit
 %
 
 category: 'prepare gsdevkit  image'
-method: GsuGsDevKit_3_5_0_StdUpgrade
+method: GsuGsDevKit_3_5_x_StdUpgrade
 prepareGsDevKitImage_bug46217_patch
 
 	"Bug 46217 - during bootstrap don''t remove any classes.
@@ -2245,7 +2283,7 @@ prepareGsDevKitImage_bug46217_patch
 %
 
 category: 'prepare gsdevkit  image'
-method: GsuGsDevKit_3_5_0_StdUpgrade
+method: GsuGsDevKit_3_5_x_StdUpgrade
 prepareGsDevKitImage_patch_compileMethodCategory
 	"patch only needed suring standard upgrade ..."
 
@@ -2260,7 +2298,7 @@ prepareGsDevKitImage_patch_compileMethodCategory
 %
 
 category: 'prepare gsdevkit  image'
-method: GsuGsDevKit_3_5_0_StdUpgrade
+method: GsuGsDevKit_3_5_x_StdUpgrade
 prepareGsDevKitImage_recompilePragmaMethods
 
 	"Methods that references the ObsoletePragma class (pre-3.4) need to be recompiled."
@@ -2299,7 +2337,7 @@ prepareGsDevKitImage_recompilePragmaMethods
 %
 
 category: 'prepare gsdevkit  image'
-method: GsuGsDevKit_3_5_0_StdUpgrade
+method: GsuGsDevKit_3_5_x_StdUpgrade
 prepareGsDevKitImage_removeAllMethods
 
 	"remove all methods in GsDevKit user classes"
@@ -2308,7 +2346,7 @@ prepareGsDevKitImage_removeAllMethods
 %
 
 category: 'prepare gsdevkit  image'
-method: GsuGsDevKit_3_5_0_StdUpgrade
+method: GsuGsDevKit_3_5_x_StdUpgrade
 prepareGsDevKitImage_resetExistingGlobalState
 
 	"Reset and/or initialize any classes that may have invalid state carried over"
@@ -2319,7 +2357,7 @@ prepareGsDevKitImage_resetExistingGlobalState
 %
 
 category: 'prepare image user'
-method: GsuGsDevKit_3_5_0_StdUpgrade
+method: GsuGsDevKit_3_5_x_StdUpgrade
 prepareImage_user_clear_subscriptions
 	"no need to clear subscriptions during standard upgrade, because class initialization 
 		methods will not be fired."
@@ -2328,7 +2366,7 @@ prepareImage_user_clear_subscriptions
 %
 
 category: 'initialization'
-method: GsuGsDevKit_3_5_0_StdUpgrade
+method: GsuGsDevKit_3_5_x_StdUpgrade
 resolveForUpgrade
 	"Receiver is already resolved"
 
@@ -2336,7 +2374,7 @@ resolveForUpgrade
 %
 
 category: 'private'
-method: GsuGsDevKit_3_5_0_StdUpgrade
+method: GsuGsDevKit_3_5_x_StdUpgrade
 _clearMetacelloCaches
 
 	"Metacello caches used in calculating default values for application load specs, so cache
@@ -2350,14 +2388,14 @@ _clearMetacelloCaches
 %
 
 category: 'private'
-method: GsuGsDevKit_3_5_0_StdUpgrade
+method: GsuGsDevKit_3_5_x_StdUpgrade
 _listUpgradeParameters
 
 	^ #( )
 %
 
 category: 'private'
-method: GsuGsDevKit_3_5_0_StdUpgrade
+method: GsuGsDevKit_3_5_x_StdUpgrade
 _singletonUpgradeParameters
 
 	^ #( upgradeUserName upgradeSymbolDictName )
@@ -2371,11 +2409,12 @@ category: 'instance creation'
 classmethod: GsuGsDevKitBootstrap
 upgradeUserName: aString upgradeSymbolDictName: aSymbol bootstrapGemStoneRelease: bootstrapRelease
 
-	^ (self
-			upgradeUserName: aString
-				upgradeSymbolDictName: aSymbol)
-			bootstrapGemStoneRelease: bootstrapRelease;
-			yourself
+	^ (self new
+			upgradeUserName: aString;
+			upgradeSymbolDictName: aSymbol;
+			yourself)
+				bootstrapGemStoneRelease: bootstrapRelease;
+				yourself
 %
 
 !		Instance methods for 'GsuGsDevKitBootstrap'

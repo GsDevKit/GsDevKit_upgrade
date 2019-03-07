@@ -24,7 +24,7 @@ pushd "${upgradeLogDir}" >& /dev/null
   # start upgradeSeasideImage
 	rm -f *.log *.out
   echo "STARTING standard upgradeImage "
-	startTopaz $GEMSTONE_NAME -lq < $GS_HOME/shared/repos/GsDevKit_upgradeDevKitImage/bin/installGsDevKit_upgrade_${version}
+	startTopaz $GEMSTONE_NAME -lq < $GS_HOME/shared/repos/GsDevKit_upgrade/bin/installGsDevKit_upgrade_${version}
 	startTopaz $GEMSTONE_NAME -lq < $GS_HOME/shared/repos/GsDevKit_upgradeDevKitImage/bin/prepareGsDevKitImage
 	startTopaz $GEMSTONE_NAME -lq < $GS_HOME/shared/repos/GsDevKit_upgradeDevKitImage/bin/prepareGsDevKitImage_pragma_user
 	startTopaz $GEMSTONE_NAME -lq < $GS_HOME/shared/repos/GsDevKit_upgradeDevKitImage/bin/prepareGsDevKitImage_pragma_SystemUser

@@ -1,11 +1,11 @@
 Class {
-	#name : 'GsuGsDevKit_3_5_0_StdUpgrade',
-	#superclass : 'GsuGsDevKit_3_5_0_Upgrade',
+	#name : 'GsuGsDevKit_3_5_x_StdUpgrade',
+	#superclass : 'GsuGsDevKit_3_5_x_Upgrade',
 	#category : 'GsDevKit_upgrade-Core'
 }
 
 { #category : 'private' }
-GsuGsDevKit_3_5_0_StdUpgrade >> _clearMetacelloCaches [
+GsuGsDevKit_3_5_x_StdUpgrade >> _clearMetacelloCaches [
 
 	"Metacello caches used in calculating default values for application load specs, so cache
 		application load specs before clearing the Metacello cache"
@@ -18,19 +18,19 @@ GsuGsDevKit_3_5_0_StdUpgrade >> _clearMetacelloCaches [
 ]
 
 { #category : 'private' }
-GsuGsDevKit_3_5_0_StdUpgrade >> _listUpgradeParameters [
+GsuGsDevKit_3_5_x_StdUpgrade >> _listUpgradeParameters [
 
 	^ #( )
 ]
 
 { #category : 'private' }
-GsuGsDevKit_3_5_0_StdUpgrade >> _singletonUpgradeParameters [
+GsuGsDevKit_3_5_x_StdUpgrade >> _singletonUpgradeParameters [
 
 	^ #( upgradeUserName upgradeSymbolDictName )
 ]
 
 { #category : 'accessing' }
-GsuGsDevKit_3_5_0_StdUpgrade >> buildString [
+GsuGsDevKit_3_5_x_StdUpgrade >> buildString [
 
 	" 
 		Standard -	method recompilation not required
@@ -41,7 +41,7 @@ GsuGsDevKit_3_5_0_StdUpgrade >> buildString [
 ]
 
 { #category : 'prepare gsdevkit  image' }
-GsuGsDevKit_3_5_0_StdUpgrade >> prepareGsDevKitImage_bootstrapGsDevkit [
+GsuGsDevKit_3_5_x_StdUpgrade >> prepareGsDevKitImage_bootstrapGsDevkit [
 
 	"install GsdevKit from scratch"
 
@@ -49,7 +49,7 @@ GsuGsDevKit_3_5_0_StdUpgrade >> prepareGsDevKitImage_bootstrapGsDevkit [
 ]
 
 { #category : 'prepare gsdevkit  image' }
-GsuGsDevKit_3_5_0_StdUpgrade >> prepareGsDevKitImage_bug46217_patch [
+GsuGsDevKit_3_5_x_StdUpgrade >> prepareGsDevKitImage_bug46217_patch [
 
 	"Bug 46217 - during bootstrap don''t remove any classes.
 		during initial bootstrap no classes will be removed
@@ -60,7 +60,7 @@ GsuGsDevKit_3_5_0_StdUpgrade >> prepareGsDevKitImage_bug46217_patch [
 ]
 
 { #category : 'prepare gsdevkit  image' }
-GsuGsDevKit_3_5_0_StdUpgrade >> prepareGsDevKitImage_patch_compileMethodCategory [
+GsuGsDevKit_3_5_x_StdUpgrade >> prepareGsDevKitImage_patch_compileMethodCategory [
 	"patch only needed suring standard upgrade ..."
 
 	"will be overridden when Core package loaded"
@@ -74,7 +74,7 @@ GsuGsDevKit_3_5_0_StdUpgrade >> prepareGsDevKitImage_patch_compileMethodCategory
 ]
 
 { #category : 'prepare gsdevkit  image' }
-GsuGsDevKit_3_5_0_StdUpgrade >> prepareGsDevKitImage_recompilePragmaMethods [
+GsuGsDevKit_3_5_x_StdUpgrade >> prepareGsDevKitImage_recompilePragmaMethods [
 
 	"Methods that references the ObsoletePragma class (pre-3.4) need to be recompiled."
 
@@ -112,7 +112,7 @@ GsuGsDevKit_3_5_0_StdUpgrade >> prepareGsDevKitImage_recompilePragmaMethods [
 ]
 
 { #category : 'prepare gsdevkit  image' }
-GsuGsDevKit_3_5_0_StdUpgrade >> prepareGsDevKitImage_removeAllMethods [
+GsuGsDevKit_3_5_x_StdUpgrade >> prepareGsDevKitImage_removeAllMethods [
 
 	"remove all methods in GsDevKit user classes"
 
@@ -120,7 +120,7 @@ GsuGsDevKit_3_5_0_StdUpgrade >> prepareGsDevKitImage_removeAllMethods [
 ]
 
 { #category : 'prepare gsdevkit  image' }
-GsuGsDevKit_3_5_0_StdUpgrade >> prepareGsDevKitImage_resetExistingGlobalState [
+GsuGsDevKit_3_5_x_StdUpgrade >> prepareGsDevKitImage_resetExistingGlobalState [
 
 	"Reset and/or initialize any classes that may have invalid state carried over"
 
@@ -130,7 +130,7 @@ GsuGsDevKit_3_5_0_StdUpgrade >> prepareGsDevKitImage_resetExistingGlobalState [
 ]
 
 { #category : 'prepare image user' }
-GsuGsDevKit_3_5_0_StdUpgrade >> prepareImage_user_clear_subscriptions [
+GsuGsDevKit_3_5_x_StdUpgrade >> prepareImage_user_clear_subscriptions [
 	"no need to clear subscriptions during standard upgrade, because class initialization 
 		methods will not be fired."
 
@@ -138,7 +138,7 @@ GsuGsDevKit_3_5_0_StdUpgrade >> prepareImage_user_clear_subscriptions [
 ]
 
 { #category : 'initialization' }
-GsuGsDevKit_3_5_0_StdUpgrade >> resolveForUpgrade [
+GsuGsDevKit_3_5_x_StdUpgrade >> resolveForUpgrade [
 	"Receiver is already resolved"
 
 	self objectSecurityPolicy: self upgradeUserProfile defaultObjectSecurityPolicy

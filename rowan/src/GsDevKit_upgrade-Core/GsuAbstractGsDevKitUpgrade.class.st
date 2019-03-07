@@ -32,6 +32,32 @@ Class {
 }
 
 { #category : 'private' }
+GsuAbstractGsDevKitUpgrade class >> _calculatePreviousRelease [
+
+	| previousGemStoneVersionInt |
+	previousGemStoneVersionInt := GsPackagePolicy perform: #'_previousVersion'.
+	previousGemStoneVersionInt = 35
+		ifTrue: [ ^ GsuGemStone_3_5_x_Release ].
+	previousGemStoneVersionInt = 34
+		ifTrue: [ ^ GsuGemStone_3_4_x_Release ].
+	previousGemStoneVersionInt = 33
+		ifTrue: [ ^ GsuGemStone_3_3_x_Release ].
+	previousGemStoneVersionInt = 32
+		ifTrue: [ ^ GsuGemStone_3_2_x_Release ].
+	self error: 'Upgrades from GemStone versions earlier than 3.2.0', ' are not currently supported.'
+]
+
+{ #category : 'private' }
+GsuAbstractGsDevKitUpgrade class >> _calculateUpgradeClass [
+
+	| currentGemStoneVersionInt |
+	currentGemStoneVersionInt := GsPackagePolicy perform: #'_originVersion'.
+	currentGemStoneVersionInt = 35
+		ifTrue: [ ^ GsuGsDevKit_3_5_x_Upgrade ].
+	self error: 'Upgrades to ', (System gemVersionReport at: 'gsVersion') printString, ' are not currently supported.'
+]
+
+{ #category : 'private' }
 GsuAbstractGsDevKitUpgrade class >> _globalName [
 
 	^ #GsDevKit_Upgrade_Cache
@@ -83,6 +109,14 @@ GsuAbstractGsDevKitUpgrade class >> sourceGemStoneRelease: sourceRelease [
 ]
 
 { #category : 'instance creation' }
+GsuAbstractGsDevKitUpgrade class >> upgradeUserName: aString [
+
+	^ self
+		upgradeUserName: aString 
+		upgradeSymbolDictName: nil
+]
+
+{ #category : 'instance creation' }
 GsuAbstractGsDevKitUpgrade class >> upgradeUserName: aString sourceGemStoneRelease: sourceRelease [
 
 	^ self 
@@ -92,13 +126,23 @@ GsuAbstractGsDevKitUpgrade class >> upgradeUserName: aString sourceGemStoneRelea
 ]
 
 { #category : 'instance creation' }
+GsuAbstractGsDevKitUpgrade class >> upgradeUserName: aString upgradeSymbolDictName: aSymbol [ 
+
+	^ self _calculateUpgradeClass
+		upgradeUserName: aString 
+		upgradeSymbolDictName: aSymbol 
+		sourceGemStoneRelease: self _calculatePreviousRelease
+]
+
+{ #category : 'instance creation' }
 GsuAbstractGsDevKitUpgrade class >> upgradeUserName: aString upgradeSymbolDictName: aSymbol sourceGemStoneRelease: sourceRelease [
 
-	^ (self
-			upgradeUserName: aString
-				upgradeSymbolDictName: aSymbol)
-			sourceGemStoneRelease: sourceRelease;
-			resolveForUpgrade
+	^ (self new
+			upgradeUserName: aString;
+			upgradeSymbolDictName: aSymbol;
+			yourself)
+				sourceGemStoneRelease: sourceRelease;
+				resolveForUpgrade
 ]
 
 { #category : 'private' }

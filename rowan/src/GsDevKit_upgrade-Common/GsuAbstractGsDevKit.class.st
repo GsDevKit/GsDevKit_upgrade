@@ -20,15 +20,6 @@ GsuAbstractGsDevKit class >> gemstone_user [
 		ifNil: [ 'DataCurator' ]
 ]
 
-{ #category : 'instance creation' }
-GsuAbstractGsDevKit class >> upgradeUserName: aString upgradeSymbolDictName: aSymbol [
-
-	^ self new
-		upgradeUserName: aString;
-		upgradeSymbolDictName: aSymbol;
-		yourself
-]
-
 { #category : 'private' }
 GsuAbstractGsDevKit >> _currentUserGlobals [
 

@@ -10,11 +10,12 @@ Class {
 { #category : 'instance creation' }
 GsuGsDevKitBootstrap class >> upgradeUserName: aString upgradeSymbolDictName: aSymbol bootstrapGemStoneRelease: bootstrapRelease [
 
-	^ (self
-			upgradeUserName: aString
-				upgradeSymbolDictName: aSymbol)
-			bootstrapGemStoneRelease: bootstrapRelease;
-			yourself
+	^ (self new
+			upgradeUserName: aString;
+			upgradeSymbolDictName: aSymbol;
+			yourself)
+				bootstrapGemStoneRelease: bootstrapRelease;
+				yourself
 ]
 
 { #category : 'private' }

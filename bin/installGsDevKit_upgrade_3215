@@ -7,7 +7,7 @@ limit bytes 200
 set u SystemUser p swordfish
 login
 
-input $GS_HOME/shared/repos/GsDevKit_upgradeDevKitImage/bin/installGsDevKit_upgrade
+input $GS_HOME/shared/repos/GsDevKit_upgrade/gemstone/GsDevKit_upgrade.gs
 
 run
 	
@@ -18,14 +18,9 @@ run
 	UserGlobals
 		at: #GsDevKit_Image_Upgrade
 		put: 
-			(GsuGsDevKit_3_5_0_Upgrade 
-				sourceGemStoneRelease: (GsuAbstractGemStoneRelease major: 3 minor: 2 patch: 15)).
-"
-				bootstrapExistingConfigurationList: #( ConfigurationOfGLASS1 );
-				bootstrapPostLoadClassList: #( #SecureHashAlgorithm );
+			(GsuAbstractGsDevKitUpgrade 'DataCurator')
 				bootstrapRepositoryDirectory: GsPackageLibrary getMonticelloRepositoryDirectory;
-				yourself).
-"
+
 	System myUserProfile removeDictionaryAt: (System myUserProfile symbolList size).
 	true
 %

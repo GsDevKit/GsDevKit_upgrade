@@ -27,5 +27,5 @@ stopStone $sourceStoneName
 cp ${sourceStoneDir}/extents/extent0.dbf snapshots/extent0_TODE_${version}.dbf
 startStone $sourceStoneName
 
-startTopaz $sourceStoneName -lq < $GS_HOME/shared/repos/GsDevKit_upgradeDevKitImage/bin/runImageTests
+startTopaz $sourceStoneName -lq < $GS_HOME/shared/repos/GsDevKit_upgrade/bin/runImageTests
 

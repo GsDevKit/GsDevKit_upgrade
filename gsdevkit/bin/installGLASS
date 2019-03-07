@@ -19,8 +19,6 @@ version="$1"	# 3215, 339, 343
 sourceStoneName="battery_${version}"
 sourceStoneDir="$GS_HOME/server/stones/${sourceStoneName}"
 
-cp ${sourceStoneDir}/product/bin/extent0.seaside.dbf snapshots/extent0.seaside_3215.dbf
-
 newExtent -s ${sourceStoneDir}/product/bin/extent0.seaside.dbf $sourceStoneName
 
 export upgradeLogDir=`pwd`/upgradeLogDir
@@ -32,7 +30,7 @@ pushd "${upgradeLogDir}" >& /dev/null
 	cp ${sourceStoneDir}/extents/extent0.dbf ../snapshots/extent0_GLASS_${version}.dbf
 	startStone $sourceStoneName
 
-	startTopaz $sourceStoneName -lq < $GS_HOME/shared/repos/GsDevKit_upgradeDevKitImage/bin/runImageTests
+	startTopaz $sourceStoneName -lq < $GS_HOME/shared/repos/GsDevKit_upgrade/bin/runImageTests
 popd
 
 

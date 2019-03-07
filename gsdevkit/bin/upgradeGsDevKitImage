@@ -19,6 +19,7 @@ version="$2"	# 3215, 339, 343
 newExtent -s snapshots/extent0_upgradedImage_${contents}_${version}.dbf $GEMSTONE_NAME
 
 export upgradeLogDir=`pwd`/upgradeLogDir
+export upgradeDir="$GS_HOME/shared/repos/GsDevKit_upgrade/gemstone"
 
 pushd "${upgradeLogDir}" >& /dev/null
   # start upgradeSeasideImage

@@ -4,9 +4,9 @@
 # Sequence:
 #
 #	createStone battery_339 3.3.9
-# installImage GLASS1 339 
-#	upgradeImage GLASS1 339 GLASS1
-# upgradePreGsDevKitImage GLASS1 339
+# installGLASS1 339 
+#	upgradeImage GLASS1 339
+# upgradeGsDevKitImage GLASS1 339
 #
 set -e
 . defStone.env
@@ -25,15 +25,15 @@ pushd "${upgradeLogDir}" >& /dev/null
 	rm -f *.log *.out
   echo "STARTING GsdevKit_upgrad upgradeImage "
 	startTopaz $GEMSTONE_NAME -lq < $GS_HOME/shared/repos/GsDevKit_upgrade/bin/installGsDevKit_upgrade
-	startTopaz $GEMSTONE_NAME -lq < $GS_HOME/shared/repos/GsDevKit_upgradeDevKitImage/bin/prepareGsDevKitImage
-	startTopaz $GEMSTONE_NAME -lq < $GS_HOME/shared/repos/GsDevKit_upgradeDevKitImage/bin/prepareGsDevKitImage_pragma_user
-	startTopaz $GEMSTONE_NAME -lq < $GS_HOME/shared/repos/GsDevKit_upgradeDevKitImage/bin/prepareGsDevKitImage_pragma_SystemUser
-	startTopaz $GEMSTONE_NAME -lq -T 500000 < $GS_HOME/shared/repos/GsDevKit_upgradeDevKitImage/bin/prepareGsDevKitImage_user
+	startTopaz $GEMSTONE_NAME -lq < $GS_HOME/shared/repos/GsDevKit_upgrade/bin/prepareGsDevKitImage
+	startTopaz $GEMSTONE_NAME -lq < $GS_HOME/shared/repos/GsDevKit_upgrade/bin/prepareGsDevKitImage_pragma_user
+	startTopaz $GEMSTONE_NAME -lq < $GS_HOME/shared/repos/GsDevKit_upgrade/bin/prepareGsDevKitImage_pragma_SystemUser
+	startTopaz $GEMSTONE_NAME -lq -T 500000 < $GS_HOME/shared/repos/GsDevKit_upgrade/bin/prepareGsDevKitImage_user
 
 	stopStone $GEMSTONE_NAME
 	cp ../extents/extent0.dbf ../snapshots/extent0_preparedGsDevKitImage_${contents}_${version}.dbf
 	startStone $GEMSTONE_NAME
 
-	startTopaz $GEMSTONE_NAME -lq < $GS_HOME/shared/repos/GsDevKit_upgradeDevKitImage/bin/runImageTests
+	startTopaz $GEMSTONE_NAME -lq < $GS_HOME/shared/repos/GsDevKit_upgrade/bin/runImageTests
 popd
 

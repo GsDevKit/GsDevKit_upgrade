@@ -1,0 +1,38 @@
+# arg1 is the content id: GLASS, GLASS1, TODE
+#
+# Sequence:
+#
+#	createStone battery_339 3.3.9
+# installGLASS 339 
+#	upgradeImage GLASS 339
+# upgradeGsDevKitImage GLASS 339
+# loadTODE GLASS 339
+#
+set -e
+. defStone.env
+export vers="3.5.0_g"
+
+rm -f *.log *.out
+
+version="$1"	# 3215, 339, 343
+
+sourceStoneName="battery_${version}"
+sourceStoneDir="$GS_HOME/server/stones/${sourceStoneName}"
+
+cp ${sourceStoneDir}/product/bin/extent0.seaside.dbf snapshots/extent0.seaside_3215.dbf
+
+newExtent -s ${sourceStoneDir}/product/bin/extent0.seaside.dbf $sourceStoneName
+
+export upgradeLogDir=`pwd`/upgradeLogDir
+
+pushd "${upgradeLogDir}" >& /dev/null
+	rm -f *.log *.out
+
+	stopStone $sourceStoneName
+	cp ${sourceStoneDir}/extents/extent0.dbf ../snapshots/extent0_GLASS_${version}.dbf
+	startStone $sourceStoneName
+
+	startTopaz $sourceStoneName -lq < $GS_HOME/shared/repos/GsDevKit_upgradeDevKitImage/bin/runImageTests
+popd
+
+

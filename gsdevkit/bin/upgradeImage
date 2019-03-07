@@ -4,9 +4,9 @@
 # Sequence:
 #
 #	createStone battery_339 3.3.9
-# installImage GLASS1 339 
-#	upgradeImage GLASS1 339 GLASS1
-# upgradePreGsDevKitImage GLASS1 339
+# installGLASS1 339
+#	upgradeImage GLASS1 339
+# upgradeGsDevKitImage GLASS1 339
 #
 set -e
 . defStone.env

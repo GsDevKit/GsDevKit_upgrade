@@ -11,6 +11,23 @@ GsuGsDevKitUpgradeDeploymentTools >> _defaultDeploySpecName [
 ]
 
 { #category : 'private' }
+GsuGsDevKitUpgradeDeploymentTools >> _defaultTopazFileHeader: fileName [
+
+	^ (WriteStream on: String new)
+		nextPutAll: '!========================================================================='; lf;
+		nextPutAll: '! Copyright (C) GemTalk Systems 2019.  All Rights Reserved.'; lf;
+		nextPutAll: '! MIT license: see https://github.com/GsDevKit/GsDevKit_upgrade/blob/master/LICENSE'; lf;
+		nextPutAll: '!'; lf;
+		nextPutAll: '! Name - ', fileName, '.gs'; lf;
+		nextPutAll: '!'; lf;
+		nextPutAll: '! Purpose:'; lf;
+		nextPutAll: '! Bootstrap GsDevKit_upgrade into a 3.x database to perform GsDevKit upgade operations.'; lf;
+		nextPutAll: '!'; lf;
+		nextPutAll: '!======================================================================='; lf;
+		contents
+]
+
+{ #category : 'private' }
 GsuGsDevKitUpgradeDeploymentTools >> _projectDefinitionFor: specName [
 	| projectRoot specUrlString projectDefinition packageNameToPlatformPropertiesMap |
 
@@ -83,6 +100,15 @@ GsuGsDevKitUpgradeDeploymentTools >> deployTopazFilein [
 { #category : 'topaz' }
 GsuGsDevKitUpgradeDeploymentTools >> deployTopazFilein: topazFileName spec: specName [
 
+	self 
+		deployTopazFilein: topazFileName 
+		topazFileHeader: (self _defaultTopazFileHeader: topazFileName)
+		spec: specName
+]
+
+{ #category : 'topaz' }
+GsuGsDevKitUpgradeDeploymentTools >> deployTopazFilein: topazFileName topazFileHeader: topazFileHeader spec: specName [
+
 	| projectSetDefinition visitor deploymentDir projectSetModification |
 	projectSetDefinition := self _projectSetFor: specName.
 
@@ -92,6 +118,7 @@ GsuGsDevKitUpgradeDeploymentTools >> deployTopazFilein: topazFileName spec: spec
 	visitor := RwGsModificationTopazWriterVisitor new
 		repositoryRootPath: deploymentDir;
 		topazFilename: topazFileName;
+		topazFileHeader: topazFileHeader;
 		yourself.
 	visitor visit: projectSetModification.
 ]

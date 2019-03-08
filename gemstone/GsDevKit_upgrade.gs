@@ -1,3 +1,13 @@
+!=========================================================================
+! Copyright (C) GemTalk Systems 2019.  All Rights Reserved.
+! MIT license: see https://github.com/GsDevKit/GsDevKit_upgrade/blob/master/LICENSE
+!
+! Name - GsDevKit_upgrade.gs
+!
+! Purpose:
+! Bootstrap GsDevKit_upgrade into a 3.x database to perform GsDevKit upgade operations.
+!
+!=======================================================================
 ! Class Declarations
 
 doit

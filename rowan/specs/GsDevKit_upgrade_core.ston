@@ -10,7 +10,7 @@ RwSimpleProjectSpecification {
 		#remoteUrl : 'git@github.com:GsDevKit/GsDevKit_upgrade.git '
 	},
 	#repoPath : 'rowan/src',
-	#comment : 'Support for upgrading GsDevKit images to GemStone 3.5.x and beyond',
+	#comment : 'Support for upgrading GsDevKit images to GemStone 3.5.x and beyond - used for loading in as non-SystemUer user',
 	#defaultConfigurationNames : [
 		'Main'
 	],

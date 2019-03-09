@@ -15,13 +15,14 @@
 #	installTODE GLASS1 339
 #
 set -e
-. defStone.env
-export vers="3.5.0_g"
-
-rm -f *.log *.out
-
 contents="$1"	# GLASS, GLASS1, TODE
 version="$2"	# 3215, 339, 343
+shift
+shift
+
+. defStone.env
+
+rm -f *.log *.out
 
 newExtent -s snapshots/extent0_preparedGsDevKitImage_${contents}_${version}.dbf $GEMSTONE_NAME
 

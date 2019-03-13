@@ -414,7 +414,7 @@ GsuAbstractGsDevKitUpgrade >> prepareGsDevKitImage_enableSessionMethods [
 
 	GsPackagePolicy current refreshSessionMethodDictionary. "no persistent state modified"
 
-	self log: '	session methods enambled (commit)'.
+	self log: '	session methods enabled (commit)'.
 ]
 
 { #category : 'prepare gsdevkit  image' }

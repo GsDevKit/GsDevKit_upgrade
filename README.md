@@ -7,10 +7,10 @@ file:$ROWAN_PROJECTS_HOME/GsDevKit_upgrade/rowan/specs/GsDevKit_upgrade.ston
 "both topaz and filetree format deployments should be created when a new version is released"
 
 "deploy topaz filein"
-	Rowan projectTools gsuDeploy deployTopazFilein
+	Rowan projectTools gsuDeploy deployTopazFilein.
 
 "deploy filetree repository"
-	Rowan projectTools gsuDeploy deployFiletreeFilein
+	Rowan projectTools gsuDeploy deployFiletreeRepository.
 ```
 ### Rowan project creation script
 ```smalltalk

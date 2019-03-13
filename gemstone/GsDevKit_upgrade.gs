@@ -8,6 +8,7 @@
 ! Bootstrap GsDevKit_upgrade into a 3.x database to perform GsDevKit upgade operations.
 !
 !=======================================================================
+
 ! Class Declarations
 
 doit
@@ -1244,19 +1245,12 @@ _singletonUpgradeParameters
 category: 'private'
 method: GsuAbstractGsDevKit
 _standardBaselineLoaded: baselineClassName
-self log: '_standardBaselineLoaded: ', baselineClassName.
 	(self _globalNamed: baselineClassName)
 		ifNotNil: [ 
-self log: '	baseline class present'.
 		(self _globalNamed: 'MetacelloProjectRegistration')
 			ifNotNil: [ :cls | 
-self log: '	MetacelloProjectRegistration class present'.
-				(cls registrationForClassNamed: baselineClassName ifAbsent: [  self log: '	no registration'. nil])
-					ifNotNil: [ :registration | 
-| res | 
-res := registration loadedInImage.
-self log: '	registration loaded: ', res printString.
-^res ] ] ].
+				(cls registrationForClassNamed: baselineClassName ifAbsent: [ ])
+					ifNotNil: [ :registration | ^ registration loadedInImage ] ] ].
 	^ false
 %
 
@@ -1581,7 +1575,7 @@ prepareGsDevKitImage_enableSessionMethods
 
 	GsPackagePolicy current refreshSessionMethodDictionary. "no persistent state modified"
 
-	self log: '	session methods enambled (commit)'.
+	self log: '	session methods enabled (commit)'.
 %
 
 category: 'prepare gsdevkit  image'

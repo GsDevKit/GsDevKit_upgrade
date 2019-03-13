@@ -9,8 +9,25 @@
 !		for options.
 !
 !		To customize the upgrade edit this scrpt with the desired values and define the
-!			path to your script using the -C option to the upgradeSeasideImage shell 
-!			script. 
+!			path to your script using the -P option to the upgradeSeasideImage shell 
+!			script:
+!
+!				(GsuAbstractGsDevKitUpgrade
+!					upgradeUserName: 'seaside' 										"default is 'DataCurator'"
+!						upgradeSymbolDictName: #Seaside							"default is #UserGlobals")
+!							bootstrapPostLoadClassList: nil;					"default is { #SecureHashAlgorithm . #MCFileTreeFileDirectoryUtils  }"
+!							bootstrapRepositoryDirectory: nil;				"default is GsPackageLibrary getMonticelloRepositoryDirectory"
+!							bootstrapApplicationLoadSpecs: nil;				"default depends upon what is installed in image. Add your application
+!																													spec to end of list or arrange to reload your application after
+!																													upgradeSeasideImage completes:
+!																														GLASS			- { { 'ConfigurationOfGLASS'. '1.0-beta.9.2.2'. #('default'). nil } }"
+!																														GLASS1		- { { 'Metacello' }. { 'GLASS1' }  }"
+!																														tODE			- { { 'Metacello' }. { 'Tode' } }"
+!																														GsDevKit	- { { 'Metacello' }. { 'GsDevKit' } }"
+!							bootstrapExistingConfigurationList: nil;	"default is list of ConfigurationOf classes in upgradeSymbolDictName"
+!							yourself
+!
+!			See https://github.com/GsDevKit/GsDevKit_upgrade/blob/master/README.md for additional details.
 !
 !=======================================================================
 

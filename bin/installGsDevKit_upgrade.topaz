@@ -35,15 +35,9 @@ run
 %
 commit
 
-run
-	
-	UserGlobals
-		at: #GsDevKit_Image_Upgrade
-		put: 
-			((GsuAbstractGsDevKitUpgrade upgradeUserName: SeasideUpgradeUser)
-				bootstrapRepositoryDirectory: GsPackageLibrary getMonticelloRepositoryDirectory
-				yourself).
+input $upgradeLogDir/createGsDevKit_upgrade.topaz
 
+run
 	System myUserProfile removeDictionaryAt: (System myUserProfile symbolList size).
 	System commitTransaction
 %

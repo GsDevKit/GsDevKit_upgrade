@@ -1,0 +1,23 @@
+!=========================================================================
+! Copyright (C) GemTalk Systems 2019.  All Rights Reserved.
+! MIT license: see https://github.com/GsDevKit/GsDevKit_upgrade/blob/master/LICENSE
+!
+! Name -createGsDevKit_upgrade.topaz
+!
+! Purpose:
+! 	topaz script for creating the default upgrade object, using the default values 
+!		for options.
+!
+!		To customize the upgrade edit this scrpt with the desired values and define the
+!			path to your script using the -C option to the upgradeSeasideImage shell 
+!			script. 
+!
+!=======================================================================
+
+run
+	UserGlobals
+		at: #GsDevKit_Image_Upgrade
+		put: (GsuAbstractGsDevKitUpgrade upgradeUserName: SeasideUpgradeUser).
+	System commitTransaction
+%
+

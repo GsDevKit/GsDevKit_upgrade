@@ -3,7 +3,7 @@
 #
 # arg1 is the GemStone version id: 3215, 339, 343
 #
-#	createStone battery_339 3.3.9
+#	createStone -g battery_339 3.3.9
 # installTODE_339
 #	upgradeImage TODE 339
 # upgradeGsDevKitImage TODE 339

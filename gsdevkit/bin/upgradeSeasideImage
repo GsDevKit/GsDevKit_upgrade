@@ -3,7 +3,7 @@
 #
 # Sequence:
 #
-#	createStone battery_339 3.3.9
+#	createStone -g battery_339 3.3.9
 # installGLASS1 339
 #	upgradeImage GLASS1 339
 # upgradeSeaideImage GLASS1 339

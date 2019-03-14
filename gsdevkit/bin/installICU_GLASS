@@ -2,7 +2,7 @@
 #
 # Sequence:
 #
-#	createStone battery_339 3.3.9
+#	createStone -g battery_339 3.3.9
 # installICU_GLASS 339 
 #	upgradeImage ICU_GLASS 339
 # upgradeGsDevKitImage ICU_GLASS 339

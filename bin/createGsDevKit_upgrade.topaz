@@ -14,7 +14,7 @@
 !
 !				(GsuAbstractGsDevKitUpgrade
 !					upgradeUserName: 'seaside' 										"default is 'DataCurator'"
-!						upgradeSymbolDictName: #Seaside							"default is #UserGlobals")
+!						upgradeSymbolDictName: #Seaside)						"default is #UserGlobals"
 !							bootstrapPostLoadClassList: nil;					"default is { #SecureHashAlgorithm . #MCFileTreeFileDirectoryUtils  }"
 !							bootstrapRepositoryDirectory: nil;				"default is GsPackageLibrary getMonticelloRepositoryDirectory"
 !							bootstrapApplicationLoadSpecs: nil;				"default depends upon what is installed in image. Add your application

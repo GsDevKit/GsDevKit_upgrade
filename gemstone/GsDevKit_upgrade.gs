@@ -8,7 +8,6 @@
 ! Bootstrap GsDevKit_upgrade into a 3.x database to perform GsDevKit upgade operations.
 !
 !=======================================================================
-
 ! Class Declarations
 
 doit
@@ -323,6 +322,51 @@ _classForMajorVersion: major minorVersion: minor
 	} at: minor + 1
 %
 
+category: 'private'
+classmethod: GsuAbstractGemStoneRelease
+_previousPatchVersionFor: primaryVersionPattern
+  "Returns a single digit SmallInteger representing the patch version of the version we are upgrading from."
+
+  | prevVer hist |
+  prevVer := 0.
+  (Globals at: #'DbfHistory' otherwise: nil)
+    ifNotNil: [ :h | 
+      | ofs |
+      hist := h.
+      ofs := hist
+        _findLastString: 'upgrade to GemStone'
+        startingAt: hist size
+        ignoreCase: true.
+      ofs == 0
+        ifTrue: [ 
+          (ImageVersion at: #'gsVersion' otherwise: nil)
+            ifNotNil: [ :iVer | 
+              ofs := 1.
+              hist := '  v' , iVer , '  ' ] ].
+      ofs ~~ 0
+        ifTrue: [ 
+          | subStr |
+          subStr := hist copyFrom: ofs to: hist size.
+          (hist
+            matchPattern:
+              {$*.
+             primaryVersionPattern.
+              $*})
+            ifTrue: [  | idx patchVersion |
+				idx := hist 
+					_findLastString: '.'
+					startingAt: hist size
+					ignoreCase: true.
+				idx = 0
+					ifTrue: [ self error: 'patch version not found' ].
+				patchVersion := (hist copyFrom: idx + 1 to: hist size) asNumber.
+				^ patchVersion ]
+            ifFalse: [ self error: 'version matching ', primaryVersionPattern printString, ' not found.' ] ] ].
+  prevVer == 0
+    ifTrue: [ self error: 'no previous version found' ].
+  ^ prevVer
+%
+
 !		Instance methods for 'GsuAbstractGemStoneRelease'
 
 category: 'bootstrapping'
@@ -345,7 +389,7 @@ category: 'accessing'
 method: GsuAbstractGemStoneRelease
 major
 
-	^ major
+	^ major ifNil: [ 3 ]
 %
 
 category: 'accessing'
@@ -373,7 +417,7 @@ category: 'accessing'
 method: GsuAbstractGemStoneRelease
 patch
 
-	^ patch ifNil: [ 0 ]
+	^ patch ifNil: [ patch := self class _previousPatchVersionFor: 'v', self major asString, '.', self minor asString, '.' ]
 %
 
 category: 'accessing'
@@ -568,6 +612,13 @@ resolveForUpgradeToGemStone350: aGsuGsDevKit_3_5_0_Upgrade
 
 category: 'accessing'
 method: GsuGemStone_2_4_x_Release
+major
+
+	^ major ifNil: [ 2 ]
+%
+
+category: 'accessing'
+method: GsuGemStone_2_4_x_Release
 minor: anInteger
 
 	anInteger ~= 4 ifTrue: [ self error: 'GemStone version 2.', anInteger printString, ' not supported' ].
@@ -594,9 +645,27 @@ prepareImage_makeClassesObsolete: aGsDevKitUpgrade
 			  do: [:className | aGsDevKitUpgrade prepareImage_makeClassObsolete: className in: symDict ] ].
 %
 
+! Class implementation for 'GsuGemStone_3_0_x_Release'
+
+!		Instance methods for 'GsuGemStone_3_0_x_Release'
+
+category: 'accessing'
+method: GsuGemStone_3_0_x_Release
+minor
+
+	^ minor ifNil: [ 0 ]
+%
+
 ! Class implementation for 'GsuGemStone_3_1_x_Release'
 
 !		Instance methods for 'GsuGemStone_3_1_x_Release'
+
+category: 'accessing'
+method: GsuGemStone_3_1_x_Release
+minor
+
+	^ minor ifNil: [ 1 ]
+%
 
 category: 'prepare image'
 method: GsuGemStone_3_1_x_Release
@@ -612,6 +681,13 @@ prepareImage_makeClassesObsolete: aGsDevKitUpgrade
 ! Class implementation for 'GsuGemStone_3_2_x_Release'
 
 !		Instance methods for 'GsuGemStone_3_2_x_Release'
+
+category: 'accessing'
+method: GsuGemStone_3_2_x_Release
+minor
+
+	^ minor ifNil: [ 2 ]
+%
 
 category: 'prepare image'
 method: GsuGemStone_3_2_x_Release
@@ -688,6 +764,13 @@ resolveForUpgradeToGemStone350: aGsuGsDevKit_3_5_0_Upgrade
 
 !		Instance methods for 'GsuGemStone_3_3_x_Release'
 
+category: 'accessing'
+method: GsuGemStone_3_3_x_Release
+minor
+
+	^ minor ifNil: [ 3 ]
+%
+
 category: 'prepare image'
 method: GsuGemStone_3_3_x_Release
 prepareImage_patches: aGsDevKitUpgrade
@@ -755,6 +838,13 @@ prepareImage_userPragmaFor: aGsDevKitUpgrade
 
 !		Instance methods for 'GsuGemStone_3_4_x_Release'
 
+category: 'accessing'
+method: GsuGemStone_3_4_x_Release
+minor
+
+	^ minor ifNil: [ 4 ]
+%
+
 category: 'prepare gsdevkit image'
 method: GsuGemStone_3_4_x_Release
 prepareGsDevKitImage_recompilePragmaMethods:  aGsDevKitUpgrade
@@ -781,6 +871,13 @@ bootstrapPackageFileNames
 	"answer an ordered list of the Monticello packages that are needed to bootstrap GsDevKit/GLASS into image"
 
 	^self _bootstrapPackageFileNames_0
+%
+
+category: 'accessing'
+method: GsuGemStone_3_5_x_Release
+minor
+
+	^ minor ifNil: [ 5 ]
 %
 
 category: 'prepare gsdevkit image'

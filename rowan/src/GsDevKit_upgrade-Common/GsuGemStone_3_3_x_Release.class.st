@@ -4,6 +4,12 @@ Class {
 	#category : 'GsDevKit_upgrade-Common'
 }
 
+{ #category : 'accessing' }
+GsuGemStone_3_3_x_Release >> minor [
+
+	^ minor ifNil: [ 3 ]
+]
+
 { #category : 'prepare image' }
 GsuGemStone_3_3_x_Release >> prepareImage_patches: aGsDevKitUpgrade [
 	"Opportunity for target image to install any patches needed pre-upgrade"

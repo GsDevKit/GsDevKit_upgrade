@@ -46,6 +46,12 @@ GsuGemStone_3_5_x_Release >> bootstrapPackageFileNames [
 	^self _bootstrapPackageFileNames_0
 ]
 
+{ #category : 'accessing' }
+GsuGemStone_3_5_x_Release >> minor [
+
+	^ minor ifNil: [ 5 ]
+]
+
 { #category : 'prepare gsdevkit image' }
 GsuGemStone_3_5_x_Release >> prepareGsDevKitImage_recompilePragmaMethods:  aGsDevKitUpgrade [
 

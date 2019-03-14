@@ -1,4 +1,4 @@
 accessing
 patch
 
-	^ patch ifNil: [ 0 ]
+	^ patch ifNil: [ patch := self class _previousPatchVersionFor: 'v', self major asString, '.', self minor asString, '.' ]

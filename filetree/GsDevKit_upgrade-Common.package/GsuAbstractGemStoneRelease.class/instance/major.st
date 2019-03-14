@@ -1,4 +1,4 @@
 accessing
 major
 
-	^ major
+	^ major ifNil: [ 3 ]

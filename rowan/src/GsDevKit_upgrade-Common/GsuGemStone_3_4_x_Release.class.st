@@ -4,6 +4,12 @@ Class {
 	#category : 'GsDevKit_upgrade-Common'
 }
 
+{ #category : 'accessing' }
+GsuGemStone_3_4_x_Release >> minor [
+
+	^ minor ifNil: [ 4 ]
+]
+
 { #category : 'prepare gsdevkit image' }
 GsuGemStone_3_4_x_Release >> prepareGsDevKitImage_recompilePragmaMethods:  aGsDevKitUpgrade [
 

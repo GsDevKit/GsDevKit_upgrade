@@ -285,9 +285,27 @@ GsuAbstractGsDevKitUpgrade >> logUpgradeParameters [
 ]
 
 { #category : 'accessing' }
+GsuAbstractGsDevKitUpgrade >> major [
+
+	^ 3
+]
+
+{ #category : 'accessing' }
 GsuAbstractGsDevKitUpgrade >> methodsWithPragmas [
 
 	^ methodsWithPragmas ifNil: [ methodsWithPragmas := {} ]
+]
+
+{ #category : 'accessing' }
+GsuAbstractGsDevKitUpgrade >> minor [
+
+	self subclassResponsibiity: #minor
+]
+
+{ #category : 'accessing' }
+GsuAbstractGsDevKitUpgrade >> patch [
+
+	self subclassResponsibiity: #patch
 ]
 
 { #category : 'phases' }
@@ -768,7 +786,10 @@ GsuAbstractGsDevKitUpgrade >> prepareImage_user_clear_subscriptions [
 { #category : 'prepare image' }
 GsuAbstractGsDevKitUpgrade >> prepareImageBanner [
 
-	self bannerLog: 'Starting ', self buildString, ' GsDevKit upgrade: prepare image as ', System myUserProfile userId.
+	self bannerLogDash.
+	self log:  'Starting ', self buildString, ' GsDevKit upgrade: prepare image as ', System myUserProfile userId.
+	self log:  '	Upgrading', self sourceGemStoneRelease printString, ' to ', self printString.
+	self bannerLogDash.
 	self logUpgradeParameters
 ]
 
@@ -798,6 +819,15 @@ GsuAbstractGsDevKitUpgrade >> prepareImageUserBanner [
 
 	self bannerLog: 'Starting ', self buildString, ' GsDevKit upgrade: prepare image for user ', System myUserProfile userId.
 	self logUpgradeParameters
+]
+
+{ #category : 'printing' }
+GsuAbstractGsDevKitUpgrade >> printOn: aStream [
+
+	aStream 
+		nextPutAll: self class name asString;
+		nextPutAll: ' v', self major printString, '.', self minor printString, '.', self patch printString;
+		yourself
 ]
 
 { #category : 'initialization' }

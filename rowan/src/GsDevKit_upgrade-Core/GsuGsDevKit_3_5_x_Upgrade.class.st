@@ -58,6 +58,18 @@ GsuGsDevKit_3_5_x_Upgrade >> asStandardUpgrade [
 	^ GsuGsDevKit_3_5_x_StdUpgrade upgradeUserName: self upgradeUserName sourceGemStoneRelease: self sourceGemStoneRelease
 ]
 
+{ #category : 'accessing' }
+GsuGsDevKit_3_5_x_Upgrade >> minor [
+
+	^ 5
+]
+
+{ #category : 'accessing' }
+GsuGsDevKit_3_5_x_Upgrade >> patch [
+
+	^ self _patchRelease
+]
+
 { #category : 'prepare image' }
 GsuGsDevKit_3_5_x_Upgrade >> prepareImage_patches [
 

@@ -599,6 +599,16 @@ prepareImage_user_clear_subscriptions: aGsDevKitUpgrade
 	aGsDevKitUpgrade prepareImage_user_clear_subscriptions
 %
 
+category: 'printing'
+method: GsuAbstractGemStoneRelease
+printOn: aStream
+
+	aStream 
+		nextPutAll: self class name asString;
+		nextPutAll: ' v', self major printString, '.', self minor printString, '.', self patch printString;
+		yourself
+%
+
 category: 'initialization'
 method: GsuAbstractGemStoneRelease
 resolveForUpgradeToGemStone350: aGsuGsDevKit_3_5_0_Upgrade
@@ -1530,9 +1540,30 @@ logUpgradeParameters
 
 category: 'accessing'
 method: GsuAbstractGsDevKitUpgrade
+major
+
+	^ 3
+%
+
+category: 'accessing'
+method: GsuAbstractGsDevKitUpgrade
 methodsWithPragmas
 
 	^ methodsWithPragmas ifNil: [ methodsWithPragmas := {} ]
+%
+
+category: 'accessing'
+method: GsuAbstractGsDevKitUpgrade
+minor
+
+	self subclassResponsibiity: #minor
+%
+
+category: 'accessing'
+method: GsuAbstractGsDevKitUpgrade
+patch
+
+	self subclassResponsibiity: #patch
 %
 
 category: 'phases'
@@ -1806,7 +1837,10 @@ category: 'prepare image'
 method: GsuAbstractGsDevKitUpgrade
 prepareImageBanner
 
-	self bannerLog: 'Starting ', self buildString, ' GsDevKit upgrade: prepare image as ', System myUserProfile userId.
+	self bannerLogDash.
+	self log:  'Starting ', self buildString, ' GsDevKit upgrade: prepare image as ', System myUserProfile userId.
+	self log:  '	Upgrading', self sourceGemStoneRelease printString, ' to ', self printString.
+	self bannerLogDash.
 	self logUpgradeParameters
 %
 
@@ -2077,6 +2111,16 @@ prepareImage_user_clear_subscriptions
 	(cls _classVars at: #'Subscriptions') removeAll: (cls _classVars at: #'Subscriptions').
 %
 
+category: 'printing'
+method: GsuAbstractGsDevKitUpgrade
+printOn: aStream
+
+	aStream 
+		nextPutAll: self class name asString;
+		nextPutAll: ' v', self major printString, '.', self minor printString, '.', self patch printString;
+		yourself
+%
+
 category: 'initialization'
 method: GsuAbstractGsDevKitUpgrade
 resolveForUpgrade
@@ -2243,6 +2287,39 @@ _prepareImage_user_class_bug46059_patchSource
   ar ifNotNil: [ (ar at: 1) removeKey: (ar at: 2) ].'
 %
 
+! Class implementation for 'GsuGsDevKit_3_2_x_BootstrapUpgrade'
+
+!		Instance methods for 'GsuGsDevKit_3_2_x_BootstrapUpgrade'
+
+category: 'accessing'
+method: GsuGsDevKit_3_2_x_BootstrapUpgrade
+minor
+
+	^ 2
+%
+
+! Class implementation for 'GsuGsDevKit_3_3_x_BootstrapUpgrade'
+
+!		Instance methods for 'GsuGsDevKit_3_3_x_BootstrapUpgrade'
+
+category: 'accessing'
+method: GsuGsDevKit_3_3_x_BootstrapUpgrade
+minor
+
+	^ 3
+%
+
+! Class implementation for 'GsuGsDevKit_3_4_x_BootstrapUpgrade'
+
+!		Instance methods for 'GsuGsDevKit_3_4_x_BootstrapUpgrade'
+
+category: 'accessing'
+method: GsuGsDevKit_3_4_x_BootstrapUpgrade
+minor
+
+	^ 4
+%
+
 ! Class implementation for 'GsuGsDevKit_3_5_x_Upgrade'
 
 !		Instance methods for 'GsuGsDevKit_3_5_x_Upgrade'
@@ -2269,6 +2346,20 @@ asStandardUpgrade
 	"postLoadClassList is not used in standard upgrade case"
 
 	^ GsuGsDevKit_3_5_x_StdUpgrade upgradeUserName: self upgradeUserName sourceGemStoneRelease: self sourceGemStoneRelease
+%
+
+category: 'accessing'
+method: GsuGsDevKit_3_5_x_Upgrade
+minor
+
+	^ 5
+%
+
+category: 'accessing'
+method: GsuGsDevKit_3_5_x_Upgrade
+patch
+
+	^ self _patchRelease
 %
 
 category: 'prepare image'

@@ -290,6 +290,15 @@ GsuAbstractGemStoneRelease >> prepareImage_userPragmaFor: aGsDevKitUpgrade [
 	"noop by default"
 ]
 
+{ #category : 'printing' }
+GsuAbstractGemStoneRelease >> printOn: aStream [
+
+	aStream 
+		nextPutAll: self class name asString;
+		nextPutAll: ' v', self major printString, '.', self minor printString, '.', self patch printString;
+		yourself
+]
+
 { #category : 'initialization' }
 GsuAbstractGemStoneRelease >> resolveForUpgradeToGemStone350: aGsuGsDevKit_3_5_0_Upgrade [
 

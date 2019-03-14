@@ -1,4 +1,4 @@
 debugging
 log: aString
 
-	GsFile gciLogServer: aString
+	self class log: aString

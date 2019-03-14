@@ -285,6 +285,13 @@ true.
 
 !		Class methods for 'GsuAbstractGemStoneRelease'
 
+category: 'logging'
+classmethod: GsuAbstractGemStoneRelease
+log: aString
+
+	GsFile gciLogServer: aString
+%
+
 category: 'instance creation'
 classmethod: GsuAbstractGemStoneRelease
 major: major minor: minor
@@ -346,21 +353,23 @@ _previousPatchVersionFor: primaryVersionPattern
       ofs ~~ 0
         ifTrue: [ 
           | subStr |
-          subStr := hist copyFrom: ofs to: hist size.
-          (hist
+          subStr := hist copyFrom: 1 to: ofs.
+          (subStr
             matchPattern:
               {$*.
              primaryVersionPattern.
               $*})
-            ifTrue: [  | idx patchVersion |
+            ifTrue: [  | idx patchHist pattern |
 				idx := hist 
-					_findLastString: '.'
+					_findLastString: primaryVersionPattern
 					startingAt: hist size
 					ignoreCase: true.
 				idx = 0
 					ifTrue: [ self error: 'patch version not found' ].
-				patchVersion := (hist copyFrom: idx + 1 to: hist size) asNumber.
-				^ patchVersion ]
+				pattern := primaryVersionPattern copyFrom: 2 to: primaryVersionPattern size.
+				patchHist :=  hist copyFrom: idx +1 + pattern size to: hist size.
+				idx := patchHist _findString: ' '  startingAt: 1 ignoreCase: true.
+				^(patchHist copyFrom: 1 to: idx) asNumber ]
             ifFalse: [ self error: 'version matching ', primaryVersionPattern printString, ' not found.' ] ] ].
   prevVer == 0
     ifTrue: [ self error: 'no previous version found' ].
@@ -382,7 +391,7 @@ category: 'debugging'
 method: GsuAbstractGemStoneRelease
 log: aString
 
-	GsFile gciLogServer: aString
+	self class log: aString
 %
 
 category: 'accessing'
@@ -1839,7 +1848,7 @@ prepareImageBanner
 
 	self bannerLogDash.
 	self log:  'Starting ', self buildString, ' GsDevKit upgrade: prepare image as ', System myUserProfile userId.
-	self log:  '	Upgrading', self sourceGemStoneRelease printString, ' to ', self printString.
+	self log:  '	Upgrading ', self sourceGemStoneRelease printString, ' to ', self printString.
 	self bannerLogDash.
 	self logUpgradeParameters
 %

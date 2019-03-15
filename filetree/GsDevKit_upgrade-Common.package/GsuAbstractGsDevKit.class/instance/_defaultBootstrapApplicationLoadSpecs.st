@@ -30,6 +30,9 @@ _defaultBootstrapApplicationLoadSpecs
 		ifTrue: [
 			self log: '	load BaselineOfGsDevKit'.
 			^{	"assume that GsDevKit needs to be reloaded"
+				{
+					'Metacello'. 
+				}.
 				 {
 						'GsDevKit'. 
 				}.

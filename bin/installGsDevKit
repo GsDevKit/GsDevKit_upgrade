@@ -1,0 +1,31 @@
+#
+#	login as DataCurator to install GLASS1
+#
+iferr 1 stk
+iferr 2 stack
+iferr 3 exit 1
+display oops
+limit bytes 200
+set u DataCurator p swordfish
+login 
+
+run
+	| gsUpgrader |
+	Gofer new
+		package: 'GsUpgrader-Core';
+		url: 'http://ss3.gemtalksystems.com/ss/gsUpgrader';
+    load.
+	gsUpgrader := System myUserProfile objectNamed: 'GsUpgrader'.
+	gsUpgrader batchErrorHandlingDo: [
+  	Transcript
+    	cr;
+    	show: '-----Upgrade GsDevKit using gsUpgrader'.
+  	gsUpgrader upgradeGsDevKit ].
+%
+
+commit
+
+errorCount
+
+exit 
+

@@ -1,0 +1,40 @@
+# arg1 is the GemStone version id: 3215, 339, 343
+#
+# Sequence:
+#
+#	createStone -g battery_339 3.3.9
+# installGsDevKit 339 
+#	upgradeImage GsDevKit 339
+# upgradeGsDevKitImage GsDevKit 339
+#
+set -e
+version="$1"	# 3215, 339, 343
+shift
+
+. defStone.env
+export vers="3.5.0_g"
+
+rm -f *.log *.out
+
+sourceStoneName="battery_${version}"
+sourceStoneDir="$GS_HOME/server/stones/${sourceStoneName}"
+
+cp ${sourceStoneDir}/product/bin/extent0.seaside.dbf snapshots/extent0.seaside_3215.dbf
+
+newExtent -s ${sourceStoneDir}/product/bin/extent0.seaside.dbf $sourceStoneName
+
+export upgradeLogDir=`pwd`/upgradeLogDir
+
+pushd "${upgradeLogDir}" >& /dev/null
+	rm -f *.log *.out
+
+	startTopaz $sourceStoneName -lq -T 500000 < $GS_HOME/shared/repos/GsDevKit_upgrade/bin/installGsDevKit
+
+	stopStone $sourceStoneName
+	cp ${sourceStoneDir}/extents/extent0.dbf ../snapshots/extent0_GsDevKit_${version}.dbf
+	startStone $sourceStoneName
+
+	startTopaz $sourceStoneName -lq < $GS_HOME/shared/repos/GsDevKit_upgrade/bin/runImageTests
+popd
+
+

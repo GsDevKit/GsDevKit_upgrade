@@ -1,0 +1,11 @@
+
+run
+	UserGlobals
+		at: #GsDevKit_Image_Upgrade
+		put: (GsuAbstractGsDevKitUpgrade 
+						upgradeUserName: 'seaside'
+							upgradeSymbolDictName: #Seaside)
+						bootstrapApplicationLoadSpecs: { { 'Metacello' } . { 'GsDevKit' } . { 'Seaside3' }} .
+	System commitTransaction
+%
+

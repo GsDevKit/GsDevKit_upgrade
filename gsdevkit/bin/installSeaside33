@@ -6,7 +6,7 @@
 #	createStone -g battery_339 3.3.9
 # installSeaside32 GsDevKit 339 
 #	upgradeImage seaside_GsDevKit 339
-# upgradeSeasideImage seaside_GsDevKit 339
+# upgradeSeasideImage seaside_GsDevKit 339 $GS_HOME/shared/repos/GsDevKit_upgrade/bin/seaside3_upgrade.topaz
 #
 set -e
 content="$1"	# GLASS1, GsDevKit, TODE
@@ -14,15 +14,18 @@ version="$2"	# 3215, 339, 343
 shift
 shift
 
+userName='DataCurator'
+symDictName='UserGlobals'
+userName='seaside'
+symDictName='Seaside'
+
 . defStone.env
-export vers="3.5.0_g"
 
 rm -f *.log *.out
 
 sourceStoneName="battery_${version}"
 sourceStoneDir="$GS_HOME/server/stones/${sourceStoneName}"
 
-newExtent -s ${sourceStoneDir}/product/bin/extent0.dbf $sourceStoneName
 
 export upgradeLogDir=`pwd`/upgradeLogDir
 
@@ -30,6 +33,11 @@ pushd "${upgradeLogDir}" >& /dev/null
 	rm -f *.log *.out
 
 	export upgradeDir=${sourceStoneDir}/product/upgrade
+
+if [ "$userName" != "DataCurator" ] ; then 
+
+	newExtent -s ${sourceStoneDir}/product/bin/extent0.dbf $sourceStoneName
+
 	startTopaz $sourceStoneName -lq << EOF
 		iferr 1 stk
 		iferr 2 stack
@@ -59,14 +67,14 @@ pushd "${upgradeLogDir}" >& /dev/null
 		login 
 		run
 			| seaside |
-			seaside := AllUsers userWithId: 'seaside' ifAbsent: [ nil ].
+			seaside := AllUsers userWithId: '$userName' ifAbsent: [ nil ].
 			seaside ~~ nil
 			  ifTrue: [ 
 			    AllUsers removeAndCleanup: seaside.
 			    System commitTransaction.
 			 ].
 			(AllUsers 
-			  addNewUserWithId: 'seaside'
+			  addNewUserWithId: '$userName'
 			  password: 'swordfish')
 			    addPrivilege: #'CodeModification';
 			    addPrivilege: #'UserPassword';
@@ -78,12 +86,12 @@ pushd "${upgradeLogDir}" >& /dev/null
 		errorCount
 		logout
 
-		set u seaside p swordfish
+		set u $userName p swordfish
 		login
  
 		run
-			System myUserProfile _createDictionary: #Seaside at: 1.
-			UserGlobals at: #BootstrapSymbolDictionaryName put: #Seaside.
+			System myUserProfile _createDictionary: #'$symDictName' at: 1.
+			UserGlobals at: #BootstrapSymbolDictionaryName put: #'$symDictName'.
 			true
 %
 		commit
@@ -96,7 +104,9 @@ pushd "${upgradeLogDir}" >& /dev/null
 		logout
 		exit
 EOF
-
+else
+		newExtent -s ${sourceStoneDir}/product/bin/extent0.seaside.dbf $sourceStoneName
+fi
 	if [ "$content" = "GLASS1" ] ; then
 		startTopaz $sourceStoneName -lq -T 500000 << EOF
 			iferr 1 stk
@@ -104,7 +114,7 @@ EOF
 			iferr 3 exit 1
 			display oops
 			limit bytes 200
-			set u seaside p swordfish
+			set u $userName p swordfish
 			login 
 
 			run
@@ -133,7 +143,7 @@ EOF
 			iferr 3 exit 1
 			display oops
 			limit bytes 200
-			set u seaside p swordfish
+			set u $userName p swordfish
 			login 
 
 			run
@@ -156,8 +166,7 @@ EOF
 			exit
 EOF
 	elif [ "$content" = "TODE" ] ; then
-		echo "not yet implemented"
-		exit 1
+		todeLoad $sourceStoneName
 	else
 		echo "Unknown content type $content"
 		exit 1
@@ -169,7 +178,7 @@ EOF
 		iferr 3 exit 1
 		display oops
 		limit bytes 200
-		set u seaside p swordfish
+		set u $userName p swordfish
 		login 
 
 		run
@@ -184,7 +193,7 @@ EOF
     			baseline: 'Seaside3';
     			repository: 'github://SeasideSt/Seaside:issue_1115/repository';
     			onLock: [ :ex | ex honor ];
-    			load: #('Seaside-Welcome' 'Zinc' 'Development' 'Examples' 'CI').
+    			load: #('CI').
 			].
 			true
 %
@@ -195,10 +204,14 @@ EOF
 EOF
 
 	stopStone $sourceStoneName
-	cp ${sourceStoneDir}/extents/extent0.dbf ../snapshots/extent0_seaside_${content}_${version}.dbf
+	cp ${sourceStoneDir}/extents/extent0.dbf ../snapshots/extent0_${userName}_${content}_${version}.dbf
 	startStone $sourceStoneName
 
-	startTopaz $sourceStoneName -lq < $GS_HOME/shared/repos/GsDevKit_upgrade/bin/runImageTests
+	if [ "$userName" != "DataCurator" ] ; then
+		startTopaz $sourceStoneName -lq < $GS_HOME/shared/repos/GsDevKit_upgrade/bin/runSeasideImageTests
+	else
+		startTopaz $sourceStoneName -lq < $GS_HOME/shared/repos/GsDevKit_upgrade/bin/runImageTests
+	fi
 popd
 
 

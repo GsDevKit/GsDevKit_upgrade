@@ -1,0 +1,30 @@
+iferr 1 stk
+iferr 2 stack
+iferr 3 exit 1
+display oops
+limit bytes 200
+set u seaside p swordfish
+login
+
+run
+	| results defects |
+	GsFile gciLogServer: 'Running image test cases'.
+	GsFile gciLogServer: '------------------------'.
+	GsFile gciLogServer: '------------------------'.
+	results := TestCase suite run .
+	defects := results defects.
+	GsFile gciLogServer: results printString.
+	defects isEmpty ifTrue: [
+		GsFile gciLogServer: '------------------------'.
+		^ true
+	].
+	defects do: [:each | 
+		GsFile gciLogServer: each printString ].
+	GsFile gciLogServer: '------------------------'.
+	self error: 'Test defects'.
+%
+
+errorCount
+
+exit 
+

@@ -5,6 +5,9 @@ asBootstrapUpgrade
 
 	"postLoadClassList is used in the bootstrap case"
 
-	^ (GsuGsDevKit_3_5_x_BootstrapUpgrade upgradeUserName: self upgradeUserName sourceGemStoneRelease: self sourceGemStoneRelease)
+	^ (GsuGsDevKit_3_5_x_BootstrapUpgrade 
+			upgradeUserName: self upgradeUserName 
+				upgradeSymbolDictName: self upgradeSymbolDictName 
+				sourceGemStoneRelease: self sourceGemStoneRelease)
 			bootstrapPostLoadClassList: self bootstrapPostLoadClassList;
 			yourself

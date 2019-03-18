@@ -58,5 +58,5 @@ stopStone $GEMSTONE_NAME
 cp extents/extent0.dbf snapshots/extent0_preparedSeasideImage_${contents}_${version}.dbf
 
 startStone $GEMSTONE_NAME
-startTopaz $GEMSTONE_NAME -lq < $GS_HOME/shared/repos/GsDevKit_upgrade/bin/runImageTests
+startTopaz $GEMSTONE_NAME -lq < $GS_HOME/shared/repos/GsDevKit_upgrade/bin/runSeasideImageTests
 

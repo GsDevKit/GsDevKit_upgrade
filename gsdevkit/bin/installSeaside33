@@ -191,7 +191,7 @@ EOF
 			GsDeployer deploy: [
   			Metacello new
     			baseline: 'Seaside3';
-    			repository: 'github://SeasideSt/Seaside:issue_1115/repository';
+    			repository: 'github://SeasideSt/Seaside:master/repository';
     			onLock: [ :ex | ex honor ];
     			load: #('CI').
 			].

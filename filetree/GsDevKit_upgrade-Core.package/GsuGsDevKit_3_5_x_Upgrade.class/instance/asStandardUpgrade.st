@@ -5,4 +5,7 @@ asStandardUpgrade
 
 	"postLoadClassList is not used in standard upgrade case"
 
-	^ GsuGsDevKit_3_5_x_StdUpgrade upgradeUserName: self upgradeUserName sourceGemStoneRelease: self sourceGemStoneRelease
+	^ GsuGsDevKit_3_5_x_StdUpgrade 
+		upgradeUserName: self upgradeUserName 
+			upgradeSymbolDictName: self upgradeSymbolDictName 
+			sourceGemStoneRelease: self sourceGemStoneRelease

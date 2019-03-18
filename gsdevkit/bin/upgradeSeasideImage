@@ -10,7 +10,7 @@
 #	upgradeImage GLASS1 339
 # upgradeSeaideImage GLASS1 339
 #
-set -e
+set -ex
 
 contents="$1"	# GLASS, GLASS1, TODE
 version="$2"	# 3215, 339, 343

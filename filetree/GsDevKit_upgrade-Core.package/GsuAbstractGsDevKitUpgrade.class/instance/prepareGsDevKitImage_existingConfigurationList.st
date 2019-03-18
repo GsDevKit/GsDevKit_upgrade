@@ -14,3 +14,4 @@ prepareGsDevKitImage_existingConfigurationList
 					  self log: '		', assoc key asString.
 					  self bootstrapExistingConfigurationList add: assoc value ] ] ].
 	System commit.
+	self log: '	existing configuration collected (', self bootstrapExistingConfigurationList size asString, ')'.

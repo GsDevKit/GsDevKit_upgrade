@@ -21,6 +21,20 @@ GsuAbstractGsDevKit class >> gemstone_user [
 ]
 
 { #category : 'private' }
+GsuAbstractGsDevKit >> _configurationOfGLASS_bootstrap [
+	"When doing a bootstrap load, this version of the ConfigurationOfGLASS needs to be loaded before loading BaselineOf"
+
+	^ {
+			{
+				'ConfigurationOfGLASS'. 
+				'1.0-beta.9.2.2'. 
+				#('default'). 
+				nil.	"nill - use bootstrapRepositoryDirectory"
+			}.
+		}
+]
+
+{ #category : 'private' }
 GsuAbstractGsDevKit >> _currentUserGlobals [
 
 	^ GsSession currentSession objectNamed: #UserGlobals
@@ -34,7 +48,7 @@ GsuAbstractGsDevKit >> _defaultBootstrapApplicationLoadSpecs [
 		ifTrue: [
 			self log: '	load BaselineOfMetacello BaselineOfTode'.
 			"first update Metacello and then update Tode"
-			^{
+			^ self _configurationOfGLASS_bootstrap, {
 				{
 					'Metacello'. 
 				}.
@@ -46,7 +60,7 @@ GsuAbstractGsDevKit >> _defaultBootstrapApplicationLoadSpecs [
 		ifTrue: [
 			self log: '	load BaselineOfMetacello BaselineOfGLASS1'.
 			"first update Metacello and then update GLASS1"
-			^{
+			^ self _configurationOfGLASS_bootstrap, {
 				{
 					'Metacello'. 
 				}.
@@ -57,7 +71,7 @@ GsuAbstractGsDevKit >> _defaultBootstrapApplicationLoadSpecs [
 	self _gsDevKitLoaded
 		ifTrue: [
 			self log: '	load BaselineOfGsDevKit'.
-			^{	"assume that GsDevKit needs to be reloaded"
+			^ self _configurationOfGLASS_bootstrap, {	"assume that GsDevKit needs to be reloaded"
 				{
 					'Metacello'. 
 				}.

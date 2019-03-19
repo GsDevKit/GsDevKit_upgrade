@@ -5,6 +5,14 @@ Class {
 }
 
 { #category : 'private' }
+GsuGsDevKit_3_5_x_StdUpgrade >> _configurationOfGLASS_bootstrap [
+	"When doing a bootstrap load, this version of the ConfigurationOfGLASS needs to be loaded"
+
+	"loading ConfigurationOfGLASS not needed, since methods are not recompiled"
+	^ { }
+]
+
+{ #category : 'private' }
 GsuGsDevKit_3_5_x_StdUpgrade >> _defaultExistingConfigurationOfNames [
 	" These two configurations are the only configurations that must be removed, before loading GLASS1 or GsDevKit or tODE"
 

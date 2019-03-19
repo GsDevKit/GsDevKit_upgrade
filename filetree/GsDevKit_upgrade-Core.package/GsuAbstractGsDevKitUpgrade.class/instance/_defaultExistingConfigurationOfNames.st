@@ -8,5 +8,5 @@ _defaultExistingConfigurationOfNames
 	   assoc value isBehavior
 		   ifTrue: [
 			   (assoc key asString _findString: 'ConfigurationOf' startingAt: 1 ignoreCase: false) == 1 
-				  ifTrue: [ configurationOfClassNames add: assoc value ] ] ].
+				  ifTrue: [ configurationOfClassNames add: assoc key ] ] ].
 	^ configurationOfClassNames

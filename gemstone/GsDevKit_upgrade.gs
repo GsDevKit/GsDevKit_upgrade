@@ -581,6 +581,7 @@ prepareImage_userPatches: aGsDevKitUpgrade
 
 	aGsDevKitUpgrade 
 		log: 'Prepare image user - patches';
+		prepareImage_user_removeSessionMethods;
 		prepareImage_user_bug46059
 %
 
@@ -1330,6 +1331,9 @@ category: 'logging'
 method: GsuAbstractGsDevKit
 _logUpgradeParameters
 
+	| enabled |
+	 
+	self log: '	session methods ', (GsPackagePolicy enabled ifTrue: [ '(enabled)' ] ifFalse: [ '(disabled)' ]).
 	self _singletonUpgradeParameters do: [:selectorSymbol |
 		self log: '	', selectorSymbol asString, ' : ', (self perform: selectorSymbol) ].
 
@@ -1375,12 +1379,20 @@ _singletonUpgradeParameters
 category: 'private'
 method: GsuAbstractGsDevKit
 _standardBaselineLoaded: baselineClassName
+	"Have to extract information from regsitry without sending messages, because methods may need to be recompiled"
+
+	"see subclass implementation for message-based implementation"
+
 	(self _globalNamed: baselineClassName)
 		ifNotNil: [ 
 		(self _globalNamed: 'MetacelloProjectRegistration')
 			ifNotNil: [ :cls | 
-				(cls registrationForClassNamed: baselineClassName ifAbsent: [ ])
-					ifNotNil: [ :registration | ^ registration loadedInImage ] ] ].
+				| registry baselineRegistry |
+				registry := cls _classVars at: #Registry.
+				baselineRegistry := registry instVarAt: (registry class allInstVarNames indexOf: #baselineRegistry).
+				(baselineRegistry at: baselineClassName ifAbsent: [ ])
+					ifNotNil: [ :registration | 
+						(registration instVarAt:  (registration class allInstVarNames indexOf: #loadedInImage)) == true ] ] ].
 	^ false
 %
 
@@ -1668,12 +1680,21 @@ category: 'prepare gsdevkit  image'
 method: GsuAbstractGsDevKitUpgrade
 prepareGsDevKitImage_clearMetacelloCaches
 
-	" clear caches - those that are unneeded or create problem during initial bootstrap load"
+	"GLASS needs to have the caches cleared, since stale repository entries can cause trouble"
 
+	"Metacello caches used in calculating default values for application load specs, so cache
+		application load specs before clearing the Metacello cache"
+
+	self _glassLoaded
+		ifFalse: [ 
+			"metacello registry is needed to be able to reload GLASS1 and GsDevKit"
+			self log: 'Prepare gsdevkit - Metacello caches NOT cleared'.
+			^ self ].
 	self log: 'Prepare gsdevkit - clear Metacello caches'.
 
-	self _clearMetacelloCaches.
-
+	self bootstrapApplicationLoadSpecs.
+	(self _globalNamed: #MetacelloProjectRegistration)
+	  ifNotNil: [:cl | cl _classVars at: #Registry put: nil ].
 	System commit.
 
 	self log: '	Metacello caches cleared (commit)'.
@@ -2138,6 +2159,24 @@ prepareImage_user_clear_subscriptions
 	(cls _classVars at: #'Subscriptions') removeAll: (cls _classVars at: #'Subscriptions').
 %
 
+category: 'prepare image user'
+method: GsuAbstractGsDevKitUpgrade
+prepareImage_user_removeSessionMethods
+	"Remove all session methods as they must be recompiled during loading ... must be done before GsPackagePolicy is enabled"
+
+	self log: '		removing session methods'.
+    System myUserProfile symbolList do:[:dict |
+		| dName |
+		dName := dict name ifNil:[ 'unnamed' ].
+		(dict at: GsPackage globalName otherwise: nil) 
+			ifNotNil:[:pkg |
+				"SessionMethods rebuilt during upgradeImage"
+				pkg name == #SessionMethods
+					ifFalse:[ 
+						pkg removeAllMethods .
+						self log: '			', dName, ' GsPackage oop: [', pkg asOop asString, '] session methods removed all' ] ] ]
+%
+
 category: 'printing'
 method: GsuAbstractGsDevKitUpgrade
 printOn: aStream
@@ -2213,16 +2252,6 @@ _bootstrapRelease
 
 category: 'private'
 method: GsuAbstractGsDevKitUpgrade
-_clearMetacelloCaches
-
-	"Wipe out the Metacello registry ... if it exists"
-
-	(self _globalNamed: #MetacelloProjectRegistration)
-	  ifNotNil: [:cl | cl _classVars at: #Registry put: nil ].
-%
-
-category: 'private'
-method: GsuAbstractGsDevKitUpgrade
 _defaultExistingConfigurationOfNames
 	"When bootstrapping all of the ConfigurationOfs present in image, should be removed"
 
@@ -2232,7 +2261,7 @@ _defaultExistingConfigurationOfNames
 	   assoc value isBehavior
 		   ifTrue: [
 			   (assoc key asString _findString: 'ConfigurationOf' startingAt: 1 ignoreCase: false) == 1 
-				  ifTrue: [ configurationOfClassNames add: assoc value ] ] ].
+				  ifTrue: [ configurationOfClassNames add: assoc key ] ] ].
 	^ configurationOfClassNames
 %
 
@@ -2601,26 +2630,20 @@ prepareImage_user_clear_subscriptions
 	self log: '	SystemLoginNotification Subscriptions NOT cleared'.
 %
 
+category: 'prepare image user'
+method: GsuGsDevKit_3_5_x_StdUpgrade
+prepareImage_user_removeSessionMethods
+	"Remove all session methods as they must be recompiled during loading ... must be done before GsPackagePolicy is enabled"
+
+	"noop"
+%
+
 category: 'initialization'
 method: GsuGsDevKit_3_5_x_StdUpgrade
 resolveForUpgrade
 	"Receiver is already resolved"
 
 	self objectSecurityPolicy: self upgradeUserProfile defaultObjectSecurityPolicy
-%
-
-category: 'private'
-method: GsuGsDevKit_3_5_x_StdUpgrade
-_clearMetacelloCaches
-
-	"Metacello caches used in calculating default values for application load specs, so cache
-		application load specs before clearing the Metacello cache"
-
-	(self _glass1Loaded or: [ self _gsDevKitLoaded ])
-		ifFalse: [ 
-			"GLASS needs to have the caches cleared, since stale repository entries can cause trouble"
-			self bootstrapApplicationLoadSpecs.
-			super _clearMetacelloCaches ].
 %
 
 category: 'private'
@@ -2651,6 +2674,20 @@ method: GsuGsDevKit_3_5_x_StdUpgrade
 _singletonUpgradeParameters
 
 	^ #( upgradeUserName upgradeSymbolDictName )
+%
+
+category: 'private'
+method: GsuGsDevKit_3_5_x_StdUpgrade
+_standardBaselineLoaded: baselineClassName
+	"message-based implmentation since methods do not need recompilation"
+
+	(self _globalNamed: baselineClassName)
+		ifNotNil: [ 
+			(self _globalNamed: 'MetacelloProjectRegistration')
+				ifNotNil: [ :cls | 
+					(cls registrationForClassNamed: baselineClassName ifAbsent: [ ])
+						ifNotNil: [ :registration | ^ registration loadedInImage ] ] ].
+	^ false
 %
 
 ! Class implementation for 'GsuGsDevKitBootstrap'

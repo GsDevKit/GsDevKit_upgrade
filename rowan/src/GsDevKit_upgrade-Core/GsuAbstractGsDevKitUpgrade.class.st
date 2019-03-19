@@ -148,15 +148,6 @@ GsuAbstractGsDevKitUpgrade >> _bootstrapRelease [
 ]
 
 { #category : 'private' }
-GsuAbstractGsDevKitUpgrade >> _clearMetacelloCaches [
-
-	"Wipe out the Metacello registry ... if it exists"
-
-	(self _globalNamed: #MetacelloProjectRegistration)
-	  ifNotNil: [:cl | cl _classVars at: #Registry put: nil ].
-]
-
-{ #category : 'private' }
 GsuAbstractGsDevKitUpgrade >> _defaultExistingConfigurationOfNames [
 	"When bootstrapping all of the ConfigurationOfs present in image, should be removed"
 
@@ -166,7 +157,7 @@ GsuAbstractGsDevKitUpgrade >> _defaultExistingConfigurationOfNames [
 	   assoc value isBehavior
 		   ifTrue: [
 			   (assoc key asString _findString: 'ConfigurationOf' startingAt: 1 ignoreCase: false) == 1 
-				  ifTrue: [ configurationOfClassNames add: assoc value ] ] ].
+				  ifTrue: [ configurationOfClassNames add: assoc key ] ] ].
 	^ configurationOfClassNames
 ]
 
@@ -390,12 +381,21 @@ GsuAbstractGsDevKitUpgrade >> prepareGsDevKitImage_bug46217_patch [
 { #category : 'prepare gsdevkit  image' }
 GsuAbstractGsDevKitUpgrade >> prepareGsDevKitImage_clearMetacelloCaches [
 
-	" clear caches - those that are unneeded or create problem during initial bootstrap load"
+	"GLASS needs to have the caches cleared, since stale repository entries can cause trouble"
 
+	"Metacello caches used in calculating default values for application load specs, so cache
+		application load specs before clearing the Metacello cache"
+
+	self _glassLoaded
+		ifFalse: [ 
+			"metacello registry is needed to be able to reload GLASS1 and GsDevKit"
+			self log: 'Prepare gsdevkit - Metacello caches NOT cleared'.
+			^ self ].
 	self log: 'Prepare gsdevkit - clear Metacello caches'.
 
-	self _clearMetacelloCaches.
-
+	self bootstrapApplicationLoadSpecs.
+	(self _globalNamed: #MetacelloProjectRegistration)
+	  ifNotNil: [:cl | cl _classVars at: #Registry put: nil ].
 	System commit.
 
 	self log: '	Metacello caches cleared (commit)'.
@@ -799,6 +799,23 @@ GsuAbstractGsDevKitUpgrade >> prepareImage_user_clear_subscriptions [
 	self log: '	SystemLoginNotification Subscriptions cleared'.
 	cls := self _globalNamed: 'SystemLoginNotification'.
 	(cls _classVars at: #'Subscriptions') removeAll: (cls _classVars at: #'Subscriptions').
+]
+
+{ #category : 'prepare image user' }
+GsuAbstractGsDevKitUpgrade >> prepareImage_user_removeSessionMethods [
+	"Remove all session methods as they must be recompiled during loading ... must be done before GsPackagePolicy is enabled"
+
+	self log: '		removing session methods'.
+    System myUserProfile symbolList do:[:dict |
+		| dName |
+		dName := dict name ifNil:[ 'unnamed' ].
+		(dict at: GsPackage globalName otherwise: nil) 
+			ifNotNil:[:pkg |
+				"SessionMethods rebuilt during upgradeImage"
+				pkg name == #SessionMethods
+					ifFalse:[ 
+						pkg removeAllMethods .
+						self log: '			', dName, ' GsPackage oop: [', pkg asOop asString, '] session methods removed all' ] ] ]
 ]
 
 { #category : 'prepare image' }

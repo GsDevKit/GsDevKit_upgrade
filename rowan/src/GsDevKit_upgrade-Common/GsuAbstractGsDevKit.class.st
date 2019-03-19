@@ -145,6 +145,9 @@ GsuAbstractGsDevKit >> _listUpgradeParameters [
 { #category : 'logging' }
 GsuAbstractGsDevKit >> _logUpgradeParameters [
 
+	| enabled |
+	 
+	self log: '	session methods ', (GsPackagePolicy enabled ifTrue: [ '(enabled)' ] ifFalse: [ '(disabled)' ]).
 	self _singletonUpgradeParameters do: [:selectorSymbol |
 		self log: '	', selectorSymbol asString, ' : ', (self perform: selectorSymbol) ].
 
@@ -187,12 +190,20 @@ GsuAbstractGsDevKit >> _singletonUpgradeParameters [
 
 { #category : 'private' }
 GsuAbstractGsDevKit >> _standardBaselineLoaded: baselineClassName [
+	"Have to extract information from regsitry without sending messages, because methods may need to be recompiled"
+
+	"see subclass implementation for message-based implementation"
+
 	(self _globalNamed: baselineClassName)
 		ifNotNil: [ 
 		(self _globalNamed: 'MetacelloProjectRegistration')
 			ifNotNil: [ :cls | 
-				(cls registrationForClassNamed: baselineClassName ifAbsent: [ ])
-					ifNotNil: [ :registration | ^ registration loadedInImage ] ] ].
+				| registry baselineRegistry |
+				registry := cls _classVars at: #Registry.
+				baselineRegistry := registry instVarAt: (registry class allInstVarNames indexOf: #baselineRegistry).
+				(baselineRegistry at: baselineClassName ifAbsent: [ ])
+					ifNotNil: [ :registration | 
+						(registration instVarAt:  (registration class allInstVarNames indexOf: #loadedInImage)) == true ] ] ].
 	^ false
 ]
 

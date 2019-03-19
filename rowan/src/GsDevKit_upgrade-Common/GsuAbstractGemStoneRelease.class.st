@@ -281,6 +281,7 @@ GsuAbstractGemStoneRelease >> prepareImage_userPatches: aGsDevKitUpgrade [
 
 	aGsDevKitUpgrade 
 		log: 'Prepare image user - patches';
+		prepareImage_user_removeSessionMethods;
 		prepareImage_user_bug46059
 ]
 

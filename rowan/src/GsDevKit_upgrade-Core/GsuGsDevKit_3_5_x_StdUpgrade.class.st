@@ -5,19 +5,6 @@ Class {
 }
 
 { #category : 'private' }
-GsuGsDevKit_3_5_x_StdUpgrade >> _clearMetacelloCaches [
-
-	"Metacello caches used in calculating default values for application load specs, so cache
-		application load specs before clearing the Metacello cache"
-
-	(self _glass1Loaded or: [ self _gsDevKitLoaded ])
-		ifFalse: [ 
-			"GLASS needs to have the caches cleared, since stale repository entries can cause trouble"
-			self bootstrapApplicationLoadSpecs.
-			super _clearMetacelloCaches ].
-]
-
-{ #category : 'private' }
 GsuGsDevKit_3_5_x_StdUpgrade >> _defaultExistingConfigurationOfNames [
 	" These two configurations are the only configurations that must be removed, before loading GLASS1 or GsDevKit or tODE"
 
@@ -42,6 +29,19 @@ GsuGsDevKit_3_5_x_StdUpgrade >> _listUpgradeParameters [
 GsuGsDevKit_3_5_x_StdUpgrade >> _singletonUpgradeParameters [
 
 	^ #( upgradeUserName upgradeSymbolDictName )
+]
+
+{ #category : 'private' }
+GsuGsDevKit_3_5_x_StdUpgrade >> _standardBaselineLoaded: baselineClassName [
+	"message-based implmentation since methods do not need recompilation"
+
+	(self _globalNamed: baselineClassName)
+		ifNotNil: [ 
+			(self _globalNamed: 'MetacelloProjectRegistration')
+				ifNotNil: [ :cls | 
+					(cls registrationForClassNamed: baselineClassName ifAbsent: [ ])
+						ifNotNil: [ :registration | ^ registration loadedInImage ] ] ].
+	^ false
 ]
 
 { #category : 'accessing' }
@@ -150,6 +150,13 @@ GsuGsDevKit_3_5_x_StdUpgrade >> prepareImage_user_clear_subscriptions [
 		methods will not be fired."
 
 	self log: '	SystemLoginNotification Subscriptions NOT cleared'.
+]
+
+{ #category : 'prepare image user' }
+GsuGsDevKit_3_5_x_StdUpgrade >> prepareImage_user_removeSessionMethods [
+	"Remove all session methods as they must be recompiled during loading ... must be done before GsPackagePolicy is enabled"
+
+	"noop"
 ]
 
 { #category : 'initialization' }

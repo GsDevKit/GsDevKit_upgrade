@@ -75,6 +75,18 @@ GsuGsDevKit_3_5_x_StdUpgrade >> prepareGsDevKitImage_bug46217_patch [
 ]
 
 { #category : 'prepare gsdevkit  image' }
+GsuGsDevKit_3_5_x_StdUpgrade >> prepareGsDevKitImage_clearMetacelloCaches [
+
+	"GLASS needs to have the caches cleared, since stale repository entries can cause trouble during reload"
+
+	self _glassLoaded
+		ifTrue: [ 
+			^ super prepareGsDevKitImage_clearMetacelloCaches ].
+	"caches are used for reloading BaselineOf"
+	self log: 'Prepare gsdevkit - Metacello caches NOT cleared'.
+]
+
+{ #category : 'prepare gsdevkit  image' }
 GsuGsDevKit_3_5_x_StdUpgrade >> prepareGsDevKitImage_patch_compileMethodCategory [
 	"patch only needed suring standard upgrade ..."
 

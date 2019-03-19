@@ -1685,14 +1685,9 @@ prepareGsDevKitImage_clearMetacelloCaches
 	"Metacello caches used in calculating default values for application load specs, so cache
 		application load specs before clearing the Metacello cache"
 
-	self bootstrapApplicationLoadSpecs.
-	self _glassLoaded
-		ifFalse: [ 
-			"metacello registry is needed to be able to reload GLASS1 and GsDevKit"
-			self log: 'Prepare gsdevkit - Metacello caches NOT cleared'.
-			^ self ].
 	self log: 'Prepare gsdevkit - clear Metacello caches'.
 
+	self bootstrapApplicationLoadSpecs.
 	(self _globalNamed: #MetacelloProjectRegistration)
 	  ifNotNil: [:cl | cl _classVars at: #Registry put: nil ].
 	System commit.
@@ -2545,6 +2540,19 @@ prepareGsDevKitImage_bug46217_patch
 		bootstrap operation"
 
 	"noop for standard upgrade"
+%
+
+category: 'prepare gsdevkit  image'
+method: GsuGsDevKit_3_5_x_StdUpgrade
+prepareGsDevKitImage_clearMetacelloCaches
+
+	"GLASS needs to have the caches cleared, since stale repository entries can cause trouble during reload"
+
+	self _glassLoaded
+		ifTrue: [ 
+			^ super prepareGsDevKitImage_clearMetacelloCaches ].
+	"caches are used for reloading BaselineOf"
+	self log: 'Prepare gsdevkit - Metacello caches NOT cleared'.
 %
 
 category: 'prepare gsdevkit  image'

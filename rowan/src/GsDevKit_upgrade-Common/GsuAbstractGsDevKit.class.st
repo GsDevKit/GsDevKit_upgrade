@@ -201,9 +201,9 @@ GsuAbstractGsDevKit >> _standardBaselineLoaded: baselineClassName [
 				| registry baselineRegistry |
 				registry := cls _classVars at: #Registry.
 				baselineRegistry := registry instVarAt: (registry class allInstVarNames indexOf: #baselineRegistry).
-				(baselineRegistry at: baselineClassName ifAbsent: [ ])
+				(baselineRegistry at: baselineClassName ifAbsent: [ ] )
 					ifNotNil: [ :registration | 
-						(registration instVarAt:  (registration class allInstVarNames indexOf: #loadedInImage)) == true ] ] ].
+					^ (registration instVarAt:  (registration class allInstVarNames indexOf: #loadedInImage)) == true ] ] ].
 	^ false
 ]
 

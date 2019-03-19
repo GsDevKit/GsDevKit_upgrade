@@ -9,9 +9,11 @@ _defaultBootstrapApplicationLoadSpecs
 			^ self _configurationOfGLASS_bootstrap, {
 				{
 					'Metacello'. 
+					self _projectSpecForBaseline: 'BaselineOfMetacello'.
 				}.
 				{
 					'Tode'. 
+					self _projectSpecForBaseline: 'BaselineOfTode'.
 				}.
 			} ].
 	self _glass1Loaded
@@ -21,9 +23,11 @@ _defaultBootstrapApplicationLoadSpecs
 			^ self _configurationOfGLASS_bootstrap, {
 				{
 					'Metacello'. 
+					self _projectSpecForBaseline: 'BaselineOfMetacello'.
 				}.
 				{
 					'GLASS1'. 
+					self _projectSpecForBaseline: 'BaselineOfGLASS1'.
 				}.
 			} ].
 	self _gsDevKitLoaded
@@ -32,9 +36,11 @@ _defaultBootstrapApplicationLoadSpecs
 			^ self _configurationOfGLASS_bootstrap, {	"assume that GsDevKit needs to be reloaded"
 				{
 					'Metacello'. 
+					self _projectSpecForBaseline: 'BaselineOfMetacello'.
 				}.
 				 {
-						'GsDevKit'. 
+					'GsDevKit'. 
+					self _projectSpecForBaseline: 'BaselineOfGsDevKit'.
 				}.
 			} ].
 	self log: '	load ConfigurationOfGLASS'.

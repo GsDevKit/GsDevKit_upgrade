@@ -34,6 +34,15 @@ GsuGsDevKit_3_5_x_StdUpgrade >> _listUpgradeParameters [
 ]
 
 { #category : 'private' }
+GsuGsDevKit_3_5_x_StdUpgrade >> _projectSpecForBaseline: baselineClassName [
+	"Have to extract project spec from regsitry without sending messages, because methods may need to be recompiled"
+
+	"should only apply when doing bootstrap loads"
+
+	^ nil	"project spec will be calculated at load time"
+]
+
+{ #category : 'private' }
 GsuGsDevKit_3_5_x_StdUpgrade >> _singletonUpgradeParameters [
 
 	^ #( upgradeUserName upgradeSymbolDictName )

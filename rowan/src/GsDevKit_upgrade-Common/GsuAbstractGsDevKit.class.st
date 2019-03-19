@@ -51,9 +51,11 @@ GsuAbstractGsDevKit >> _defaultBootstrapApplicationLoadSpecs [
 			^ self _configurationOfGLASS_bootstrap, {
 				{
 					'Metacello'. 
+					self _projectSpecForBaseline: 'BaselineOfMetacello'.
 				}.
 				{
 					'Tode'. 
+					self _projectSpecForBaseline: 'BaselineOfTode'.
 				}.
 			} ].
 	self _glass1Loaded
@@ -63,9 +65,11 @@ GsuAbstractGsDevKit >> _defaultBootstrapApplicationLoadSpecs [
 			^ self _configurationOfGLASS_bootstrap, {
 				{
 					'Metacello'. 
+					self _projectSpecForBaseline: 'BaselineOfMetacello'.
 				}.
 				{
 					'GLASS1'. 
+					self _projectSpecForBaseline: 'BaselineOfGLASS1'.
 				}.
 			} ].
 	self _gsDevKitLoaded
@@ -74,9 +78,11 @@ GsuAbstractGsDevKit >> _defaultBootstrapApplicationLoadSpecs [
 			^ self _configurationOfGLASS_bootstrap, {	"assume that GsDevKit needs to be reloaded"
 				{
 					'Metacello'. 
+					self _projectSpecForBaseline: 'BaselineOfMetacello'.
 				}.
 				 {
-						'GsDevKit'. 
+					'GsDevKit'. 
+					self _projectSpecForBaseline: 'BaselineOfGsDevKit'.
 				}.
 			} ].
 	self log: '	load ConfigurationOfGLASS'.
@@ -172,24 +178,56 @@ GsuAbstractGsDevKit >> _logUpgradeParameters [
 		] on: Error do: [:ex  | self log: '			error extracting parameter ', ex description printString ] ]
 ]
 
-{ #category : 'application loading' }
-GsuAbstractGsDevKit >> _reloadProjectNamed: projectName [
-	| specs projectSpec metacello repoSpec |
+{ #category : 'private' }
+GsuAbstractGsDevKit >> _projectSpecForBaseline: baselineClassName [
+	"Have to extract project spec from regsitry without sending messages, because methods may need to be recompiled"
 
-	specs := (self _globalNamed: 'Metacello') image
-		baseline: [ :spec | spec name = projectName ];
-		list.
-	specs isEmpty
-		ifFalse: [ projectSpec := specs first ].
+	"should only apply when doing bootstrap loads"
+
+	(self _globalNamed: baselineClassName)
+		ifNotNil: [ 
+		(self _globalNamed: 'MetacelloProjectRegistration')
+			ifNotNil: [ :cls | 
+				| registry baselineRegistry |
+				registry := cls _classVars at: #Registry.
+				baselineRegistry := registry instVarAt: (registry class allInstVarNames indexOf: #baselineRegistry).
+				(baselineRegistry at: baselineClassName ifAbsent: [ ] )
+					ifNotNil: [ :registration | 
+						^ registration instVarAt: (registration class allInstVarNames indexOf: #baselineProjectSpec). ] ] ].
+	^ nil "calculate project spec at load time"
+]
+
+{ #category : 'application loading' }
+GsuAbstractGsDevKit >> _reloadProjectNamed: projectName projectSpec: projectSpecOrNilOrString [
+	| specs metacello projectSpec repoSpec repoDescription |
+
+	projectSpecOrNilOrString
+		ifNil: [
+			specs := (self _globalNamed: 'Metacello') image
+				baseline: [ :spec | spec name = projectName ];
+				list.
+			specs isEmpty
+				ifFalse: [ projectSpec := specs first ] ]
+		ifNotNil: [ 
+			(projectSpecOrNilOrString isKindOf: CharacterCollection)
+				ifTrue: [ repoDescription :=  projectSpecOrNilOrString. ]
+				ifFalse: [ repoDescription := projectSpecOrNilOrString repositoryDescriptions first ] ].
 	self bannerLogDash.
 	self bannerLogDash.
-	projectSpec notNil
-		ifTrue: [ 
-			self log: '		Reloading Project ', projectName printString.
-			self bannerLogDash.
-			repoSpec := projectSpec repositorySpecs first.
-			metacello := (self _globalNamed: 'Metacello') image baseline: projectName ]
-		ifFalse: [ self error: 'Project spec not found for ', projectName printString ].
+	repoDescription
+		ifNotNil: [
+			metacello := ((self _globalNamed: 'Metacello') new) 
+				baseline: projectName;
+				repository: repoDescription ]
+		ifNil: [ 
+			projectSpec notNil
+				ifTrue: [ 
+					self log: '		Reloading Project ', projectName printString.
+					self bannerLogDash.
+					metacello := ((self _globalNamed: 'Metacello') image) 
+						baseline: projectName;
+						yourself ]
+				ifFalse: [ self error: 'Project spec not found for ', projectName printString ] ].
 	self
 		_deploy: [ 
 		metacello copy get.
@@ -322,8 +360,8 @@ GsuAbstractGsDevKit >> loadApplicationLoadSpecs [
 	"explicitly load each of the configuration packages lised in boolStrapApplicationLoadSpecs"
 	glass1Upgraded := false.
 	self bootstrapApplicationLoadSpecs do: [:loadSpec |
-		loadSpec size = 1
-			ifFalse: [
+		loadSpec size > 2
+			ifTrue: [
 				| path |
 				path := (loadSpec at: 4) ifNil: [ self bootstrapRepositoryDirectory ].
 				(self _globalNamed: 'Gofer') new 
@@ -337,32 +375,35 @@ GsuAbstractGsDevKit >> loadApplicationLoadSpecs [
 
 	self bootstrapApplicationLoadSpecs do: [:loadSpec | 
 		loadSpec size = 1
-			ifTrue: [ self _reloadProjectNamed: (loadSpec at: 1) ]
+			ifTrue: [ self _reloadProjectNamed: (loadSpec at: 1) projectSpec: nil ]
 			ifFalse: [
-				[
-				| repoPath configurationClassName versionString loadList |
-				configurationClassName := loadSpec at: 1.
-				versionString := loadSpec at: 2.
-				loadList := loadSpec at: 3.
-				repoPath := (loadSpec at: 4) ifNil: [ self bootstrapRepositoryDirectory ].
-				self log: '		', configurationClassName printString, ' version ', versionString printString , ' loads: ', loadList printString, ' from: ', repoPath printString.
-				(self _globalNamed: 'GsDeployer') bulkMigrate: [ 
-					| projectName |
-					projectName := (self _globalNamed: 'MetacelloScriptEngine') configurationProjectNameOf: configurationClassName asString.
-					(self _globalNamed: 'Metacello') new
-						configuration: projectName;
-						version: versionString;
-						repositoryOverrides: { 'server://', repoPath };
-						load: loadList ] ]
-							on: (self _globalNamed: 'MCPerformPostloadNotification')
-							do: [:ex |
-								(self bootstrapPostLoadClassList includes: ex postloadClass theNonMetaClass name)
-									ifTrue: [ 
-										self log: '			Skip ', ex postloadClass name asString, ' initialization.'.
-										ex resume: false ]
-									ifFalse: [ 
-										self log: '			Perform ', ex postloadClass name asString, ' initialization.'.
-										ex resume: true ] ] ] ].
+				loadSpec size = 2
+					ifTrue: [ self _reloadProjectNamed: (loadSpec at: 1) projectSpec: (loadSpec at: 2) ]
+					ifFalse: [ 
+						[
+						| repoPath configurationClassName versionString loadList |
+						configurationClassName := loadSpec at: 1.
+						versionString := loadSpec at: 2.
+						loadList := loadSpec at: 3.
+						repoPath := (loadSpec at: 4) ifNil: [ self bootstrapRepositoryDirectory ].
+						self log: '		', configurationClassName printString, ' version ', versionString printString , ' loads: ', loadList printString, ' from: ', repoPath printString.
+						(self _globalNamed: 'GsDeployer') bulkMigrate: [ 
+							| projectName |
+							projectName := (self _globalNamed: 'MetacelloScriptEngine') configurationProjectNameOf: configurationClassName asString.
+							(self _globalNamed: 'Metacello') new
+								configuration: projectName;
+								version: versionString;
+								repositoryOverrides: { 'server://', repoPath };
+								load: loadList ] ]
+									on: (self _globalNamed: 'MCPerformPostloadNotification')
+									do: [:ex |
+										(self bootstrapPostLoadClassList includes: ex postloadClass theNonMetaClass name)
+											ifTrue: [ 
+												self log: '			Skip ', ex postloadClass name asString, ' initialization.'.
+												ex resume: false ]
+											ifFalse: [ 
+												self log: '			Perform ', ex postloadClass name asString, ' initialization.'.
+												ex resume: true ] ] ] ] ].
 	self bannerLogDash.
 	self bannerLogDash.
 

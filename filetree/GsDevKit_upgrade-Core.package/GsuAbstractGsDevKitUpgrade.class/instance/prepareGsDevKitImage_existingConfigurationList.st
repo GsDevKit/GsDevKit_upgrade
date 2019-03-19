@@ -1,17 +1,20 @@
 prepare gsdevkit  image
 prepareGsDevKitImage_existingConfigurationList
 
-	"Generate list of loaded configuration classes to be removed"
+	"Generate list of loaded configuration classes to be removed only the #_defaultExistingConfigurationOfNames need be removed,
+		since they will be used during loading of GLASS, GLASS1, GsDevKit, and tODE"
 
+	| requiredConfigurations |
 	self bootstrapExistingConfigurationList isEmpty ifFalse: [ "already set" ^ self ].
 	self log: '	create existing configuration list (commit)'.
 
-   self upgradeSymbolDict associationsDo: [:assoc |
-	   assoc value isBehavior
-		   ifTrue: [
-			   (assoc key asString _findString: 'ConfigurationOf' startingAt: 1 ignoreCase: false) == 1 
-				  ifTrue: [
-					  self log: '		', assoc key asString.
-					  self bootstrapExistingConfigurationList add: assoc value ] ] ].
+   self _defaultExistingConfigurationOfNames
+		do: [:className |
+			(self upgradeSymbolDict at: className ifAbsent: [])
+				ifNotNil: [:configurationOfClass |
+				   configurationOfClass isBehavior
+					   ifTrue: [
+								  self log: '		', className asString.
+								  self bootstrapExistingConfigurationList add: configurationOfClass ] ] ].
 	System commit.
 	self log: '	existing configuration collected (', self bootstrapExistingConfigurationList size asString, ')'.

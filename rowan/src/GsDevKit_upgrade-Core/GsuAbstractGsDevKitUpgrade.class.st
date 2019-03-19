@@ -157,6 +157,20 @@ GsuAbstractGsDevKitUpgrade >> _clearMetacelloCaches [
 ]
 
 { #category : 'private' }
+GsuAbstractGsDevKitUpgrade >> _defaultExistingConfigurationOfNames [
+	"When bootstrapping all of the ConfigurationOfs present in image, should be removed"
+
+	| configurationOfClassNames |
+	configurationOfClassNames := {}.
+	self upgradeSymbolDict associationsDo: [:assoc |
+	   assoc value isBehavior
+		   ifTrue: [
+			   (assoc key asString _findString: 'ConfigurationOf' startingAt: 1 ignoreCase: false) == 1 
+				  ifTrue: [ configurationOfClassNames add: assoc value ] ] ].
+	^ configurationOfClassNames
+]
+
+{ #category : 'private' }
 GsuAbstractGsDevKitUpgrade >> _defaultTargetRelease [
 
 	self subclassResponsibility: #_defaultTargetRelease
@@ -438,18 +452,21 @@ GsuAbstractGsDevKitUpgrade >> prepareGsDevKitImage_enableSessionMethods [
 { #category : 'prepare gsdevkit  image' }
 GsuAbstractGsDevKitUpgrade >> prepareGsDevKitImage_existingConfigurationList [
 
-	"Generate list of loaded configuration classes to be removed"
+	"Generate list of loaded configuration classes to be removed only the #_defaultExistingConfigurationOfNames need be removed,
+		since they will be used during loading of GLASS, GLASS1, GsDevKit, and tODE"
 
+	| requiredConfigurations |
 	self bootstrapExistingConfigurationList isEmpty ifFalse: [ "already set" ^ self ].
 	self log: '	create existing configuration list (commit)'.
 
-   self upgradeSymbolDict associationsDo: [:assoc |
-	   assoc value isBehavior
-		   ifTrue: [
-			   (assoc key asString _findString: 'ConfigurationOf' startingAt: 1 ignoreCase: false) == 1 
-				  ifTrue: [
-					  self log: '		', assoc key asString.
-					  self bootstrapExistingConfigurationList add: assoc value ] ] ].
+   self _defaultExistingConfigurationOfNames
+		do: [:className |
+			(self upgradeSymbolDict at: className ifAbsent: [])
+				ifNotNil: [:configurationOfClass |
+				   configurationOfClass isBehavior
+					   ifTrue: [
+								  self log: '		', className asString.
+								  self bootstrapExistingConfigurationList add: configurationOfClass ] ] ].
 	System commit.
 	self log: '	existing configuration collected (', self bootstrapExistingConfigurationList size asString, ')'.
 ]

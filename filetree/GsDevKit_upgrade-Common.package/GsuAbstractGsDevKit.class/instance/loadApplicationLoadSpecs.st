@@ -17,11 +17,12 @@ loadApplicationLoadSpecs
 	self bootstrapApplicationLoadSpecs do: [:loadSpec |
 		loadSpec size > 2
 			ifTrue: [
+				"ConfigurationOf load spec"
 				| path |
 				path := (loadSpec at: 4) ifNil: [ self bootstrapRepositoryDirectory ].
 				(self _globalNamed: 'Gofer') new 
 					directory: ((self _globalNamed: 'ServerFileDirectory') on: path);
-					package: (loadSpec at: 1);
+					package: 'ConfigurationOf', (loadSpec at: 1);
 					load ] ].
 	System commit.
 
@@ -37,14 +38,14 @@ loadApplicationLoadSpecs
 					ifFalse: [ 
 						[
 						| repoPath configurationClassName versionString loadList |
-						configurationClassName := loadSpec at: 1.
+						configurationClassName := 'ConfigurationOf', (loadSpec at: 1).
 						versionString := loadSpec at: 2.
 						loadList := loadSpec at: 3.
 						repoPath := (loadSpec at: 4) ifNil: [ self bootstrapRepositoryDirectory ].
 						self log: '		', configurationClassName printString, ' version ', versionString printString , ' loads: ', loadList printString, ' from: ', repoPath printString.
 						(self _globalNamed: 'GsDeployer') bulkMigrate: [ 
 							| projectName |
-							projectName := (self _globalNamed: 'MetacelloScriptEngine') configurationProjectNameOf: configurationClassName asString.
+							projectName := loadSpec at: 1.
 							(self _globalNamed: 'Metacello') new
 								configuration: projectName;
 								version: versionString;

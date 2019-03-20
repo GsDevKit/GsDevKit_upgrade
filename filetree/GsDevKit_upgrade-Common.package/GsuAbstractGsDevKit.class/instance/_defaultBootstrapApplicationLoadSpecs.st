@@ -44,11 +44,6 @@ _defaultBootstrapApplicationLoadSpecs
 				}.
 			} ].
 	self log: '	load ConfigurationOfGLASS'.
-	^{	"assume that GLASS needs to be reloaded"
-		 {
-				'ConfigurationOfGLASS'. 
-				'1.0-beta.9.2.2'. 
-				#('default'). 
-				nil.	"nill - use bootstrapRepositoryDirectory"
-		}.
+	^{
+		 self _defaultConfigurationOfGLASS.
 	}

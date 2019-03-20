@@ -7,6 +7,7 @@ _defaultExistingConfigurationOfNames
 	self upgradeSymbolDict associationsDo: [:assoc |
 	   assoc value isBehavior
 		   ifTrue: [
-			   (assoc key asString _findString: 'ConfigurationOf' startingAt: 1 ignoreCase: false) == 1 
+			   (((assoc key asString _findString: 'ConfigurationOf' startingAt: 1 ignoreCase: false) == 1 ) 
+				or: [ (assoc key asString _findString: 'BaselineOf' startingAt: 1 ignoreCase: false) == 1 ])
 				  ifTrue: [ configurationOfClassNames add: assoc key ] ] ].
 	^ configurationOfClassNames

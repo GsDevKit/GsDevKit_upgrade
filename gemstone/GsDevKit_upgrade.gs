@@ -1106,6 +1106,7 @@ loadApplicationLoadSpecs
 								configuration: projectName;
 								version: versionString;
 								repositoryOverrides: { 'server://', repoPath };
+								onConflict: [ :ex :loaded :incoming | ex useIncoming ];
 								load: loadList ] ]
 									on: (self _globalNamed: 'MCPerformPostloadNotification')
 									do: [:ex |
@@ -1429,6 +1430,7 @@ _reloadProjectNamed: projectName projectSpec: projectSpecOrNilOrString
 				ifFalse: [ self error: 'Project spec not found for ', projectName printString ] ].
 	self
 		_deploy: [ 
+		metacello onConflict: [ :ex :loaded :incoming | ex useIncoming ].
 		metacello copy get.
 		metacello copy load ].
 %
@@ -1845,7 +1847,12 @@ prepareGsDevKitImage_loadApplicationCode
 	self removeExistingConfigurations.
 
 	"now load application"
-	self loadApplicationLoadSpecs
+
+
+self log: '	prepareGsDevKitImage_loadApplicationCode'.
+	self loadApplicationLoadSpecs.
+
+self log: '	prepareGsDevKitImage_loadApplicationCode'
 %
 
 category: 'prepare gsdevkit  image'
@@ -2851,11 +2858,6 @@ bootstrapGsDevkit
 		compileMethod: self _bootstrap_class_removeFromSystem_patchSource 
 		dictionaries: self upgradeUserProfile symbolList 
 		category: '*change-notification') ifNotNil: [:ar | self error: 'did not compile' ].
-
-	"force configurations to be reloaded if needed"
-	self removeExistingConfigurations.
-
-	self loadApplicationLoadSpecs.
 
 	self log: '	... done bootstrap GsdevKit'.
 %

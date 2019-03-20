@@ -31,5 +31,6 @@ _reloadProjectNamed: projectName projectSpec: projectSpecOrNilOrString
 				ifFalse: [ self error: 'Project spec not found for ', projectName printString ] ].
 	self
 		_deploy: [ 
+		metacello onConflict: [ :ex :loaded :incoming | ex useIncoming ].
 		metacello copy get.
 		metacello copy load ].

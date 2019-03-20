@@ -50,6 +50,7 @@ loadApplicationLoadSpecs
 								configuration: projectName;
 								version: versionString;
 								repositoryOverrides: { 'server://', repoPath };
+								onConflict: [ :ex :loaded :incoming | ex useIncoming ];
 								load: loadList ] ]
 									on: (self _globalNamed: 'MCPerformPostloadNotification')
 									do: [:ex |

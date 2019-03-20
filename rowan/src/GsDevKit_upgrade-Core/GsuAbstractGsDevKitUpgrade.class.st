@@ -479,7 +479,12 @@ GsuAbstractGsDevKitUpgrade >> prepareGsDevKitImage_loadApplicationCode [
 	self removeExistingConfigurations.
 
 	"now load application"
-	self loadApplicationLoadSpecs
+
+
+self log: '	prepareGsDevKitImage_loadApplicationCode'.
+	self loadApplicationLoadSpecs.
+
+self log: '	prepareGsDevKitImage_loadApplicationCode'
 ]
 
 { #category : 'prepare gsdevkit  image' }

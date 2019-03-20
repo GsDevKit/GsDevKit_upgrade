@@ -104,11 +104,6 @@ GsuGsDevKitBootstrap >> bootstrapGsDevkit [
 		dictionaries: self upgradeUserProfile symbolList 
 		category: '*change-notification') ifNotNil: [:ar | self error: 'did not compile' ].
 
-	"force configurations to be reloaded if needed"
-	self removeExistingConfigurations.
-
-	self loadApplicationLoadSpecs.
-
 	self log: '	... done bootstrap GsdevKit'.
 ]
 

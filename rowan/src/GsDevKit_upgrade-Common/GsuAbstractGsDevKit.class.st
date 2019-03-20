@@ -232,6 +232,7 @@ GsuAbstractGsDevKit >> _reloadProjectNamed: projectName projectSpec: projectSpec
 				ifFalse: [ self error: 'Project spec not found for ', projectName printString ] ].
 	self
 		_deploy: [ 
+		metacello onConflict: [ :ex :loaded :incoming | ex useIncoming ].
 		metacello copy get.
 		metacello copy load ].
 ]
@@ -397,6 +398,7 @@ GsuAbstractGsDevKit >> loadApplicationLoadSpecs [
 								configuration: projectName;
 								version: versionString;
 								repositoryOverrides: { 'server://', repoPath };
+								onConflict: [ :ex :loaded :incoming | ex useIncoming ];
 								load: loadList ] ]
 									on: (self _globalNamed: 'MCPerformPostloadNotification')
 									do: [:ex |

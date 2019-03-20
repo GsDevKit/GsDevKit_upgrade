@@ -18,4 +18,4 @@ prepareImage_user
 		prepareImage_userPatches: self;
 		prepareImage_user_clear_subscriptions: self;
 		yourself.
-	self bannerLogDash.
+	self prepareImageUserDoneBanner.

@@ -35,4 +35,4 @@ prepareGsDevKitImage
 		prepareGsDevKitImage_validation: self;
 		yourself.	
 	self log: '	finished gsdevkit image (commit)'.
-	self bannerLogDash.
+	self prepareGsDevKitImageDoneBanner.

@@ -10,3 +10,4 @@ prepareImage_userPragmaFor: aGsDevKitUpgrade
 	aGsDevKitUpgrade log: 'Prepare image - user pragmas'.
 
 	"noop by default"
+	aGsDevKitUpgrade log: '	pragmas (noop)'.

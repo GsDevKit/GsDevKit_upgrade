@@ -565,6 +565,7 @@ prepareImage_pragmasFor: aGsDevKitUpgrade
 	aGsDevKitUpgrade log: 'Prepare image - pragmas'.
 
 	"noop by default"
+	aGsDevKitUpgrade log: '	pragmas (noop)'.
 %
 
 category: 'prepare image system user pragma'
@@ -579,6 +580,7 @@ prepareImage_systemuserPragmaFor: aGsDevKitUpgrade
 	aGsDevKitUpgrade log: 'Prepare image - system user pragmas'.
 
 	"noop by default"
+	aGsDevKitUpgrade log: '	pragmas (noop)'.
 %
 
 category: 'perpare image user'
@@ -605,6 +607,7 @@ prepareImage_userPragmaFor: aGsDevKitUpgrade
 	aGsDevKitUpgrade log: 'Prepare image - user pragmas'.
 
 	"noop by default"
+	aGsDevKitUpgrade log: '	pragmas (noop)'.
 %
 
 category: 'perpare image user'
@@ -1229,7 +1232,7 @@ _defaultBootstrapApplicationLoadSpecs
 
 	self _todeLoaded
 		ifTrue: [
-			self log: '	load BaselineOfMetacello BaselineOfTode'.
+			self log: '	load BaselineOfMetacello and BaselineOfTode (default)'.
 			"first update Metacello and then update Tode"
 			^ self _configurationOfGLASS_bootstrap, {
 				{
@@ -1243,7 +1246,7 @@ _defaultBootstrapApplicationLoadSpecs
 			} ].
 	self _glass1Loaded
 		ifTrue: [
-			self log: '	load BaselineOfMetacello BaselineOfGLASS1'.
+			self log: '	load BaselineOfMetacello and BaselineOfGLASS1 (default)'.
 			"first update Metacello and then update GLASS1"
 			^ self _configurationOfGLASS_bootstrap, {
 				{
@@ -1257,7 +1260,7 @@ _defaultBootstrapApplicationLoadSpecs
 			} ].
 	self _gsDevKitLoaded
 		ifTrue: [
-			self log: '	load BaselineOfGsDevKit'.
+			self log: '	load BaselineOfMetacello and BaselineOfGsDevKit (default)'.
 			^ self _configurationOfGLASS_bootstrap, {	"assume that GsDevKit needs to be reloaded"
 				{
 					'Metacello'. 
@@ -1708,7 +1711,7 @@ prepareGsDevKitImage
 		prepareGsDevKitImage_validation: self;
 		yourself.	
 	self log: '	finished gsdevkit image (commit)'.
-	self bannerLogDash.
+	self prepareGsDevKitImageDoneBanner.
 %
 
 category: 'prepare gsdevkit  image'
@@ -1716,6 +1719,13 @@ method: GsuAbstractGsDevKitUpgrade
 prepareGsDevKitImageBanner
 
 	self bannerLog: 'Starting ', self buildString, ' GsDevKit upgrade: prepare gsdevkit image as ', System myUserProfile userId.
+%
+
+category: 'prepare gsdevkit  image'
+method: GsuAbstractGsDevKitUpgrade
+prepareGsDevKitImageDoneBanner
+
+	self bannerLog: 'Finished ', self buildString, ' GsDevKit upgrade: prepare gsdevkit image as ', System myUserProfile userId.
 %
 
 category: 'prepare gsdevkit  image'
@@ -1991,7 +2001,7 @@ prepareImage
 		prepareImage_pragmasFor: self;
 		prepareImage_makeClassesObsolete: self;
 		prepareImage_patches: self.
-	self bannerLogDash.
+	self prepareImageDoneBanner.
 %
 
 category: 'prepare image'
@@ -2005,12 +2015,28 @@ prepareImageBanner
 	self logUpgradeParameters
 %
 
+category: 'prepare image'
+method: GsuAbstractGsDevKitUpgrade
+prepareImageDoneBanner
+
+	self bannerLogDash.
+	self log:  'Finished ', self buildString, ' GsDevKit upgrade: prepare image as ', System myUserProfile userId.
+	self bannerLogDash.
+%
+
 category: 'prepare image user'
 method: GsuAbstractGsDevKitUpgrade
 prepareImagePragmaSystemUserBanner
 
 	self bannerLog: 'Starting ', self buildString, ' GsDevKit pragma upgrade (part 2): prepare image pragma system user as ', System myUserProfile userId.
 	self logUpgradeParameters
+%
+
+category: 'prepare image user'
+method: GsuAbstractGsDevKitUpgrade
+prepareImagePragmaSystemUserDoneBanner
+
+	self bannerLog: 'Finished ', self buildString, ' GsDevKit pragma upgrade (part 2): prepare image pragma system user as ', System myUserProfile userId.
 %
 
 category: 'prepare image pragma user'
@@ -2021,12 +2047,26 @@ prepareImagePragmaUserBanner
 	self logUpgradeParameters
 %
 
+category: 'prepare image pragma user'
+method: GsuAbstractGsDevKitUpgrade
+prepareImagePragmaUserDoneBanner
+
+	self bannerLog: 'Finished ', self buildString, ' GsDevKit pragma upgrade (part 1): prepare image pragma user as ', System myUserProfile userId.
+%
+
 category: 'prepare image user'
 method: GsuAbstractGsDevKitUpgrade
 prepareImageUserBanner
 
 	self bannerLog: 'Starting ', self buildString, ' GsDevKit upgrade: prepare image for user ', System myUserProfile userId.
 	self logUpgradeParameters
+%
+
+category: 'prepare image user'
+method: GsuAbstractGsDevKitUpgrade
+prepareImageUserDoneBanner
+
+	self bannerLog: 'Finished ', self buildString, ' GsDevKit upgrade: prepare image for user ', System myUserProfile userId.
 %
 
 category: 'prepare image'
@@ -2178,7 +2218,7 @@ prepareImage_pragma_systemuser
 	self sourceGemStoneRelease 
 		prepareImage_systemuserPragmaFor: self;
 		yourself.
-	self bannerLogDash.
+	self prepareImagePragmaSystemUserDoneBanner.
 %
 
 category: 'phases'
@@ -2204,7 +2244,7 @@ prepareImage_pragma_user
 	self sourceGemStoneRelease 
 		prepareImage_userPragmaFor: self;
 		yourself.
-	self bannerLogDash.
+	self prepareImagePragmaUserDoneBanner.
 %
 
 category: 'phases'
@@ -2228,7 +2268,7 @@ prepareImage_user
 		prepareImage_userPatches: self;
 		prepareImage_user_clear_subscriptions: self;
 		yourself.
-	self bannerLogDash.
+	self prepareImageUserDoneBanner.
 %
 
 category: 'prepare image user'
@@ -2418,12 +2458,14 @@ _prepareGsDevKitImage_validate_user_methods
 	self upgradeSymbolDict valuesDo: [:global |
 		global isBehavior
 			ifTrue: [ 
-				(global persistentMethodDictForEnv: 0) values do: [:meth |
-					meth needsRecompile
-						ifTrue: [ methodsNeedingRecompilation add: meth ] ].
-				(global class persistentMethodDictForEnv: 0) values do: [:meth |
-					meth needsRecompile
-						ifTrue: [ methodsNeedingRecompilation add: meth ] ] ] ].
+				(global persistentMethodDictForEnv: 0) 
+					ifNotNil: [:methodDict | methodDict values do: [:meth |
+						meth needsRecompile
+							ifTrue: [ methodsNeedingRecompilation add: meth ] ] ].
+				(global class persistentMethodDictForEnv: 0) 
+					ifNotNil: [:methodDict | methodDict values do: [:meth |
+						meth needsRecompile
+							ifTrue: [ methodsNeedingRecompilation add: meth ] ] ] ] ].
 	^ methodsNeedingRecompilation
 %
 

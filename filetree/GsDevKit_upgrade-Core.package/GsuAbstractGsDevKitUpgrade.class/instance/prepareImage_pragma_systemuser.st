@@ -19,4 +19,4 @@ prepareImage_pragma_systemuser
 	self sourceGemStoneRelease 
 		prepareImage_systemuserPragmaFor: self;
 		yourself.
-	self bannerLogDash.
+	self prepareImagePragmaSystemUserDoneBanner.

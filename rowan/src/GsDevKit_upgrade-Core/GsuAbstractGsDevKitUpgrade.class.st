@@ -199,12 +199,14 @@ GsuAbstractGsDevKitUpgrade >> _prepareGsDevKitImage_validate_user_methods [
 	self upgradeSymbolDict valuesDo: [:global |
 		global isBehavior
 			ifTrue: [ 
-				(global persistentMethodDictForEnv: 0) values do: [:meth |
-					meth needsRecompile
-						ifTrue: [ methodsNeedingRecompilation add: meth ] ].
-				(global class persistentMethodDictForEnv: 0) values do: [:meth |
-					meth needsRecompile
-						ifTrue: [ methodsNeedingRecompilation add: meth ] ] ] ].
+				(global persistentMethodDictForEnv: 0) 
+					ifNotNil: [:methodDict | methodDict values do: [:meth |
+						meth needsRecompile
+							ifTrue: [ methodsNeedingRecompilation add: meth ] ] ].
+				(global class persistentMethodDictForEnv: 0) 
+					ifNotNil: [:methodDict | methodDict values do: [:meth |
+						meth needsRecompile
+							ifTrue: [ methodsNeedingRecompilation add: meth ] ] ] ] ].
 	^ methodsNeedingRecompilation
 ]
 
@@ -391,7 +393,7 @@ GsuAbstractGsDevKitUpgrade >> prepareGsDevKitImage [
 		prepareGsDevKitImage_validation: self;
 		yourself.	
 	self log: '	finished gsdevkit image (commit)'.
-	self bannerLogDash.
+	self prepareGsDevKitImageDoneBanner.
 ]
 
 { #category : 'prepare gsdevkit  image' }
@@ -639,6 +641,12 @@ GsuAbstractGsDevKitUpgrade >> prepareGsDevKitImageBanner [
 	self bannerLog: 'Starting ', self buildString, ' GsDevKit upgrade: prepare gsdevkit image as ', System myUserProfile userId.
 ]
 
+{ #category : 'prepare gsdevkit  image' }
+GsuAbstractGsDevKitUpgrade >> prepareGsDevKitImageDoneBanner [
+
+	self bannerLog: 'Finished ', self buildString, ' GsDevKit upgrade: prepare gsdevkit image as ', System myUserProfile userId.
+]
+
 { #category : 'phases' }
 GsuAbstractGsDevKitUpgrade >> prepareImage [
 	"prepare image for upgrade"
@@ -659,7 +667,7 @@ GsuAbstractGsDevKitUpgrade >> prepareImage [
 		prepareImage_pragmasFor: self;
 		prepareImage_makeClassesObsolete: self;
 		prepareImage_patches: self.
-	self bannerLogDash.
+	self prepareImageDoneBanner.
 ]
 
 { #category : 'prepare image' }
@@ -723,7 +731,7 @@ GsuAbstractGsDevKitUpgrade >> prepareImage_pragma_systemuser [
 	self sourceGemStoneRelease 
 		prepareImage_systemuserPragmaFor: self;
 		yourself.
-	self bannerLogDash.
+	self prepareImagePragmaSystemUserDoneBanner.
 ]
 
 { #category : 'phases' }
@@ -748,7 +756,7 @@ GsuAbstractGsDevKitUpgrade >> prepareImage_pragma_user [
 	self sourceGemStoneRelease 
 		prepareImage_userPragmaFor: self;
 		yourself.
-	self bannerLogDash.
+	self prepareImagePragmaUserDoneBanner.
 ]
 
 { #category : 'prepare image' }
@@ -853,7 +861,7 @@ GsuAbstractGsDevKitUpgrade >> prepareImage_user [
 		prepareImage_userPatches: self;
 		prepareImage_user_clear_subscriptions: self;
 		yourself.
-	self bannerLogDash.
+	self prepareImageUserDoneBanner.
 ]
 
 { #category : 'prepare image user' }
@@ -920,11 +928,25 @@ GsuAbstractGsDevKitUpgrade >> prepareImageBanner [
 	self logUpgradeParameters
 ]
 
+{ #category : 'prepare image' }
+GsuAbstractGsDevKitUpgrade >> prepareImageDoneBanner [
+
+	self bannerLogDash.
+	self log:  'Finished ', self buildString, ' GsDevKit upgrade: prepare image as ', System myUserProfile userId.
+	self bannerLogDash.
+]
+
 { #category : 'prepare image user' }
 GsuAbstractGsDevKitUpgrade >> prepareImagePragmaSystemUserBanner [
 
 	self bannerLog: 'Starting ', self buildString, ' GsDevKit pragma upgrade (part 2): prepare image pragma system user as ', System myUserProfile userId.
 	self logUpgradeParameters
+]
+
+{ #category : 'prepare image user' }
+GsuAbstractGsDevKitUpgrade >> prepareImagePragmaSystemUserDoneBanner [
+
+	self bannerLog: 'Finished ', self buildString, ' GsDevKit pragma upgrade (part 2): prepare image pragma system user as ', System myUserProfile userId.
 ]
 
 { #category : 'prepare image pragma user' }
@@ -934,11 +956,23 @@ GsuAbstractGsDevKitUpgrade >> prepareImagePragmaUserBanner [
 	self logUpgradeParameters
 ]
 
+{ #category : 'prepare image pragma user' }
+GsuAbstractGsDevKitUpgrade >> prepareImagePragmaUserDoneBanner [
+
+	self bannerLog: 'Finished ', self buildString, ' GsDevKit pragma upgrade (part 1): prepare image pragma user as ', System myUserProfile userId.
+]
+
 { #category : 'prepare image user' }
 GsuAbstractGsDevKitUpgrade >> prepareImageUserBanner [
 
 	self bannerLog: 'Starting ', self buildString, ' GsDevKit upgrade: prepare image for user ', System myUserProfile userId.
 	self logUpgradeParameters
+]
+
+{ #category : 'prepare image user' }
+GsuAbstractGsDevKitUpgrade >> prepareImageUserDoneBanner [
+
+	self bannerLog: 'Finished ', self buildString, ' GsDevKit upgrade: prepare image for user ', System myUserProfile userId.
 ]
 
 { #category : 'printing' }

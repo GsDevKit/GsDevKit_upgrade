@@ -7,10 +7,12 @@ _prepareGsDevKitImage_validate_user_methods
 	self upgradeSymbolDict valuesDo: [:global |
 		global isBehavior
 			ifTrue: [ 
-				(global persistentMethodDictForEnv: 0) values do: [:meth |
-					meth needsRecompile
-						ifTrue: [ methodsNeedingRecompilation add: meth ] ].
-				(global class persistentMethodDictForEnv: 0) values do: [:meth |
-					meth needsRecompile
-						ifTrue: [ methodsNeedingRecompilation add: meth ] ] ] ].
+				(global persistentMethodDictForEnv: 0) 
+					ifNotNil: [:methodDict | methodDict values do: [:meth |
+						meth needsRecompile
+							ifTrue: [ methodsNeedingRecompilation add: meth ] ] ].
+				(global class persistentMethodDictForEnv: 0) 
+					ifNotNil: [:methodDict | methodDict values do: [:meth |
+						meth needsRecompile
+							ifTrue: [ methodsNeedingRecompilation add: meth ] ] ] ] ].
 	^ methodsNeedingRecompilation

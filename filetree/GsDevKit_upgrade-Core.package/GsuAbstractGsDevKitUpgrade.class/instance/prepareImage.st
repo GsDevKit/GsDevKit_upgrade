@@ -18,4 +18,4 @@ prepareImage
 		prepareImage_pragmasFor: self;
 		prepareImage_makeClassesObsolete: self;
 		prepareImage_patches: self.
-	self bannerLogDash.
+	self prepareImageDoneBanner.

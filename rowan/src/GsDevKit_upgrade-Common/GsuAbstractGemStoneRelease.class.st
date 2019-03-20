@@ -258,6 +258,7 @@ GsuAbstractGemStoneRelease >> prepareImage_pragmasFor: aGsDevKitUpgrade [
 	aGsDevKitUpgrade log: 'Prepare image - pragmas'.
 
 	"noop by default"
+	aGsDevKitUpgrade log: '	pragmas (noop)'.
 ]
 
 { #category : 'prepare image system user pragma' }
@@ -271,6 +272,7 @@ GsuAbstractGemStoneRelease >> prepareImage_systemuserPragmaFor: aGsDevKitUpgrade
 	aGsDevKitUpgrade log: 'Prepare image - system user pragmas'.
 
 	"noop by default"
+	aGsDevKitUpgrade log: '	pragmas (noop)'.
 ]
 
 { #category : 'perpare image user' }
@@ -303,6 +305,7 @@ GsuAbstractGemStoneRelease >> prepareImage_userPragmaFor: aGsDevKitUpgrade [
 	aGsDevKitUpgrade log: 'Prepare image - user pragmas'.
 
 	"noop by default"
+	aGsDevKitUpgrade log: '	pragmas (noop)'.
 ]
 
 { #category : 'printing' }

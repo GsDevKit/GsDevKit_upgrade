@@ -35,7 +35,7 @@ run
 %
 commit
 
-input $upgradeLogDir/createGsDevKit_upgrade.topaz
+input $upgradeDir/createGsDevKit_upgrade.topaz
 
 run
 	System myUserProfile removeDictionaryAt: (System myUserProfile symbolList size).

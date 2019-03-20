@@ -1,6 +1,20 @@
 #
 #	login as SystemUser to to prepareImage work
 #
+############################################################################
+#	1. As SystemUser, install GsDevKit_upgrade code and GsuAbstractGsDevKitUpgrade>>prepareImage.
+#	2. [preparGsDevKitImage_pragma_user]
+#	3. [preparGsDevKitImage_pragma_SystemUser]
+#	4. [preparGsDevKitImage_user]
+############################################################################
+#
+#	newExtent -s snapshots/extent0_seaside_GLASS1_3215.dbf battery_350_g
+#
+#	input $GS_HOME/shared/repos/GsDevKit_upgrade/bin/prepareGsDevKitImage
+#	input $GS_HOME/shared/repos/GsDevKit_upgrade/bin/prepareGsDevKitImage_pragma_user
+#	input $GS_HOME/shared/repos/GsDevKit_upgrade/bin/prepareGsDevKitImage_pragma_SystemUser
+#	input $GS_HOME/shared/repos/GsDevKit_upgrade/bin/prepareGsDevKitImage_user
+#
 iferr 1 stk
 iferr 2 stack
 iferr 3 exit 1

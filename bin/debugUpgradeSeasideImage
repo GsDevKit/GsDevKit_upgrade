@@ -1,0 +1,51 @@
+
+. defStone.env
+export upgradeDir="`pwd`/product/upgrade"
+export upgradeLogDir="`pwd`/upgradeLogDir"
+#
+#	allow one to interactively debug any one of the standard upgradeSeasideImage steps
+#
+# 
+
+set -e
+
+echo "############################################################################"
+echo	"	-1. New extent that has had upgrdeImage applied"
+
+newExtent -s snapshots/extent0_upgradedImage_GLASS1_3215.dbf battery_350_g
+
+echo "############################################################################"
+echo	"	0. install GsDevKit_upgrade.gs"
+
+startTopaz battery_350_g -l < $GS_HOME/shared/repos/GsDevKit_upgrade/bin/installGsDevKit_upgrade
+echo	"	0. install GsDevKit_upgrade.gs"
+
+echo "############################################################################"
+echo	"	1. As SystemUser, install GsDevKit_upgrade code and GsuAbstractGsDevKitUpgrade>>prepareImage"
+
+startTopaz battery_350_g -l < $GS_HOME/shared/repos/GsDevKit_upgrade/bin/prepareGsDevKitImage 
+echo	"	1. As SystemUser, install GsDevKit_upgrade code and GsuAbstractGsDevKitUpgrade>>prepareImage"
+
+echo "############################################################################"
+echo	"	2. As $username, GsuAbstractGsDevKitUpgrade>>prepareImage_pragma_user"
+
+startTopaz battery_350_g -l < $GS_HOME/shared/repos/GsDevKit_upgrade/bin/prepareGsDevKitImage_pragma_user
+echo	"	2. As $username, GsuAbstractGsDevKitUpgrade>>prepareImage_pragma_user"
+
+echo "############################################################################"
+echo	"	3. As SystemUser, GsuAbstractGsDevKitUpgrade>>prepareImage_pragma_systemuser"
+
+startTopaz battery_350_g -l < $GS_HOME/shared/repos/GsDevKit_upgrade/bin/prepareGsDevKitImage_pragma_SystemUser
+echo	"	3. As SystemUser, GsuAbstractGsDevKitUpgrade>>prepareImage_pragma_systemuser"
+
+echo "############################################################################"
+echo	"	4. As $username, GsuAbstractGsDevKitUpgrade>>prepareImage_user and GsuAbstractGsDevKitUpgrade>>prepareGsDevKitImage"
+
+stopStone battery_350_g
+cp extents/extent0.dbf snapshots/extent0_upgradedImage__debug_GLASS1_3215.dbf
+
+newExtent -s snapshots/extent0_upgradedImage__debug_GLASS1_3215.dbf battery_350_g
+
+# startTopaz battery_350_g -l -T 500000 < $GS_HOME/shared/repos/GsDevKit_upgrade/bin/prepareGsDevKitImage_user
+# echo	"	4. As $username, GsuAbstractGsDevKitUpgrade>>prepareImage_user and GsuAbstractGsDevKitUpgrade>>prepareGsDevKitImage"
+

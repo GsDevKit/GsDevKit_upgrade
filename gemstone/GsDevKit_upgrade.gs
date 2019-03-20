@@ -527,6 +527,13 @@ prepareGsDevKitImage_resetExistingGlobalState:  aGsDevKitUpgrade
 	aGsDevKitUpgrade prepareGsDevKitImage_resetExistingGlobalState
 %
 
+category: 'prepare gsdevkit image'
+method: GsuAbstractGemStoneRelease
+prepareGsDevKitImage_validation:  aGsDevKitUpgrade
+
+	aGsDevKitUpgrade prepareGsDevKitImage_validation
+%
+
 category: 'prepare image'
 method: GsuAbstractGemStoneRelease
 prepareImage_makeClassesObsolete: aGsDevKitUpgrade
@@ -1058,8 +1065,6 @@ method: GsuAbstractGsDevKit
 loadApplicationLoadSpecs
 
 	| glass1Upgraded |
-	self log: '	loading bootstrap application load specs'.
-
 	"unload the 2.x only packages"
 	(self _globalNamed: 'PackageInfo') registerPackageName: 'GemStone-Exceptions'.
 	((self _globalNamed: 'MCWorkingCopy') forPackage: ((self _globalNamed: 'MCPackage') new name: 'GemStone-Exceptions')) unload.
@@ -1121,8 +1126,6 @@ loadApplicationLoadSpecs
 	self bannerLogDash.
 
 	System commit.
-
-	self log: '	done (commit)'.
 %
 
 category: 'logging'
@@ -1672,6 +1675,14 @@ method: GsuAbstractGsDevKitUpgrade
 prepareGsDevKitImage
 	"formerly done by $GEMSTONE/upgrade/prepareSeasideImage"
 
+	"
+		1. prepareImage
+		2. prepareImage_pragma_user
+		3. prepareImage_pragma_systemuser
+		4. prepareImage_user
+		5. prepareGsDevKitImage.
+	"
+
 	"run as gsdevkit user"
 
 
@@ -1694,7 +1705,8 @@ prepareGsDevKitImage
 	System commit.
 	self sourceGemStoneRelease
 		prepareGsDevKitImage_loadApplicationCode: self;
-		yourself.		
+		prepareGsDevKitImage_validation: self;
+		yourself.	
 	self log: '	finished gsdevkit image (commit)'.
 	self bannerLogDash.
 %
@@ -1848,11 +1860,9 @@ prepareGsDevKitImage_loadApplicationCode
 
 	"now load application"
 
-
-self log: '	prepareGsDevKitImage_loadApplicationCode'.
 	self loadApplicationLoadSpecs.
 
-self log: '	prepareGsDevKitImage_loadApplicationCode'
+	self log: '		load GsDevKit application code DONE (commit)'.
 %
 
 category: 'prepare gsdevkit  image'
@@ -1931,10 +1941,47 @@ prepareGsDevKitImage_resetExistingGlobalState
 	"noop for bootstrap (default)"
 %
 
+category: 'prepare gsdevkit  image'
+method: GsuAbstractGsDevKitUpgrade
+prepareGsDevKitImage_validation
+	"verify that all methods visible to this user have been recompiled."
+
+	| sessionMethodsNeedCompilation methodsNeedCompilation |
+	self log: 'Prepare gsdevkit - validation'.
+
+	System commit.
+
+	sessionMethodsNeedCompilation := self _prepareGsDevKitImage_validate_session_methods.
+	methodsNeedCompilation := self _prepareGsDevKitImage_validate_user_methods.
+	
+	sessionMethodsNeedCompilation isEmpty
+		ifFalse: [
+			self log: '	session methods that need recompilation:'.
+			sessionMethodsNeedCompilation do: [:meth | self log: ' 	', meth printString ] ].
+
+	methodsNeedCompilation isEmpty
+		ifFalse: [
+			self log: '	methods that need recompilation:'.
+			methodsNeedCompilation do: [:meth | self log: ' 	', meth printString ] ].
+
+	(sessionMethodsNeedCompilation isEmpty and: [ methodsNeedCompilation isEmpty ])
+		ifFalse: [].
+
+	self log: '	done with validation'
+%
+
 category: 'phases'
 method: GsuAbstractGsDevKitUpgrade
 prepareImage
 	"prepare image for upgrade"
+
+	"
+		1. prepareImage
+		2. prepareImage_pragma_user
+		3. prepareImage_pragma_systemuser
+		4. prepareImage_user
+		5. prepareGsDevKitImage.
+	"
 
 	"run as system user"
 
@@ -1958,19 +2005,11 @@ prepareImageBanner
 	self logUpgradeParameters
 %
 
-category: 'prepare image'
-method: GsuAbstractGsDevKitUpgrade
-prepareImagePragmaBanner
-
-	self bannerLog: 'Starting ', self buildString, ' GsDevKit pragma upgrade (part 1): prepare image pragma as ', System myUserProfile userId.
-	self logUpgradeParameters
-%
-
 category: 'prepare image user'
 method: GsuAbstractGsDevKitUpgrade
 prepareImagePragmaSystemUserBanner
 
-	self bannerLog: 'Starting ', self buildString, ' GsDevKit pragma upgrade (part 3): prepare image pragma system user as ', System myUserProfile userId.
+	self bannerLog: 'Starting ', self buildString, ' GsDevKit pragma upgrade (part 2): prepare image pragma system user as ', System myUserProfile userId.
 	self logUpgradeParameters
 %
 
@@ -1978,7 +2017,7 @@ category: 'prepare image pragma user'
 method: GsuAbstractGsDevKitUpgrade
 prepareImagePragmaUserBanner
 
-	self bannerLog: 'Starting ', self buildString, ' GsDevKit pragma upgrade (part 2): prepare image pragma user as ', System myUserProfile userId.
+	self bannerLog: 'Starting ', self buildString, ' GsDevKit pragma upgrade (part 1): prepare image pragma user as ', System myUserProfile userId.
 	self logUpgradeParameters
 %
 
@@ -2031,23 +2070,6 @@ category: 'prepare image'
 method: GsuAbstractGsDevKitUpgrade
 prepareImage_patches
 	"noop by default"
-%
-
-category: 'phases'
-method: GsuAbstractGsDevKitUpgrade
-prepareImage_pragma
-	"prepare pragmas for upgrade"
-
-	"run as system user"
-
-	"Part 1: set the stage for pragma upgrade"
-
-	self prepareImagePragmaBanner.
-	self log: 'Prepare image pragma'.
-	self sourceGemStoneRelease 
-		prepareImage_pragmaFor: self;
-		yourself.
-	self bannerLogDash.
 %
 
 category: 'prepare image'
@@ -2139,9 +2161,17 @@ method: GsuAbstractGsDevKitUpgrade
 prepareImage_pragma_systemuser
 	"make old pragma class obsolete"
 
+	"
+		1. prepareImage
+		2. prepareImage_pragma_user
+		3. prepareImage_pragma_systemuser
+		4. prepareImage_user
+		5. prepareGsDevKitImage.
+	"
+
 	"run as system user"
 
-	"Part 3: make pragma class obsolete"
+	"Part 2: make pragma class obsolete"
 
 	self prepareImagePragmaSystemUserBanner.
 	self log: 'Prepare image system user pragma'.
@@ -2156,9 +2186,17 @@ method: GsuAbstractGsDevKitUpgrade
 prepareImage_pragma_user
 	"prepare pragmas for upgrade"
 
+	"
+		1. prepareImage
+		2. prepareImage_pragma_user
+		3. prepareImage_pragma_systemuser
+		4. prepareImage_user
+		5. prepareGsDevKitImage.
+	"
+
 	"run as gsdevkit user"
 
-	"Part 2: collect methods that refrence the obsolete pragma class or have pragmas that 
+	"Part 1: collect methods that refrence the obsolete pragma class or have pragmas that 
 		need to be recomputed and need to be recompiled"
 
 	self prepareImagePragmaUserBanner.
@@ -2173,6 +2211,14 @@ category: 'phases'
 method: GsuAbstractGsDevKitUpgrade
 prepareImage_user
 	"prepare image for upgrade"
+
+	"
+		1. prepareImage
+		2. prepareImage_pragma_user
+		3. prepareImage_pragma_systemuser
+		4. prepareImage_user
+		5. prepareGsDevKitImage.
+	"
 
 	"run as gsdevkit user"
 
@@ -2337,6 +2383,48 @@ method: GsuAbstractGsDevKitUpgrade
 _defaultTargetRelease
 
 	self subclassResponsibility: #_defaultTargetRelease
+%
+
+category: 'private'
+method: GsuAbstractGsDevKitUpgrade
+_prepareGsDevKitImage_validate_session_methods
+	"return list of session methos that need recompilation"
+
+	| methodsNeedingRecompilation |
+	methodsNeedingRecompilation := {}.
+	System myUserProfile symbolList
+		do: [ :dict | 
+			| dName |
+			dName := dict name ifNil: [ 'unnamed' ].
+			(dict at: GsPackage globalName otherwise: nil)
+				ifNotNil: [ :pkg | 
+					pkg sessionMethods keysAndValuesDo: [ :class :ar | 
+						| methodDict |
+						methodDict := ar at: 1.
+						methodDict values
+							do: [ :meth | 
+								meth needsRecompile
+									ifTrue: [ methodsNeedingRecompilation add: meth ] ] ] ] ].
+	^ methodsNeedingRecompilation
+%
+
+category: 'private'
+method: GsuAbstractGsDevKitUpgrade
+_prepareGsDevKitImage_validate_user_methods
+	"return list of methos in upgrade symbol dictionary that need recompilation"
+
+	| methodsNeedingRecompilation |
+	methodsNeedingRecompilation := {}.
+	self upgradeSymbolDict valuesDo: [:global |
+		global isBehavior
+			ifTrue: [ 
+				(global persistentMethodDictForEnv: 0) values do: [:meth |
+					meth needsRecompile
+						ifTrue: [ methodsNeedingRecompilation add: meth ] ].
+				(global class persistentMethodDictForEnv: 0) values do: [:meth |
+					meth needsRecompile
+						ifTrue: [ methodsNeedingRecompilation add: meth ] ] ] ].
+	^ methodsNeedingRecompilation
 %
 
 category: 'private'
@@ -2756,6 +2844,26 @@ method: GsuGsDevKit_3_5_x_StdUpgrade
 _listUpgradeParameters
 
 	^ #( )
+%
+
+category: 'private'
+method: GsuGsDevKit_3_5_x_StdUpgrade
+_prepareGsDevKitImage_validate_session_methods
+	"return list of session methos that need recompilation"
+
+	"noop"
+
+	^ {}
+%
+
+category: 'private'
+method: GsuGsDevKit_3_5_x_StdUpgrade
+_prepareGsDevKitImage_validate_user_methods
+	"return list of methos in upgrade symbol dictionary that need recompilation"
+
+	"noop"
+
+	^ {}
 %
 
 category: 'private'

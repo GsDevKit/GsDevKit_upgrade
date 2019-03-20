@@ -2,6 +2,14 @@ phases
 prepareGsDevKitImage
 	"formerly done by $GEMSTONE/upgrade/prepareSeasideImage"
 
+	"
+		1. prepareImage
+		2. prepareImage_pragma_user
+		3. prepareImage_pragma_systemuser
+		4. prepareImage_user
+		5. prepareGsDevKitImage.
+	"
+
 	"run as gsdevkit user"
 
 
@@ -24,6 +32,7 @@ prepareGsDevKitImage
 	System commit.
 	self sourceGemStoneRelease
 		prepareGsDevKitImage_loadApplicationCode: self;
-		yourself.		
+		prepareGsDevKitImage_validation: self;
+		yourself.	
 	self log: '	finished gsdevkit image (commit)'.
 	self bannerLogDash.

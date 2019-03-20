@@ -224,6 +224,12 @@ GsuAbstractGemStoneRelease >> prepareGsDevKitImage_resetExistingGlobalState:  aG
 	aGsDevKitUpgrade prepareGsDevKitImage_resetExistingGlobalState
 ]
 
+{ #category : 'prepare gsdevkit image' }
+GsuAbstractGemStoneRelease >> prepareGsDevKitImage_validation:  aGsDevKitUpgrade [
+
+	aGsDevKitUpgrade prepareGsDevKitImage_validation
+]
+
 { #category : 'prepare image' }
 GsuAbstractGemStoneRelease >> prepareImage_makeClassesObsolete: aGsDevKitUpgrade [
 	"In 3.4.0, the Pragma class is in the base, and the old Pragma class  must be obsoleted"

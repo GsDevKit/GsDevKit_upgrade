@@ -11,8 +11,6 @@ prepareGsDevKitImage_loadApplicationCode
 
 	"now load application"
 
-
-self log: '	prepareGsDevKitImage_loadApplicationCode'.
 	self loadApplicationLoadSpecs.
 
-self log: '	prepareGsDevKitImage_loadApplicationCode'
+	self log: '		load GsDevKit application code DONE (commit)'.

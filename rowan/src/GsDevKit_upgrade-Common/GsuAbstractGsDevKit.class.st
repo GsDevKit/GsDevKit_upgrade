@@ -350,8 +350,6 @@ GsuAbstractGsDevKit >> bootstrapRepositoryDirectory: directoryPath [
 GsuAbstractGsDevKit >> loadApplicationLoadSpecs [
 
 	| glass1Upgraded |
-	self log: '	loading bootstrap application load specs'.
-
 	"unload the 2.x only packages"
 	(self _globalNamed: 'PackageInfo') registerPackageName: 'GemStone-Exceptions'.
 	((self _globalNamed: 'MCWorkingCopy') forPackage: ((self _globalNamed: 'MCPackage') new name: 'GemStone-Exceptions')) unload.
@@ -413,8 +411,6 @@ GsuAbstractGsDevKit >> loadApplicationLoadSpecs [
 	self bannerLogDash.
 
 	System commit.
-
-	self log: '	done (commit)'.
 ]
 
 { #category : 'logging' }

@@ -1,0 +1,4 @@
+prepare gsdevkit image
+prepareGsDevKitImage_validation:  aGsDevKitUpgrade
+
+	aGsDevKitUpgrade prepareGsDevKitImage_validation

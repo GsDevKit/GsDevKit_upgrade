@@ -34,6 +34,24 @@ GsuGsDevKit_3_5_x_StdUpgrade >> _listUpgradeParameters [
 ]
 
 { #category : 'private' }
+GsuGsDevKit_3_5_x_StdUpgrade >> _prepareGsDevKitImage_validate_session_methods [
+	"return list of session methos that need recompilation"
+
+	"noop"
+
+	^ {}
+]
+
+{ #category : 'private' }
+GsuGsDevKit_3_5_x_StdUpgrade >> _prepareGsDevKitImage_validate_user_methods [
+	"return list of methos in upgrade symbol dictionary that need recompilation"
+
+	"noop"
+
+	^ {}
+]
+
+{ #category : 'private' }
 GsuGsDevKit_3_5_x_StdUpgrade >> _projectSpecForBaseline: baselineClassName [
 	"Have to extract project spec from regsitry without sending messages, because methods may need to be recompiled"
 

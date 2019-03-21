@@ -9,6 +9,7 @@
 # upgradeSeasideImage seaside_GsDevKit 339 $GS_HOME/shared/repos/GsDevKit_upgrade/bin/seaside3_upgrade.topaz
 #
 set -e
+theArgs="$*"
 content="$1"	# GLASS1, GsDevKit, TODE
 version="$2"	# 3215, 339, 343
 shift
@@ -207,11 +208,11 @@ EOF
 	cp ${sourceStoneDir}/extents/extent0.dbf ../snapshots/extent0_${userName}_${content}_${version}.dbf
 	startStone $sourceStoneName
 
-	if [ "$userName" != "DataCurator" ] ; then
-		startTopaz $sourceStoneName -lq < $GS_HOME/shared/repos/GsDevKit_upgrade/bin/runSeasideImageTests
-	else
-		startTopaz $sourceStoneName -lq < $GS_HOME/shared/repos/GsDevKit_upgrade/bin/runImageTests
-	fi
+#	if [ "$userName" != "DataCurator" ] ; then
+#		startTopaz $sourceStoneName -lq < $GS_HOME/shared/repos/GsDevKit_upgrade/bin/runSeasideImageTests
+#	else
+#		startTopaz $sourceStoneName -lq < $GS_HOME/shared/repos/GsDevKit_upgrade/bin/runImageTests
+#	fi
 popd
 
-
+echo "finished $(basename $0) $theArgs"

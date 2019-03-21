@@ -20,7 +20,12 @@
 !							bootstrapApplicationLoadSpecs: nil;				"default depends upon what is installed in image. Add your application
 !																													spec to end of list or arrange to reload your application after
 !																													upgradeSeasideImage completes:
-!																														GLASS			- { { 'ConfigurationOfGLASS'. '1.0-beta.9.2.2'. #('default'). nil } }"
+!																														GLASS			- { 
+!																																					{ 'ConfigurationOfGLASS' . 
+!																																						'1.0-beta.9.2.2' . 
+!																																						#('default') . 
+!																																						nil "use bootstrapRepositoryDirectory -- GsPackageLibrary getMonticelloRepositoryDirectory by default"
+!																																					} }"
 !																														GLASS1		- { { 'Metacello' }. { 'GLASS1' }  }"
 !																														tODE			- { { 'Metacello' }. { 'Tode' } }"
 !																														GsDevKit	- { { 'Metacello' }. { 'GsDevKit' } }"

@@ -9,6 +9,7 @@
 # loadTODE GLASS 339
 #
 set -e
+theArgs="$*"
 version="$1"	# 3215, 339, 343
 shift
 
@@ -30,7 +31,7 @@ pushd "${upgradeLogDir}" >& /dev/null
 	cp ${sourceStoneDir}/extents/extent0.dbf ../snapshots/extent0_GLASS_${version}.dbf
 	startStone $sourceStoneName
 
-	startTopaz $sourceStoneName -lq < $GS_HOME/shared/repos/GsDevKit_upgrade/bin/runImageTests
+#	startTopaz $sourceStoneName -lq < $GS_HOME/shared/repos/GsDevKit_upgrade/bin/runImageTests
 popd
 
-
+echo "finished $(basename $0) $theArgs"

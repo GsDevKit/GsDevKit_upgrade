@@ -9,6 +9,7 @@
 # upgradeGsDevKitImage TODE 339
 #
 set -e
+theArgs="$*"
 version="$1"	# 3215, 339, 343
 shift
 
@@ -27,5 +28,6 @@ stopStone $sourceStoneName
 cp ${sourceStoneDir}/extents/extent0.dbf snapshots/extent0_TODE_${version}.dbf
 startStone $sourceStoneName
 
-startTopaz $sourceStoneName -lq < $GS_HOME/shared/repos/GsDevKit_upgrade/bin/runImageTests
+# startTopaz $sourceStoneName -lq < $GS_HOME/shared/repos/GsDevKit_upgrade/bin/runImageTests
 
+echo "finished $(basename $0) $theArgs"

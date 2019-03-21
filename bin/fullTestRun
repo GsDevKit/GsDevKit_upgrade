@@ -1,0 +1,30 @@
+set -e
+
+#	createStone -g battery_3215 3.2.15
+#	createStone -g battery_339 3.3.9
+#	createStone -g battery_343 3.4.3
+
+for gsVersion in 3215 339 343 ; do
+	# all installs are done as DataCurator
+	for stone_type in GLASS GLASS1 GsDevKit TODE ; do
+		./install${stone_type} $gsVersion
+		./upgradeImage $stone_type $gsVersion
+		./upgradeSeasideImage $stone_type $gsVersion
+		./upgradeGsDevKitImage $stone_type $gsVersion
+	done
+	# the seaside tests install seaside as a non-Datacurator user (seaside)
+	for stone_type in GLASS1 GsDevKit ; do
+		./installSeaside33 ${stone_type} $gsVersion
+		./upgradeImage seaside_${stone_type} ${gsVersion}
+		./upgradeSeasideImage seaside_${stone_type} ${gsVersion} seaside $GS_HOME/shared/repos/GsDevKit_upgrade/bin/seaside3_upgrade.topaz
+	done
+done
+
+for gsVersion in 3215 339 343 ; do
+	for stone_type in GLASS GLASS1 GsDevKit TODE ; do
+		./runImageTests $gsVersion
+	done
+	for stone_type in GLASS GLASS1 GsDevKit ; do
+		./runSeasideImageTests ${gsVersion}
+	done
+done

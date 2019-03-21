@@ -1,6 +1,6 @@
 application loading
 _reloadProjectNamed: projectName projectSpec: projectSpecOrNilOrString
-	| specs metacello projectSpec repoSpec repoDescription |
+	| specs metacello projectSpec repoDescription |
 
 	projectSpecOrNilOrString
 		ifNil: [
@@ -13,22 +13,21 @@ _reloadProjectNamed: projectName projectSpec: projectSpecOrNilOrString
 			(projectSpecOrNilOrString isKindOf: CharacterCollection)
 				ifTrue: [ repoDescription :=  projectSpecOrNilOrString. ]
 				ifFalse: [ repoDescription := projectSpecOrNilOrString repositoryDescriptions first ] ].
-	self bannerLogDash.
-	self bannerLogDash.
 	repoDescription
 		ifNotNil: [
+			self bannerLog: '		Reloading Project ', projectName, ' ', repoDescription printString.
 			metacello := ((self _globalNamed: 'Metacello') new) 
 				baseline: projectName;
 				repository: repoDescription ]
 		ifNil: [ 
 			projectSpec notNil
-				ifTrue: [ 
-					self log: '		Reloading Project ', projectName printString.
-					self bannerLogDash.
+				ifTrue: [
+					self bannerLog: '		Reloading Project ', projectName printString.
 					metacello := ((self _globalNamed: 'Metacello') image) 
 						baseline: projectName;
 						yourself ]
 				ifFalse: [ self error: 'Project spec not found for ', projectName printString ] ].
+	System commit. "commit so that reload failure can be debugged"
 	self
 		_deploy: [ 
 		metacello onConflict: [ :ex :loaded :incoming | ex useIncoming ].

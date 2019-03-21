@@ -10,7 +10,8 @@
 #	upgradeImage GLASS1 339
 # upgradeSeaideImage GLASS1 339
 #
-set -ex
+theArgs="$*"
+set -e
 
 contents="$1"	# GLASS, GLASS1, TODE
 version="$2"	# 3215, 339, 343
@@ -59,8 +60,10 @@ cp extents/extent0.dbf snapshots/extent0_preparedSeasideImage_${contents}_${vers
 
 startStone $GEMSTONE_NAME
 
-if [ "$username" = "DataCurator" ] ; then
-	startTopaz $GEMSTONE_NAME -lq < $GS_HOME/shared/repos/GsDevKit_upgrade/bin/runImageTests
-else
-	startTopaz $GEMSTONE_NAME -lq < $GS_HOME/shared/repos/GsDevKit_upgrade/bin/runSeasideImageTests
-fi
+#if [ "$username" = "DataCurator" ] ; then
+#	startTopaz $GEMSTONE_NAME -lq < $GS_HOME/shared/repos/GsDevKit_upgrade/bin/runImageTests
+#else
+#	startTopaz $GEMSTONE_NAME -lq < $GS_HOME/shared/repos/GsDevKit_upgrade/bin/runSeasideImageTests
+#fi
+
+echo "finished $(basename $0) $theArgs"

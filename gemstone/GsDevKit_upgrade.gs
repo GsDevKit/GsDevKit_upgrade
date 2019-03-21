@@ -888,6 +888,7 @@ prepareImage_makeClassesObsolete: aGsDevKitUpgrade
 	"In 3.4.0, the Pragma class is already in the base"
 
 	"noop"
+	aGsDevKitUpgrade log: '	obsolete classes (noop)'.
 %
 
 ! Class implementation for 'GsuGemStone_3_5_x_Release'
@@ -923,6 +924,7 @@ prepareImage_makeClassesObsolete: aGsDevKitUpgrade
 	"In 3.4.0, the Pragma class is already in the base"
 
 	"noop"
+	aGsDevKitUpgrade log: '	obsolete classes (noop)'.
 %
 
 category: 'private'
@@ -1405,7 +1407,7 @@ _projectSpecForBaseline: baselineClassName
 category: 'application loading'
 method: GsuAbstractGsDevKit
 _reloadProjectNamed: projectName projectSpec: projectSpecOrNilOrString
-	| specs metacello projectSpec repoSpec repoDescription |
+	| specs metacello projectSpec repoDescription |
 
 	projectSpecOrNilOrString
 		ifNil: [
@@ -1418,22 +1420,21 @@ _reloadProjectNamed: projectName projectSpec: projectSpecOrNilOrString
 			(projectSpecOrNilOrString isKindOf: CharacterCollection)
 				ifTrue: [ repoDescription :=  projectSpecOrNilOrString. ]
 				ifFalse: [ repoDescription := projectSpecOrNilOrString repositoryDescriptions first ] ].
-	self bannerLogDash.
-	self bannerLogDash.
 	repoDescription
 		ifNotNil: [
+			self bannerLog: '		Reloading Project ', projectName, ' ', repoDescription printString.
 			metacello := ((self _globalNamed: 'Metacello') new) 
 				baseline: projectName;
 				repository: repoDescription ]
 		ifNil: [ 
 			projectSpec notNil
-				ifTrue: [ 
-					self log: '		Reloading Project ', projectName printString.
-					self bannerLogDash.
+				ifTrue: [
+					self bannerLog: '		Reloading Project ', projectName printString.
 					metacello := ((self _globalNamed: 'Metacello') image) 
 						baseline: projectName;
 						yourself ]
 				ifFalse: [ self error: 'Project spec not found for ', projectName printString ] ].
+	System commit. "commit so that reload failure can be debugged"
 	self
 		_deploy: [ 
 		metacello onConflict: [ :ex :loaded :incoming | ex useIncoming ].

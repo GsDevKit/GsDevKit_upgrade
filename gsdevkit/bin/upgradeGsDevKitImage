@@ -9,6 +9,7 @@
 # upgradeGsDevKitImage GLASS1 339
 #
 set -e
+theArgs="$*"
 contents="$1"	# GLASS, GLASS1, TODE
 version="$2"	# 3215, 339, 343
 shift
@@ -37,6 +38,7 @@ pushd "${upgradeLogDir}" >& /dev/null
 	cp ../extents/extent0.dbf ../snapshots/extent0_preparedGsDevKitImage_${contents}_${version}.dbf
 	startStone $GEMSTONE_NAME
 
-	startTopaz $GEMSTONE_NAME -lq < $GS_HOME/shared/repos/GsDevKit_upgrade/bin/runImageTests
+#	startTopaz $GEMSTONE_NAME -lq < $GS_HOME/shared/repos/GsDevKit_upgrade/bin/runImageTests
 popd
 
+echo "finished $(basename $0) $theArgs"

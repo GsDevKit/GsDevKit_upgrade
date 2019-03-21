@@ -8,6 +8,9 @@
 #	upgradeImage GLASS1 339
 # upgradeGsDevKitImage GLASS1 339
 #
+#	Alternative to using $GEMSTONE/seaside/bin/upgradeSeasideImage -- beware that upgradeSeasideImage
+#		is the definitive implementation.
+#
 set -e
 theArgs="$*"
 contents="$1"	# GLASS, GLASS1, TODE

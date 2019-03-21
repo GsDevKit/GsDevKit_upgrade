@@ -20,7 +20,7 @@ rm -f *.log *.out
 sourceStoneName="battery_${version}"
 sourceStoneDir="$GS_HOME/server/stones/${sourceStoneName}"
 
-cp ${sourceStoneDir}/product/bin/extent0.seaside.dbf snapshots/extent0.seaside_3215.dbf
+cp ${sourceStoneDir}/product/bin/extent0.seaside.dbf snapshots/extent0.seaside_${version}.dbf
 
 newExtent -s ${sourceStoneDir}/product/bin/extent0.seaside.dbf $sourceStoneName
 

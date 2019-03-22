@@ -35,15 +35,24 @@ pushd "${upgradeLogDir}" >& /dev/null
 	rm -rf *.log *.out *.topaz *.conf
 popd
 
+rm -f ${upgradeLogDir}TEST_RESULTS
+touch ${upgradeLogDir}TEST_RESULTS
+
 finalStatus=0
 for gsVersion in 3215 339 343 ; do
-	for stone_type in GLASS ; do # GLASS1 GsDevKit TODE ; do
+	for stone_type in GLASS GLASS1 GsDevKit TODE ; do
 		newExtent -s snapshots/extent0_preparedSeasideImage_${stone_type}_${gsVersion}.dbf $GEMSTONE_NAME
 		./runImageTests ${stone_type} ${gsVersion}
 		exitStatus="$?"
 		if [ $exitStatus -ne 0 ] ; then
-			echo "failed runImageTests for ${stone_type}_${gsVersion}"
+			cat - >> ${upgradeLogDir}/TEST_RESULTS << EOF
+--->failed runImageTests for ${stone_type}_${gsVersion}
+EOF
 			finalStatus=1
+		else
+			cat - >> ${upgradeLogDir}/TEST_RESULTS << EOF
+passed runImageTests for ${stone_type}_${gsVersion}
+EOF
 		fi
 	done
 	for stone_type in GLASS1 GsDevKit ; do
@@ -51,8 +60,14 @@ for gsVersion in 3215 339 343 ; do
 		./runImageTests seaside_${stone_type} ${gsVersion} seaside
 		exitStatus="$?"
 		if [ $exitStatus -ne 0 ] ; then
-			echo "failed runSeasideImageTests for ${stone_type}_${gsVersion}"
+			cat - >> ${upgradeLogDir}/TEST_RESULTS << EOF
+--->failed runImageTests for seaside_${stone_type}_${gsVersion}
+EOF
 			finalStatus=1
+		else
+			cat - >> ${upgradeLogDir}/TEST_RESULTS << EOF
+passed runImageTests for seaside_${stone_type}_${gsVersion}
+EOF
 		fi
 	done
 done

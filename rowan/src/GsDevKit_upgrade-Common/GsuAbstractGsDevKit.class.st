@@ -200,20 +200,25 @@ GsuAbstractGsDevKit >> _projectSpecForBaseline: baselineClassName [
 ]
 
 { #category : 'application loading' }
-GsuAbstractGsDevKit >> _reloadProjectNamed: projectName projectSpec: projectSpecOrNilOrString [
-	| specs metacello projectSpec repoDescription |
-
+GsuAbstractGsDevKit >> _reloadProjectNamed: projectName projectSpec: projectSpecOrNilOrString loads: loads [
+	| specs metacello projectSpec repoDescription loadList |
+	loadList := {}.
+	loads ifNotNil: [ loadList := loads ].
 	projectSpecOrNilOrString
 		ifNil: [
 			specs := (self _globalNamed: 'Metacello') image
 				baseline: [ :spec | spec name = projectName ];
 				list.
 			specs isEmpty
-				ifFalse: [ projectSpec := specs first ] ]
+				ifFalse: [ 
+					projectSpec := specs first.
+					loads ifNil: [ loadList := projectSpec loads ] ] ]
 		ifNotNil: [ 
 			(projectSpecOrNilOrString isKindOf: CharacterCollection)
 				ifTrue: [ repoDescription :=  projectSpecOrNilOrString. ]
-				ifFalse: [ repoDescription := projectSpecOrNilOrString repositoryDescriptions first ] ].
+				ifFalse: [ 
+					repoDescription := projectSpecOrNilOrString repositoryDescriptions first.
+					loads ifNil: [ loadList := projectSpecOrNilOrString loads ] ] ].
 	repoDescription
 		ifNotNil: [
 			self bannerLog: '		Reloading Project ', projectName, ' ', repoDescription printString.
@@ -230,7 +235,8 @@ GsuAbstractGsDevKit >> _reloadProjectNamed: projectName projectSpec: projectSpec
 				ifFalse: [ self error: 'Project spec not found for ', projectName printString ] ].
 	System commit. "commit so that reload failure can be debugged"
 	self
-		_deploy: [ 
+		_deploy: [
+		loadList isEmpty ifFalse:  [ metacello load: loadList ].
 		metacello onConflict: [ :ex :loaded :incoming | ex useIncoming ].
 		metacello copy get.
 		metacello copy load ].
@@ -360,7 +366,7 @@ GsuAbstractGsDevKit >> loadApplicationLoadSpecs [
 	"explicitly load each of the configuration packages lised in boolStrapApplicationLoadSpecs"
 	glass1Upgraded := false.
 	self bootstrapApplicationLoadSpecs do: [:loadSpec |
-		loadSpec size > 2
+		loadSpec size = 4
 			ifTrue: [
 				"ConfigurationOf load spec"
 				| path |
@@ -376,36 +382,39 @@ GsuAbstractGsDevKit >> loadApplicationLoadSpecs [
 
 	self bootstrapApplicationLoadSpecs do: [:loadSpec | 
 		loadSpec size = 1
-			ifTrue: [ self _reloadProjectNamed: (loadSpec at: 1) projectSpec: nil ]
+			ifTrue: [ self _reloadProjectNamed: (loadSpec at: 1) projectSpec: nil loads: nil ]
 			ifFalse: [
 				loadSpec size = 2
-					ifTrue: [ self _reloadProjectNamed: (loadSpec at: 1) projectSpec: (loadSpec at: 2) ]
+					ifTrue: [ self _reloadProjectNamed: (loadSpec at: 1) projectSpec: (loadSpec at: 2) loads: nil ]
 					ifFalse: [ 
-						[
-						| repoPath configurationClassName versionString loadList |
-						configurationClassName := 'ConfigurationOf', (loadSpec at: 1).
-						versionString := loadSpec at: 2.
-						loadList := loadSpec at: 3.
-						repoPath := (loadSpec at: 4) ifNil: [ self bootstrapRepositoryDirectory ].
-						self log: '		', configurationClassName printString, ' version ', versionString printString , ' loads: ', loadList printString, ' from: ', repoPath printString.
-						(self _globalNamed: 'GsDeployer') bulkMigrate: [ 
-							| projectName |
-							projectName := loadSpec at: 1.
-							(self _globalNamed: 'Metacello') new
-								configuration: projectName;
-								version: versionString;
-								repositoryOverrides: { 'server://', repoPath };
-								onConflict: [ :ex :loaded :incoming | ex useIncoming ];
-								load: loadList ] ]
-									on: (self _globalNamed: 'MCPerformPostloadNotification')
-									do: [:ex |
-										(self bootstrapPostLoadClassList includes: ex postloadClass theNonMetaClass name)
-											ifTrue: [ 
-												self log: '			Skip ', ex postloadClass name asString, ' initialization.'.
-												ex resume: false ]
-											ifFalse: [ 
-												self log: '			Perform ', ex postloadClass name asString, ' initialization.'.
-												ex resume: true ] ] ] ] ].
+						loadSpec size = 3
+							ifTrue: [ self _reloadProjectNamed: (loadSpec at: 1) projectSpec: (loadSpec at: 2) loads: (loadSpec at: 2) ]
+							ifFalse: [ 
+								[
+								| repoPath configurationClassName versionString loadList |
+								configurationClassName := 'ConfigurationOf', (loadSpec at: 1).
+								versionString := loadSpec at: 2.
+								loadList := loadSpec at: 3.
+								repoPath := (loadSpec at: 4) ifNil: [ self bootstrapRepositoryDirectory ].
+								self log: '		', configurationClassName printString, ' version ', versionString printString , ' loads: ', loadList printString, ' from: ', repoPath printString.
+								(self _globalNamed: 'GsDeployer') bulkMigrate: [ 
+									| projectName |
+									projectName := loadSpec at: 1.
+									(self _globalNamed: 'Metacello') new
+										configuration: projectName;
+										version: versionString;
+										repositoryOverrides: { 'server://', repoPath };
+										onConflict: [ :ex :loaded :incoming | ex useIncoming ];
+										load: loadList ] ]
+											on: (self _globalNamed: 'MCPerformPostloadNotification')
+											do: [:ex |
+												(self bootstrapPostLoadClassList includes: ex postloadClass theNonMetaClass name)
+													ifTrue: [ 
+														self log: '			Skip ', ex postloadClass name asString, ' initialization.'.
+														ex resume: false ]
+													ifFalse: [ 
+														self log: '			Perform ', ex postloadClass name asString, ' initialization.'.
+														ex resume: true ] ] ] ] ] ].
 	self bannerLogDash.
 	self bannerLogDash.
 

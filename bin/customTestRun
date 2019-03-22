@@ -1,11 +1,11 @@
-set -e
+set -exv
 . defStone.env
 
 #	createStone -g battery_3215 3.2.15
 #	createStone -g battery_339 3.3.9
 #	createStone -g battery_343 3.4.3
 
-for gsVersion in 3215 339 343 ; do
+for gsVersion in 3215 ; do # 339 343 ; do
 	# all installs are done as DataCurator
 	for stone_type in GLASS GLASS1 GsDevKit TODE ; do
 		./install${stone_type} $gsVersion
@@ -24,7 +24,7 @@ for gsVersion in 3215 339 343 ; do
 	done
 done
 
-for gsVersion in 3215 339 343 ; do
+for gsVersion in 3215 ; do # 339 343 ; do
 	# the seaside tests install seaside as a non-DatacCrator user (seaside)
 	# DON'T run tests (for now - need to have seaside stones) but want to make
 	# 	sure that upgrades work
@@ -50,7 +50,7 @@ rm -f ${upgradeLogDir}/TEST_RESULTS
 touch ${upgradeLogDir}/TEST_RESULTS
 
 finalStatus=0
-for gsVersion in 3215 339 343 ; do
+for gsVersion in 3215 ; do # 339 343 ; do
 	for stone_type in GLASS GLASS1 GsDevKit TODE ; do
 		newExtent -s snapshots/extent0_preparedSeasideImage_${stone_type}_${gsVersion}.dbf $GEMSTONE_NAME
 		./runImageTests ${stone_type} ${gsVersion}
@@ -67,7 +67,7 @@ EOF
 		fi
 	done
 
-	for stone_type in GLASS1 GsDevKit ; do
+	for stone_type in GLASS1 ; do # GsDevKit ; do
 		# seaside build for DataCurator user
 		newExtent -s snapshots/extent0_preparedSeasideImage_DataCurator_${stone_type}_${gsVersion}.dbf $GEMSTONE_NAME
 		./runImageTests DataCurator_${stone_type} ${gsVersion} DataCurator
@@ -84,7 +84,7 @@ EOF
 		fi
 	done
 
-	for stone_type in GLASS1 GsDevKit ; do
+	for stone_type in GLASS1 ; do # GsDevKit ; do
 		# seaside build for seaside user
 		newExtent -s snapshots/extent0_preparedSeasideImage_seaside_${stone_type}_${gsVersion}.dbf $GEMSTONE_NAME
 		./runImageTests seaside_${stone_type} ${gsVersion} seaside

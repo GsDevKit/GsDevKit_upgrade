@@ -1,0 +1,15 @@
+
+run
+	UserGlobals
+		at: #GsDevKit_Image_Upgrade
+		put: ((GsuAbstractGsDevKitUpgrade 
+						upgradeUserName: 'DataCurator'
+							upgradeSymbolDictName: #UserGlobals)
+						bootstrapApplicationLoadSpecs: {
+			{ 'Metacello' . 'github://dalehenrich/metacello-work:master/repository' } . 
+			{ 'GLASS1' . 'github://glassdb/glass:master/repository' } . 
+			{ 'Seaside3' . 'github://SeasideSt/Seaside:master/repository' }
+	} ).
+	System commitTransaction
+%
+

@@ -15,13 +15,15 @@ version="$2"	# 3215, 339, 343
 shift
 shift
 
-username="seaside"
+userName="seaside"
 symDictName='Seaside'
 if [ $# -gt 0 ]; then
 	symDictName='UserGlobals'
-	username="$1"
+	userName="$1"
 	shift
 fi
+
+echo "============== $username $symDictName"
 
 . defStone.env
 

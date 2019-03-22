@@ -67,7 +67,7 @@ EOF
 		fi
 	done
 
-	for stone_type in GLASS1 ; do # GsDevKit ; do
+	for stone_type in GLASS1 GsDevKit ; do
 		# seaside build for DataCurator user
 		newExtent -s snapshots/extent0_preparedSeasideImage_DataCurator_${stone_type}_${gsVersion}.dbf $GEMSTONE_NAME
 		./runImageTests DataCurator_${stone_type} ${gsVersion} DataCurator

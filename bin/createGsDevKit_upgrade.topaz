@@ -27,9 +27,15 @@
 !																																						nil "use bootstrapRepositoryDirectory -- GsPackageLibrary getMonticelloRepositoryDirectory by default"
 !																																					} }
 !																														"when upgrading from 3.2.x the ConfigurationOfGLASS spec should be included as the first entry"
-!																														GLASS1		- { { 'Metacello' }. { 'GLASS1' }  }"
-!																														tODE			- { { 'Metacello' }. { 'Tode' } }"
-!																														GsDevKit	- { { 'Metacello' }. { 'GsDevKit' } }"
+!																														GLASS1		- { 
+!																																					{ 'Metacello' . 'github://dalehenrich/metacello-work:master/repository' }.
+!																																					{ 'GLASS1' } . 'github://glassdb/glass:master/repository' . #( 'default' 'Base' 'Announcements') }"
+!																														tODE			- { 
+!																																					{ 'Metacello' . 'github://dalehenrich/metacello-work:master/repository' }.
+!																																					{ 'Tode' . 'github://dalehenrich/tode:master/repository' . #( 'GemStone Dev' ) } }"
+!																														GsDevKit	- { 
+!																																					{ 'Metacello' . 'github://dalehenrich/metacello-work:master/repository' }.
+!																																					{ 'GsDevKit' . 'github://GsDevKit/GsDevKit:master/repository' . #( 'default' 'Base' 'Announcements') } }"
 !							bootstrapExistingConfigurationList: nil;	"default is list of ConfigurationOf classes in upgradeSymbolDictName"
 !							yourself
 !

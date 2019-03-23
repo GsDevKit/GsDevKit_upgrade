@@ -35,7 +35,7 @@ loadApplicationLoadSpecs
 					ifTrue: [ self _reloadProjectNamed: (loadSpec at: 1) projectSpec: (loadSpec at: 2) loads: nil ]
 					ifFalse: [ 
 						loadSpec size = 3
-							ifTrue: [ self _reloadProjectNamed: (loadSpec at: 1) projectSpec: (loadSpec at: 2) loads: (loadSpec at: 2) ]
+							ifTrue: [ self _reloadProjectNamed: (loadSpec at: 1) projectSpec: (loadSpec at: 2) loads: (loadSpec at: 3) ]
 							ifFalse: [ 
 								[
 								| repoPath configurationClassName versionString loadList |

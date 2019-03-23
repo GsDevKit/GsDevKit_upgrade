@@ -201,7 +201,7 @@ GsuAbstractGsDevKit >> _projectSpecForBaseline: baselineClassName [
 
 { #category : 'application loading' }
 GsuAbstractGsDevKit >> _reloadProjectNamed: projectName projectSpec: projectSpecOrNilOrString loads: loads [
-	| specs metacello projectSpec repoDescription loadList |
+	| specs metacello projectSpec repoDescription loadList loadListString |
 	loadList := {}.
 	loads ifNotNil: [ loadList := loads ].
 	projectSpecOrNilOrString
@@ -219,16 +219,20 @@ GsuAbstractGsDevKit >> _reloadProjectNamed: projectName projectSpec: projectSpec
 				ifFalse: [ 
 					repoDescription := projectSpecOrNilOrString repositoryDescriptions first.
 					loads ifNil: [ loadList := projectSpecOrNilOrString loads ] ] ].
+	loadListString := ''.
+	loadList isEmpty 
+		ifFalse:  [ loadListString := ' loads: ', loadList printString ].
+
 	repoDescription
 		ifNotNil: [
-			self bannerLog: '		Reloading Project ', projectName, ' ', repoDescription printString.
+			self bannerLog: '		Reloading Project ', projectName, ' repository: ', repoDescription printString, loadListString.
 			metacello := ((self _globalNamed: 'Metacello') new) 
 				baseline: projectName;
 				repository: repoDescription ]
 		ifNil: [ 
 			projectSpec notNil
 				ifTrue: [
-					self bannerLog: '		Reloading Project ', projectName printString.
+					self bannerLog: '		Reloading Project ', projectName printString, loadListString.
 					metacello := ((self _globalNamed: 'Metacello') image) 
 						baseline: projectName;
 						yourself ]
@@ -236,10 +240,10 @@ GsuAbstractGsDevKit >> _reloadProjectNamed: projectName projectSpec: projectSpec
 	System commit. "commit so that reload failure can be debugged"
 	self
 		_deploy: [
+		metacello copy get.
 		loadList isEmpty ifFalse:  [ metacello load: loadList ].
 		metacello onConflict: [ :ex :loaded :incoming | ex useIncoming ].
-		metacello copy get.
-		metacello copy load ].
+		metacello load ].
 ]
 
 { #category : 'private' }
@@ -388,7 +392,7 @@ GsuAbstractGsDevKit >> loadApplicationLoadSpecs [
 					ifTrue: [ self _reloadProjectNamed: (loadSpec at: 1) projectSpec: (loadSpec at: 2) loads: nil ]
 					ifFalse: [ 
 						loadSpec size = 3
-							ifTrue: [ self _reloadProjectNamed: (loadSpec at: 1) projectSpec: (loadSpec at: 2) loads: (loadSpec at: 2) ]
+							ifTrue: [ self _reloadProjectNamed: (loadSpec at: 1) projectSpec: (loadSpec at: 2) loads: (loadSpec at: 3) ]
 							ifFalse: [ 
 								[
 								| repoPath configurationClassName versionString loadList |

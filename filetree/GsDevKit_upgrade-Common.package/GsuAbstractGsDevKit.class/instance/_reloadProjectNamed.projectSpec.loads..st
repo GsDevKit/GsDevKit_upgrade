@@ -1,6 +1,6 @@
 application loading
 _reloadProjectNamed: projectName projectSpec: projectSpecOrNilOrString loads: loads
-	| specs metacello projectSpec repoDescription loadList |
+	| specs metacello projectSpec repoDescription loadList loadListString |
 	loadList := {}.
 	loads ifNotNil: [ loadList := loads ].
 	projectSpecOrNilOrString
@@ -18,16 +18,20 @@ _reloadProjectNamed: projectName projectSpec: projectSpecOrNilOrString loads: lo
 				ifFalse: [ 
 					repoDescription := projectSpecOrNilOrString repositoryDescriptions first.
 					loads ifNil: [ loadList := projectSpecOrNilOrString loads ] ] ].
+	loadListString := ''.
+	loadList isEmpty 
+		ifFalse:  [ loadListString := ' loads: ', loadList printString ].
+
 	repoDescription
 		ifNotNil: [
-			self bannerLog: '		Reloading Project ', projectName, ' ', repoDescription printString.
+			self bannerLog: '		Reloading Project ', projectName, ' repository: ', repoDescription printString, loadListString.
 			metacello := ((self _globalNamed: 'Metacello') new) 
 				baseline: projectName;
 				repository: repoDescription ]
 		ifNil: [ 
 			projectSpec notNil
 				ifTrue: [
-					self bannerLog: '		Reloading Project ', projectName printString.
+					self bannerLog: '		Reloading Project ', projectName printString, loadListString.
 					metacello := ((self _globalNamed: 'Metacello') image) 
 						baseline: projectName;
 						yourself ]
@@ -35,7 +39,7 @@ _reloadProjectNamed: projectName projectSpec: projectSpecOrNilOrString loads: lo
 	System commit. "commit so that reload failure can be debugged"
 	self
 		_deploy: [
+		metacello copy get.
 		loadList isEmpty ifFalse:  [ metacello load: loadList ].
 		metacello onConflict: [ :ex :loaded :incoming | ex useIncoming ].
-		metacello copy get.
-		metacello copy load ].
+		metacello load ].

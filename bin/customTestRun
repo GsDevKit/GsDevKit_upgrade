@@ -1,18 +1,18 @@
 set -exv
 . defStone.env
-
-#	createStone -g battery_3215 3.2.15
-#	createStone -g battery_339 3.3.9
-#	createStone -g battery_343 3.4.3
-
-for gsVersion in 3215 ; do # 339 343 ; do
-	# all installs are done as DataCurator
-	for stone_type in GLASS GLASS1 GsDevKit TODE ; do
-		./install${stone_type} $gsVersion
-		./upgradeImage $stone_type $gsVersion
-		./upgradeSeasideImage $stone_type $gsVersion
-		./upgradeGsDevKitImage $stone_type $gsVersion
-	done
+#
+##	createStone -g battery_3215 3.2.15
+##	createStone -g battery_339 3.3.9
+##	createStone -g battery_343 3.4.3
+#
+for gsVersion in 3215 339 343 ; do
+#	# all installs are done as DataCurator
+#	for stone_type in GLASS GLASS1 GsDevKit TODE ; do
+#		./install${stone_type} $gsVersion
+#		./upgradeImage $stone_type $gsVersion
+#		./upgradeSeasideImage $stone_type $gsVersion
+#		./upgradeGsDevKitImage $stone_type $gsVersion
+#	done
 	upgradeDriver="$GS_HOME/shared/repos/GsDevKit_upgrade/bin/seaside3_datacurator_upgrade.topaz"
 	if [ "$gsVersion" = "3215" ] ; then
 		upgradeDriver="$GS_HOME/shared/repos/GsDevKit_upgrade/bin/seaside3_datacurator_upgrade_3215.topaz"
@@ -24,7 +24,7 @@ for gsVersion in 3215 ; do # 339 343 ; do
 	done
 done
 
-for gsVersion in 3215 ; do # 339 343 ; do
+for gsVersion in 3215 339 343 ; do
 	# the seaside tests install seaside as a non-DatacCrator user (seaside)
 	# DON'T run tests (for now - need to have seaside stones) but want to make
 	# 	sure that upgrades work
@@ -33,7 +33,7 @@ for gsVersion in 3215 ; do # 339 343 ; do
 	if [ "$gsVersion" = "3215" ] ; then
 		upgradeDriver="$GS_HOME/shared/repos/GsDevKit_upgrade/bin/seaside3_upgrade_3215.topaz"
 	fi
-	for stone_type in GLASS1 GsDevKit ; do
+	for stone_type in GLASS1 ; do # GsDevKit ; do
 		./installSeaside33 ${stone_type} $gsVersion
 		./upgradeImage seaside_${stone_type} ${gsVersion}
 		./upgradeSeasideImage seaside_${stone_type} ${gsVersion} seaside $upgradeDriver
@@ -50,22 +50,22 @@ rm -f ${upgradeLogDir}/TEST_RESULTS
 touch ${upgradeLogDir}/TEST_RESULTS
 
 finalStatus=0
-for gsVersion in 3215 ; do # 339 343 ; do
-	for stone_type in GLASS GLASS1 GsDevKit TODE ; do
-		newExtent -s snapshots/extent0_preparedSeasideImage_${stone_type}_${gsVersion}.dbf $GEMSTONE_NAME
-		./runImageTests ${stone_type} ${gsVersion}
-		exitStatus="$?"
-		if [ $exitStatus -ne 0 ] ; then
-			cat - >> ${upgradeLogDir}/TEST_RESULTS << EOF
---->failed runImageTests for ${stone_type}_${gsVersion}
-EOF
-			finalStatus=1
-		else
-			cat - >> ${upgradeLogDir}/TEST_RESULTS << EOF
-passed runImageTests for ${stone_type}_${gsVersion}
-EOF
-		fi
-	done
+for gsVersion in 3215 339 343 ; do
+#	for stone_type in GLASS GLASS1 GsDevKit TODE ; do
+#		newExtent -s snapshots/extent0_preparedSeasideImage_${stone_type}_${gsVersion}.dbf $GEMSTONE_NAME
+#		./runImageTests ${stone_type} ${gsVersion}
+#		exitStatus="$?"
+#		if [ $exitStatus -ne 0 ] ; then
+#			cat - >> ${upgradeLogDir}/TEST_RESULTS << EOF
+#--->failed runImageTests for ${stone_type}_${gsVersion}
+#EOF
+#			finalStatus=1
+#		else
+#			cat - >> ${upgradeLogDir}/TEST_RESULTS << EOF
+#passed runImageTests for ${stone_type}_${gsVersion}
+#EOF
+#		fi
+#	done
 
 	for stone_type in GLASS1 ; do # GsDevKit ; do
 		# seaside build for DataCurator user

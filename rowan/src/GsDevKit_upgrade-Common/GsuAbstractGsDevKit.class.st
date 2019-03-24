@@ -24,9 +24,7 @@ GsuAbstractGsDevKit class >> gemstone_user [
 GsuAbstractGsDevKit >> _configurationOfGLASS_bootstrap [
 	"When doing a bootstrap load, this version of the ConfigurationOfGLASS needs to be loaded before loading BaselineOf"
 
-	^ {
-			self _defaultConfigurationOfGLASS.
-		}
+	^ self _defaultConfigurationOfGLASS
 ]
 
 { #category : 'private' }
@@ -81,9 +79,7 @@ GsuAbstractGsDevKit >> _defaultBootstrapApplicationLoadSpecs [
 				}.
 			} ].
 	self log: '	load ConfigurationOfGLASS'.
-	^{
-		 self _defaultConfigurationOfGLASS.
-	}
+	^ self _defaultConfigurationOfGLASS
 ]
 
 { #category : 'private' }
@@ -105,11 +101,19 @@ GsuAbstractGsDevKit >> _defaultConfigurationOfGLASS [
 	"If the bootstrap project changes name or version, then this method needs to be re-implemented for the affected upgrade classes"
 
 	^ {
-			'GLASS'. 
-			'1.0-beta.9.2.2'. 
-			#('default'). 
-			nil.	"nill - use bootstrapRepositoryDirectory"
-		}.
+			{
+				'GLASS'. 
+				'1.0-beta.9.2.2'. 
+				#('default'). 
+				nil.	"nill - use bootstrapRepositoryDirectory"
+			}.
+			{
+				'GLASS'. 
+				'1.0-beta.9.3'. 
+				#('default'). 
+				'http://seaside.gemtalksystems.com/ss/MetacelloRepository'.
+			}.
+		}
 ]
 
 { #category : 'private' }
@@ -373,10 +377,13 @@ GsuAbstractGsDevKit >> loadApplicationLoadSpecs [
 		loadSpec size = 4
 			ifTrue: [
 				"ConfigurationOf load spec"
-				| path |
+				| gofer path |
 				path := (loadSpec at: 4) ifNil: [ self bootstrapRepositoryDirectory ].
-				(self _globalNamed: 'Gofer') new 
-					directory: ((self _globalNamed: 'ServerFileDirectory') on: path);
+				gofer := (self _globalNamed: 'Gofer') new.
+				(path _findString: 'http://' startingAt: 1 ignoreCase: true) = 1
+					ifTrue: [ gofer url: path ]
+					ifFalse: [ gofer directory: ((self _globalNamed: 'ServerFileDirectory') on: path) ].
+				gofer
 					package: 'ConfigurationOf', (loadSpec at: 1);
 					load ] ].
 	System commit.

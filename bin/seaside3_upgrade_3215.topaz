@@ -12,6 +12,17 @@ run
 				#('default'). 
 				nil.	"nill - use bootstrapRepositoryDirectory"
 			}.
+			{
+				'Metacello'. 
+				#'previewBootstrap'. 
+				#('default'). 
+				'http://seaside.gemtalksystems.com/ss/metacello'.
+			}.
+			{
+				'Metacello'. 
+				'github://dalehenrich/metacello-work:7deb62a415343f8ba8294c84c9c3438c75455fe3/repository'. 
+				#('batch'). 
+			}.
 			{ 'Metacello' . 'github://dalehenrich/metacello-work:master/repository' } . 
 			{ 'GLASS1' . 'github://glassdb/glass:master/repository' } . 
 			{ 'Seaside3' . 'github://SeasideSt/Seaside:master/repository' }

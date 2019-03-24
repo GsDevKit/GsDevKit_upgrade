@@ -44,6 +44,4 @@ _defaultBootstrapApplicationLoadSpecs
 				}.
 			} ].
 	self log: '	load ConfigurationOfGLASS'.
-	^{
-		 self _defaultConfigurationOfGLASS.
-	}
+	^ self _defaultConfigurationOfGLASS

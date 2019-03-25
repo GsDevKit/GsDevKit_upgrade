@@ -9,10 +9,10 @@
 #	upgradeImage GLASS1 339
 #
 # upgradeSeaideImage GLASS1 339
-#	runImageTestsGLASS1 339
+#	runImageTests GLASS1 339
 #
 # upgradeSeaideImage GLASS1 339 seaside $GS_HOME/shared/repos/GsDevKit_upgrade/bin/seaside3_upgrade.topaz
-#	runImageTestsGLASS1 339 seaside
+#	runImageTests GLASS1 339 seaside
 #
 
 theArgs="$*"

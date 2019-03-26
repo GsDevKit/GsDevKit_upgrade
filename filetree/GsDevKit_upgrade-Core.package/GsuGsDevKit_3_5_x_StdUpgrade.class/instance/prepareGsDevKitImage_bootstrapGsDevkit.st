@@ -3,4 +3,4 @@ prepareGsDevKitImage_bootstrapGsDevkit
 
 	"install GsdevKit from scratch"
 
-	"noop for standard upgrade"
+	self _resetMonticelloPackageRegistry

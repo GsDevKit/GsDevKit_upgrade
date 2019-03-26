@@ -68,6 +68,27 @@ GsuGsDevKitBootstrap >> bootstrapGemStoneRelease: aGsuAbstractGemStoneRelease [
 ]
 
 { #category : 'bootstrapping' }
+GsuGsDevKitBootstrap >> bootstrapGlass [
+
+	"bootstrrap GLASS 1.0-beta.9.2.2' "
+
+	self log: '	bootstrap GLASS 1.0-beta.9.2.2'.
+
+	"force configurations to be reloaded if needed"
+	self removeExistingConfigurations.
+
+	self _resetMonticelloPackageRegistry.
+
+	"install the default version of GLASS"
+	self log: '	install GLASS 1.0-beta.9.2.2'.
+	self _loadApplicationLoadSpecs: { self _defaultConfigurationOfGLASS }.
+	self bannerLogDash.
+	self bannerLogDash.
+
+	self log: '	... bootstrapped GLASS 1.0-beta.9.2.2'.
+]
+
+{ #category : 'bootstrapping' }
 GsuGsDevKitBootstrap >> bootstrapGsDevkit [
 
 	"install GsdevKit from scratch"
@@ -178,4 +199,85 @@ GsuGsDevKitBootstrap >> patchMaster [
 
 	self log: '	patch master'.
 	self log: '	... done patch master'.
+]
+
+{ #category : 'bootstrapping' }
+GsuGsDevKitBootstrap >> upgradeGlass [
+
+	"use GsUpgrader to upgrade GLASS to usable version: GLASS 1.0-beta.9.3' "
+
+	self log: '	install GLASS  1.0-beta.9.3'.
+
+	self bootstrapGlass.
+
+	"install GsUpgrader"
+	self log: '	install GsUpgrader'.
+	(self _globalNamed: 'Gofer') new 
+		url: 'http://ss3.gemtalksystems.com/ss/gsUpgrader';
+		package: 'GsUpgrader-Core';
+		load.
+
+	self log: '	upGrade GLASS to 1.0-beta.9.3'.
+	(self _globalNamed: 'GsUpgrader') upgradeGLASS.
+
+	self bannerLogDash.
+	self bannerLogDash.
+
+	self log: '	... done upgrade GLASS to 1.0-beta.9.3'.
+]
+
+{ #category : 'bootstrapping' }
+GsuGsDevKitBootstrap >> upgradeGlass1 [
+
+	"use GsUpgrader to install GLASS1 "
+
+	self log: '	install GLASS1'.
+
+	self bootstrapGlass.
+
+	"install GsUpgrader"
+	self log: '	installGsUpgrader'.
+	(self _globalNamed: 'Gofer') new 
+		url: 'http://ss3.gemtalksystems.com/ss/gsUpgrader';
+		package: 'GsUpgrader-Core';
+		load.
+
+	self log: '	upgrade to GLASS'.
+	(self _globalNamed: 'GsUpgrader') upgradeGLASS.
+	self log: '	upgrade to Grease'.
+true ifTrue: [ 
+		"workaround for https://github.com/Metacello/metacello/issues/254, which is re-appearing again"
+		"
+			Metacello Issue 254 workaround
+				unregistering (configuration): Gofer
+				unregistering (configuration): FileTree
+				unregistering (configuration): Metacello
+				unregistering (configuration): Gofer Project Loader
+				unregistering (configuration): Grease
+				unregistering (configuration): SqueakCommon
+		"
+		| registry |
+		self log: '	Metacello Issue 254 workaround'.
+		registry := (self _globalNamed: 'MetacelloProjectRegistration') registry.
+		registry configurationProjectSpecs copy do: [:projectSpec |
+			projectSpec isConfigurationOfProjectSpec ifFalse: [ self log: '		unregistering (configuration): ' , projectSpec name. projectSpec unregisterProject ] ].
+		registry baselineProjectSpecs copy do: [:projectSpec | 
+			projectSpec isBaselineOfProjectSpec ifFalse: [ self log: '		unregistering (baseline): ' , projectSpec name. projectSpec unregisterProject ]].
+		{ 
+			{'FileTree' . 'github://dalehenrich/filetree:gemstone2.4/repository' } .
+			{'Metacello' . 'github://dalehenrich/metacello-work:master/repository' } .
+			{'Grease' . 'github://GsDevKit/Grease:master/repository' } .
+			{'Gofer' .  'http://seaside.gemtalksystems.com/ss/metacello'} .
+		} do: [:ar |
+			(self _globalNamed: 'Metacello') new
+				baseline: (ar at: 1);
+				repository: (ar at: 2);
+				lock ] ].
+	self log: '	upgrade to GLASS1'.
+	(self _globalNamed: 'GsUpgrader') upgradeGLASS1.
+
+	self bannerLogDash.
+	self bannerLogDash.
+
+	self log: '	... done install GLASS1'.
 ]

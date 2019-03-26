@@ -294,11 +294,11 @@ GsuAbstractGsDevKitUpgrade >> _prepareImage_user_class_bug46059_patchSource [
 { #category : 'bootstrapping' }
 GsuAbstractGsDevKitUpgrade >> bootstrapGsDevkit [
 
-	"install GsdevKit from scratch"
+	"install GLASS from scratch"
 
 	"used to create extent0.seaside.dbf"
 
-	(GsuGsDevKitBootstrap
+	^ (GsuGsDevKitBootstrap
 		upgradeUserName: self upgradeUserName
 			upgradeSymbolDictName: self upgradeSymbolDictName
 			bootstrapGemStoneRelease: self _bootstrapRelease)
@@ -306,7 +306,8 @@ GsuAbstractGsDevKitUpgrade >> bootstrapGsDevkit [
 		bootstrapRepositoryDirectory: self bootstrapRepositoryDirectory;
 		bootstrapApplicationLoadSpecs: bootstrapApplicationLoadSpecs; 
 		bootstrapExistingConfigurationList: self bootstrapExistingConfigurationList;
-		bootstrapGsDevkit
+		bootstrapGsDevkit;
+		yourself
 ]
 
 { #category : 'accessing' }
@@ -399,11 +400,11 @@ GsuAbstractGsDevKitUpgrade >> prepareGsDevKitImage [
 { #category : 'prepare gsdevkit  image' }
 GsuAbstractGsDevKitUpgrade >> prepareGsDevKitImage_bootstrapGsDevkit [
 
-	"install GsdevKit from scratch"
+	"install GLASS from scratch"
 
-	self log: 'Prepare gsdevkit - bootstrap GsdevKit'.
+	self log: 'Prepare gsdevkit - bootstrap GLASS1'.
 
-	self bootstrapGsDevkit
+	self upgradeGlass1
 ]
 
 { #category : 'prepare gsdevkit  image' }
@@ -1032,4 +1033,20 @@ GsuAbstractGsDevKitUpgrade >> updateDBFHistoryStartUpgrade [
 	history add: Character lf.
 	(GsCurrentSession currentSession objectNamed:self upgradeSymbolDictName) at: #DbfSeasideHistory put: history.
 	self log: '	update dbf history for upgrade start'.
+]
+
+{ #category : 'bootstrapping' }
+GsuAbstractGsDevKitUpgrade >> upgradeGlass [
+
+	"install GLASS from scratch"
+
+	self bootstrapGsDevkit upgradeGlass
+]
+
+{ #category : 'bootstrapping' }
+GsuAbstractGsDevKitUpgrade >> upgradeGlass1 [
+
+	"install GLASS1 from scratch"
+
+	self bootstrapGsDevkit upgradeGlass1
 ]

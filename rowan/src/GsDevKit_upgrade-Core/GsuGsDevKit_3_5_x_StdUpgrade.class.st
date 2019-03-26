@@ -5,14 +5,6 @@ Class {
 }
 
 { #category : 'private' }
-GsuGsDevKit_3_5_x_StdUpgrade >> _configurationOfGLASS_bootstrap [
-	"When doing a bootstrap load, this version of the ConfigurationOfGLASS needs to be loaded"
-
-	"loading ConfigurationOfGLASS not needed, since methods are not recompiled"
-	^ { }
-]
-
-{ #category : 'private' }
 GsuGsDevKit_3_5_x_StdUpgrade >> _defaultExistingConfigurationOfNames [
 	" These two configurations are the only configurations that must be removed, before loading GLASS1 or GsDevKit or tODE"
 
@@ -95,7 +87,7 @@ GsuGsDevKit_3_5_x_StdUpgrade >> prepareGsDevKitImage_bootstrapGsDevkit [
 
 	"install GsdevKit from scratch"
 
-	"noop for standard upgrade"
+	self _resetMonticelloPackageRegistry
 ]
 
 { #category : 'prepare gsdevkit  image' }
@@ -119,6 +111,24 @@ GsuGsDevKit_3_5_x_StdUpgrade >> prepareGsDevKitImage_clearMetacelloCaches [
 			^ super prepareGsDevKitImage_clearMetacelloCaches ].
 	"caches are used for reloading BaselineOf"
 	self log: 'Prepare gsdevkit - Metacello caches NOT cleared'.
+]
+
+{ #category : 'prepare gsdevkit  image' }
+GsuGsDevKit_3_5_x_StdUpgrade >> prepareGsDevKitImage_loadApplicationCode [
+	"explicitly load each of the configuration packages lised in boolStrapApplicationLoadSpecs"
+
+	"load application code"
+
+	self log: 'Prepare gsdevkit - load GsDevKit application code'.
+
+	"force configurations to be reloaded if needed"
+	self removeExistingConfigurations.
+
+	"now load application"
+
+	self loadApplicationLoadSpecs.
+
+	self log: '		load GsDevKit application code DONE (commit)'.
 ]
 
 { #category : 'prepare gsdevkit  image' }

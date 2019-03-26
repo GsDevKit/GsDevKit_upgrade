@@ -17,7 +17,7 @@ _reloadProjectNamed: projectName projectSpec: projectSpecOrNilOrString loads: lo
 				ifTrue: [ repoDescription :=  projectSpecOrNilOrString. ]
 				ifFalse: [ 
 					repoDescription := projectSpecOrNilOrString repositoryDescriptions first.
-					loads ifNil: [ loadList := projectSpecOrNilOrString loads ] ] ].
+					loads ifNil: [ loadList := projectSpecOrNilOrString loads ifNil: [ {} ] ] ] ].
 	loadListString := ''.
 	loadList isEmpty 
 		ifFalse:  [ loadListString := ' loads: ', loadList printString ].

@@ -1,11 +1,11 @@
 bootstrapping
 bootstrapGsDevkit
 
-	"install GsdevKit from scratch"
+	"install GLASS from scratch"
 
 	"used to create extent0.seaside.dbf"
 
-	(GsuGsDevKitBootstrap
+	^ (GsuGsDevKitBootstrap
 		upgradeUserName: self upgradeUserName
 			upgradeSymbolDictName: self upgradeSymbolDictName
 			bootstrapGemStoneRelease: self _bootstrapRelease)
@@ -13,4 +13,5 @@ bootstrapGsDevkit
 		bootstrapRepositoryDirectory: self bootstrapRepositoryDirectory;
 		bootstrapApplicationLoadSpecs: bootstrapApplicationLoadSpecs; 
 		bootstrapExistingConfigurationList: self bootstrapExistingConfigurationList;
-		bootstrapGsDevkit
+		bootstrapGsDevkit;
+		yourself

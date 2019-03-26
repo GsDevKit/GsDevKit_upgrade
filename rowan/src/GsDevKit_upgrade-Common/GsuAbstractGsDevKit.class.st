@@ -21,15 +21,6 @@ GsuAbstractGsDevKit class >> gemstone_user [
 ]
 
 { #category : 'private' }
-GsuAbstractGsDevKit >> _configurationOfGLASS_bootstrap [
-	"When doing a bootstrap load, this version of the ConfigurationOfGLASS needs to be loaded before loading BaselineOf"
-
-	^ {
-			self _defaultConfigurationOfGLASS.
-		}
-]
-
-{ #category : 'private' }
 GsuAbstractGsDevKit >> _currentUserGlobals [
 
 	^ GsSession currentSession objectNamed: #UserGlobals
@@ -43,7 +34,7 @@ GsuAbstractGsDevKit >> _defaultBootstrapApplicationLoadSpecs [
 		ifTrue: [
 			self log: '	load BaselineOfMetacello and BaselineOfTode (default)'.
 			"first update Metacello and then update Tode"
-			^ self _configurationOfGLASS_bootstrap, {
+			^	{
 				{
 					'Metacello'. 
 					self _projectSpecForBaseline: 'BaselineOfMetacello'.
@@ -57,7 +48,7 @@ GsuAbstractGsDevKit >> _defaultBootstrapApplicationLoadSpecs [
 		ifTrue: [
 			self log: '	load BaselineOfMetacello and BaselineOfGLASS1 (default)'.
 			"first update Metacello and then update GLASS1"
-			^ self _configurationOfGLASS_bootstrap, {
+			^	{
 				{
 					'Metacello'. 
 					self _projectSpecForBaseline: 'BaselineOfMetacello'.
@@ -70,7 +61,7 @@ GsuAbstractGsDevKit >> _defaultBootstrapApplicationLoadSpecs [
 	self _gsDevKitLoaded
 		ifTrue: [
 			self log: '	load BaselineOfMetacello and BaselineOfGsDevKit (default)'.
-			^ self _configurationOfGLASS_bootstrap, {	"assume that GsDevKit needs to be reloaded"
+			^	{	"assume that GsDevKit needs to be reloaded"
 				{
 					'Metacello'. 
 					self _projectSpecForBaseline: 'BaselineOfMetacello'.
@@ -81,9 +72,7 @@ GsuAbstractGsDevKit >> _defaultBootstrapApplicationLoadSpecs [
 				}.
 			} ].
 	self log: '	load ConfigurationOfGLASS'.
-	^{
-		 self _defaultConfigurationOfGLASS.
-	}
+	^{}
 ]
 
 { #category : 'private' }
@@ -164,6 +153,63 @@ GsuAbstractGsDevKit >> _listUpgradeParameters [
 	^ #( bootstrapPostLoadClassList bootstrapApplicationLoadSpecs )
 ]
 
+{ #category : 'application loading' }
+GsuAbstractGsDevKit >> _loadApplicationLoadSpecs: applicationLoadSpecs [
+
+	"explicitly load each of the configuration packages lised in boolStrapApplicationLoadSpecs"
+	applicationLoadSpecs do: [:loadSpec |
+		loadSpec size = 4
+			ifTrue: [
+				"ConfigurationOf load spec"
+				| path |
+				path := (loadSpec at: 4) ifNil: [ self bootstrapRepositoryDirectory ].
+				(self _globalNamed: 'Gofer') new 
+					directory: ((self _globalNamed: 'ServerFileDirectory') on: path);
+					package: 'ConfigurationOf', (loadSpec at: 1);
+					load ] ].
+	System commit.
+
+	"Now load the entire configuration to pick up user application code and to ensure
+		that the in-memory package state is correct"
+
+	applicationLoadSpecs do: [:loadSpec | 
+		loadSpec size = 1
+			ifTrue: [ self _reloadProjectNamed: (loadSpec at: 1) projectSpec: nil loads: nil ]
+			ifFalse: [
+				loadSpec size = 2
+					ifTrue: [ self _reloadProjectNamed: (loadSpec at: 1) projectSpec: (loadSpec at: 2) loads: nil ]
+					ifFalse: [ 
+						loadSpec size = 3
+							ifTrue: [ self _reloadProjectNamed: (loadSpec at: 1) projectSpec: (loadSpec at: 2) loads: (loadSpec at: 3) ]
+							ifFalse: [ 
+								[
+								| repoPath configurationClassName versionString loadList |
+								configurationClassName := 'ConfigurationOf', (loadSpec at: 1).
+								versionString := loadSpec at: 2.
+								loadList := loadSpec at: 3.
+								repoPath := (loadSpec at: 4) ifNil: [ self bootstrapRepositoryDirectory ].
+								self log: '		', configurationClassName printString, ' version ', versionString printString , ' loads: ', loadList printString, ' from: ', repoPath printString.
+								(self _globalNamed: 'GsDeployer') bulkMigrate: [ 
+									| projectName |
+									projectName := loadSpec at: 1.
+									(self _globalNamed: 'Metacello') new
+										configuration: projectName;
+										version: versionString;
+										repositoryOverrides: { 'server://', repoPath };
+										onConflict: [ :ex :loaded :incoming | ex useIncoming ];
+										load: loadList ] ]
+											on: (self _globalNamed: 'MCPerformPostloadNotification')
+											do: [:ex |
+												(self bootstrapPostLoadClassList includes: ex postloadClass theNonMetaClass name)
+													ifTrue: [ 
+														self log: '			Skip ', ex postloadClass name asString, ' initialization.'.
+														ex resume: false ]
+													ifFalse: [ 
+														self log: '			Perform ', ex postloadClass name asString, ' initialization.'.
+														ex resume: true ] ] ] ] ] ].
+	System commit.
+]
+
 { #category : 'logging' }
 GsuAbstractGsDevKit >> _logUpgradeParameters [
 
@@ -218,7 +264,7 @@ GsuAbstractGsDevKit >> _reloadProjectNamed: projectName projectSpec: projectSpec
 				ifTrue: [ repoDescription :=  projectSpecOrNilOrString. ]
 				ifFalse: [ 
 					repoDescription := projectSpecOrNilOrString repositoryDescriptions first.
-					loads ifNil: [ loadList := projectSpecOrNilOrString loads ] ] ].
+					loads ifNil: [ loadList := projectSpecOrNilOrString loads ifNil: [ {} ] ] ] ].
 	loadListString := ''.
 	loadList isEmpty 
 		ifFalse:  [ loadListString := ' loads: ', loadList printString ].
@@ -244,6 +290,20 @@ GsuAbstractGsDevKit >> _reloadProjectNamed: projectName projectSpec: projectSpec
 		loadList isEmpty ifFalse:  [ metacello load: loadList ].
 		metacello onConflict: [ :ex :loaded :incoming | ex useIncoming ].
 		metacello load ].
+]
+
+{ #category : 'private' }
+GsuAbstractGsDevKit >> _resetMonticelloPackageRegistry [
+
+	"unload the 2.x only packages"
+	self log: '	unload 2.x only packages'.
+	(self _globalNamed: 'PackageInfo') registerPackageName: 'GemStone-Exceptions'.
+	((self _globalNamed: 'MCWorkingCopy') forPackage: ((self _globalNamed: 'MCPackage') new name: 'GemStone-Exceptions')) unload.
+
+	"start with a fresh package registry"
+	self log: '	reset Monticello package registry'.
+	(self _globalNamed: 'MCWorkingCopy') atClassInstVar: #registry put: nil.
+	((self _globalNamed: 'PackageOrganizer') default instVarAt: ((self _globalNamed: 'PackageOrganizer') allInstVarNames indexOfIdentical: #'packages')) removeKey: 'Monticello-Mocks' ifAbsent: [].
 ]
 
 { #category : 'private' }
@@ -358,7 +418,6 @@ GsuAbstractGsDevKit >> bootstrapRepositoryDirectory: directoryPath [
 { #category : 'application loading' }
 GsuAbstractGsDevKit >> loadApplicationLoadSpecs [
 
-	| glass1Upgraded |
 	"unload the 2.x only packages"
 	(self _globalNamed: 'PackageInfo') registerPackageName: 'GemStone-Exceptions'.
 	((self _globalNamed: 'MCWorkingCopy') forPackage: ((self _globalNamed: 'MCPackage') new name: 'GemStone-Exceptions')) unload.
@@ -367,58 +426,12 @@ GsuAbstractGsDevKit >> loadApplicationLoadSpecs [
 	(self _globalNamed: 'MCWorkingCopy') atClassInstVar: #registry put: nil.
 	((self _globalNamed: 'PackageOrganizer') default instVarAt: ((self _globalNamed: 'PackageOrganizer') allInstVarNames indexOfIdentical: #'packages')) removeKey: 'Monticello-Mocks' ifAbsent: [].
 
-	"explicitly load each of the configuration packages lised in boolStrapApplicationLoadSpecs"
-	glass1Upgraded := false.
-	self bootstrapApplicationLoadSpecs do: [:loadSpec |
-		loadSpec size = 4
-			ifTrue: [
-				"ConfigurationOf load spec"
-				| path |
-				path := (loadSpec at: 4) ifNil: [ self bootstrapRepositoryDirectory ].
-				(self _globalNamed: 'Gofer') new 
-					directory: ((self _globalNamed: 'ServerFileDirectory') on: path);
-					package: 'ConfigurationOf', (loadSpec at: 1);
-					load ] ].
-	System commit.
+	"load each of the projects listed in boolStrapApplicationLoadSpecs"
+	self _loadApplicationLoadSpecs: self bootstrapApplicationLoadSpecs.
 
 	"Now load the entire configuration to pick up user application code and to ensure
 		that the in-memory package state is correct"
 
-	self bootstrapApplicationLoadSpecs do: [:loadSpec | 
-		loadSpec size = 1
-			ifTrue: [ self _reloadProjectNamed: (loadSpec at: 1) projectSpec: nil loads: nil ]
-			ifFalse: [
-				loadSpec size = 2
-					ifTrue: [ self _reloadProjectNamed: (loadSpec at: 1) projectSpec: (loadSpec at: 2) loads: nil ]
-					ifFalse: [ 
-						loadSpec size = 3
-							ifTrue: [ self _reloadProjectNamed: (loadSpec at: 1) projectSpec: (loadSpec at: 2) loads: (loadSpec at: 3) ]
-							ifFalse: [ 
-								[
-								| repoPath configurationClassName versionString loadList |
-								configurationClassName := 'ConfigurationOf', (loadSpec at: 1).
-								versionString := loadSpec at: 2.
-								loadList := loadSpec at: 3.
-								repoPath := (loadSpec at: 4) ifNil: [ self bootstrapRepositoryDirectory ].
-								self log: '		', configurationClassName printString, ' version ', versionString printString , ' loads: ', loadList printString, ' from: ', repoPath printString.
-								(self _globalNamed: 'GsDeployer') bulkMigrate: [ 
-									| projectName |
-									projectName := loadSpec at: 1.
-									(self _globalNamed: 'Metacello') new
-										configuration: projectName;
-										version: versionString;
-										repositoryOverrides: { 'server://', repoPath };
-										onConflict: [ :ex :loaded :incoming | ex useIncoming ];
-										load: loadList ] ]
-											on: (self _globalNamed: 'MCPerformPostloadNotification')
-											do: [:ex |
-												(self bootstrapPostLoadClassList includes: ex postloadClass theNonMetaClass name)
-													ifTrue: [ 
-														self log: '			Skip ', ex postloadClass name asString, ' initialization.'.
-														ex resume: false ]
-													ifFalse: [ 
-														self log: '			Perform ', ex postloadClass name asString, ' initialization.'.
-														ex resume: true ] ] ] ] ] ].
 	self bannerLogDash.
 	self bannerLogDash.
 

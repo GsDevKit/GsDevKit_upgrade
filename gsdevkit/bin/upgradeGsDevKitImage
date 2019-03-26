@@ -11,6 +11,33 @@
 #	Alternative to using $GEMSTONE/seaside/bin/upgradeSeasideImage -- beware that upgradeSeasideImage
 #		is the definitive implementation.
 #
+#	------for debugging, run these bash commands:
+#	newExtent -s snapshots/extent0_upgradedImage_DataCurator_GLASS1_3215.dbf battery_350_g
+#	
+#	startTopaz battery_350_g -lq < $GS_HOME/shared/repos/GsDevKit_upgrade/bin/installGsDevKit_upgrade
+#	startTopaz battery_350_g -lq < $GS_HOME/shared/repos/GsDevKit_upgrade/bin/prepareGsDevKitImage
+#	startTopaz battery_350_g -lq < $GS_HOME/shared/repos/GsDevKit_upgrade/bin/prepareGsDevKitImage_pragma_user
+#	startTopaz battery_350_g -lq < $GS_HOME/shared/repos/GsDevKit_upgrade/bin/prepareGsDevKitImage_pragma_SystemUser
+#	
+#	stopStone battery_350_g
+#	cp extents/extent0.dbf .
+#	startStone battery_350_g
+#	
+#	# use newExtent before invocation of startTopaz to repeat multiple debugging sessions
+#	#	newExtent -s ./extent0.dbf battery_350_g
+#	startTopaz battery_350_g -l
+#	
+#	# the following are topaz expressions to be entered at topaz promp
+#	login
+#	run
+#		(((AllUsers userWithId: 'SystemUser') 
+#			objectNamed: #UserGlobals) 
+#				at: #'GsDevKit_Image_Upgrade')
+#					prepareImage_user;
+#					prepareGsDevKitImage
+#	%
+#
+#
 set -e
 theArgs="$*"
 contents="$1"	# GLASS, GLASS1, TODE

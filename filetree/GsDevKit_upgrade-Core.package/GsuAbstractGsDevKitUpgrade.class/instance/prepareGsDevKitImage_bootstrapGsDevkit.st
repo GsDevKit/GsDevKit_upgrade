@@ -1,8 +1,8 @@
 prepare gsdevkit  image
 prepareGsDevKitImage_bootstrapGsDevkit
 
-	"install GsdevKit from scratch"
+	"install GLASS from scratch"
 
-	self log: 'Prepare gsdevkit - bootstrap GsdevKit'.
+	self log: 'Prepare gsdevkit - bootstrap GLASS1'.
 
-	self bootstrapGsDevkit
+	self upgradeGlass1

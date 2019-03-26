@@ -3212,7 +3212,6 @@ upgradeGlass1
 
 	self log: '	upgrade to GLASS'.
 	(self _globalNamed: 'GsUpgrader') upgradeGLASS.
-	self log: '	upgrade to Grease'.
 true ifTrue: [ 
 		"workaround for https://github.com/Metacello/metacello/issues/254, which is re-appearing again"
 		"
@@ -3235,14 +3234,22 @@ true ifTrue: [
 			{'FileTree' . 'github://dalehenrich/filetree:gemstone2.4/repository' } .
 			{'Metacello' . 'github://dalehenrich/metacello-work:master/repository' } .
 			{'Grease' . 'github://GsDevKit/Grease:master/repository' } .
-			{'Gofer' .  'http://seaside.gemtalksystems.com/ss/metacello'} .
 		} do: [:ar |
 			(self _globalNamed: 'Metacello') new
 				baseline: (ar at: 1);
 				repository: (ar at: 2);
-				lock ] ].
+				lock ].
+		{ 
+			{'Gofer' .  'http://seaside.gemtalksystems.com/ss/metacello'} .
+		} do: [:ar |
+			(self _globalNamed: 'Metacello') new
+				configuration: (ar at: 1);
+				repository: (ar at: 2);
+				lock ].
+ ].
+false ifTrue:  [
 	self log: '	upgrade to GLASS1'.
-	(self _globalNamed: 'GsUpgrader') upgradeGLASS1.
+	(self _globalNamed: 'GsUpgrader') upgradeGLASS1 ].
 
 	self bannerLogDash.
 	self bannerLogDash.

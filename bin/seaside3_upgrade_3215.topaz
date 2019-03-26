@@ -7,8 +7,8 @@ run
 							upgradeSymbolDictName: #Seaside)
 						bootstrapApplicationLoadSpecs: {
 			{ 'Metacello' . 'github://dalehenrich/metacello-work:master/repository' } . 
-			{ 'GLASS1' . 'github://glassdb/glass:master/repository' } . 
-			{ 'Seaside3' . 'github://SeasideSt/Seaside:master/repository' }
+			{ 'GLASS1' . 'github://glassdb/glass:master/repository' . #( 'default' 'Base' 'Announcements') } . 
+			{ 'Seaside3' . 'github://SeasideSt/Seaside:master/repository' . #( 'CI') }
 		} ).
 	System commitTransaction
 %

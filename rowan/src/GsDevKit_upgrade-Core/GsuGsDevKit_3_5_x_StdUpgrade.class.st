@@ -10,12 +10,12 @@ GsuGsDevKit_3_5_x_StdUpgrade >> _defaultExistingConfigurationOfNames [
 
 	| default |
 	default := { #ConfigurationOfGsMisc . #ConfigurationOfGsCore }.
-	self _glassLoaded 
+false ifTrue: [ 	self _glassLoaded 
 		ifTrue: [ 
 			"if we are loading GLASS, the ConfigurationOfGLASS needs to be reloaded as well"
 			default 
 				add: #ConfigurationOfGLASS;
-				add: #ConfigurationOfGsMonticello ].
+				add: #ConfigurationOfGsMonticello ] ].
 	^ default
 ]
 

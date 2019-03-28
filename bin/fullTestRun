@@ -14,9 +14,6 @@ for gsVersion in 3215 339 343 ; do
 		./upgradeGsDevKitImage $stone_type $gsVersion
 	done
 	upgradeDriver="$GS_HOME/shared/repos/GsDevKit_upgrade/bin/seaside3_datacurator_upgrade.topaz"
-#	if [ "$gsVersion" = "3215" ] ; then
-#		upgradeDriver="$GS_HOME/shared/repos/GsDevKit_upgrade/bin/seaside3_datacurator_upgrade_3215.topaz"
-#	fi
 	for stone_type in GLASS1 ; do # GsDevKit ; do -- not quite ready to work out kinks of installing Seaside on top of GsDevKit
 		./installSeaside33 ${stone_type} $gsVersion DataCurator
 		./upgradeImage DataCurator_${stone_type} ${gsVersion}
@@ -30,9 +27,6 @@ for gsVersion in 3215 339 343 ; do
 	# 	sure that upgrades work
 	
 	upgradeDriver="$GS_HOME/shared/repos/GsDevKit_upgrade/bin/seaside3_upgrade.topaz"
-#	if [ "$gsVersion" = "3215" ] ; then
-#		upgradeDriver="$GS_HOME/shared/repos/GsDevKit_upgrade/bin/seaside3_upgrade_3215.topaz"
-#	fi
 	for stone_type in GLASS1 ; do # GsDevKit ; do -- not quite ready to work out kinks of installing Seaside on top of GsDevKit
 		./installSeaside33 ${stone_type} $gsVersion
 		./upgradeImage seaside_${stone_type} ${gsVersion}
@@ -107,5 +101,6 @@ EOF
 	done
 done
 
+cat ${upgradeLogDir}/TEST_RESULTS
 
 exit $finalStatus

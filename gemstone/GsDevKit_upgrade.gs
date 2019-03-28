@@ -927,6 +927,15 @@ prepareImage_makeClassesObsolete: aGsDevKitUpgrade
 	aGsDevKitUpgrade log: '	obsolete classes (noop)'.
 %
 
+category: 'bootstrapping'
+method: GsuGemStone_3_5_x_Release
+reloadBootstrapPackageFileNames
+
+	"answer an ordered list of the Monticello packages that are needed to reload GLASS into image"
+
+	^self _reloadBootstrapPackageFileNames_0
+%
+
 category: 'private'
 method: GsuGemStone_3_5_x_Release
 _bootstrapPackageFileNames_0
@@ -938,6 +947,41 @@ _bootstrapPackageFileNames_0
 	^{ 
 		'Core.v3-dkh.82.mcz' .
 		'GemStone-Compression-dkh.1.mcz' .
+		'Base-Bootstrap.v3-dkh.29.mcz'.
+		'Bootstrap.v34-dkh.263.mcz'.
+		'GemStone-ANSI-Streams-dkh.9.mcz'.
+		'GemStone-Indexing-Extensions-dkh.3.mcz'.
+		'Sport3.010.v3-dkh.29.mcz'.
+		'Squeak.v34-dkh.339.mcz'.
+		'Regex-Core-DaleHenrichs.3.mcz'.
+		'Regex-Tests-Core-DaleHenrichs.5.mcz'.
+		'PackageInfo-Base.g-dkh.36.mcz'.
+		'Monticello.v3-dkh.457.mcz'.
+		'GemStone-Deployment.v310-dkh.26.mcz'.
+		'Change-Notification.v3-dkh.20.mcz'.
+		'Gofer-Core.gemstone-dkh.135.mcz'.
+		'Metacello-Base-dkh.103.mcz'.
+		'Metacello-Core-dkh.669.mcz'.
+		'Metacello-MC-dkh.669.mcz'.
+		'Metacello-Platform.gemstone-dkh.29.mcz'.
+		'Metacello-ToolBox-dkh.131.mcz'.
+		'Metacello-FileTree-dkh.29.mcz'.
+		'Metacello-GitHub-dkh.22.mcz'.
+		'Network-Url-dkh.3.mcz'.
+	}.
+%
+
+category: 'private'
+method: GsuGemStone_3_5_x_Release
+_reloadBootstrapPackageFileNames_0
+
+	"answer an ordered list of the Monticello packages that are needed to reload GLASS into image"
+
+	"for 3.5.0"
+
+	^{ 
+		'GemStone-Compression-dkh.1.mcz' .
+		'Core.v3-dkh.82.mcz' .
 		'Base-Bootstrap.v3-dkh.29.mcz'.
 		'Bootstrap.v34-dkh.263.mcz'.
 		'GemStone-ANSI-Streams-dkh.9.mcz'.
@@ -1077,8 +1121,13 @@ loadApplicationLoadSpecs
 	(self _globalNamed: 'MCWorkingCopy') atClassInstVar: #registry put: nil.
 	((self _globalNamed: 'PackageOrganizer') default instVarAt: ((self _globalNamed: 'PackageOrganizer') allInstVarNames indexOfIdentical: #'packages')) removeKey: 'Monticello-Mocks' ifAbsent: [].
 
-	"load each of the projects listed in boolStrapApplicationLoadSpecs"
-	self _loadApplicationLoadSpecs: self bootstrapApplicationLoadSpecs.
+	self bootstrapApplicationLoadSpecs isEmpty
+		ifTrue: [
+			"(re)load the bootstraPackageFileNames for GLASS"
+			self _reloadBootstrapPackages ]
+		ifFalse:  [
+			"load each of the projects listed in boolStrapApplicationLoadSpecs"
+			self _loadApplicationLoadSpecs: self bootstrapApplicationLoadSpecs ].
 
 	"Now load the entire configuration to pick up user application code and to ensure
 		that the in-memory package state is correct"
@@ -2602,6 +2651,16 @@ _prepareImage_user_class_bug46059_patchSource
   ar ifNotNil: [ (ar at: 1) removeKey: (ar at: 2) ].'
 %
 
+category: 'private'
+method: GsuAbstractGsDevKitUpgrade
+_reloadBootstrapPackages
+	"(re)load the bootstraPackageFileNames for GLASS"
+
+	"reload can only be done when no method recompilation is required"
+
+	"noop"
+%
+
 ! Class implementation for 'GsuGsDevKit_3_2_x_BootstrapUpgrade'
 
 !		Instance methods for 'GsuGsDevKit_3_2_x_BootstrapUpgrade'
@@ -2973,6 +3032,24 @@ _projectSpecForBaseline: baselineClassName
 	"should only apply when doing bootstrap loads"
 
 	^ nil	"project spec will be calculated at load time"
+%
+
+category: 'private'
+method: GsuGsDevKit_3_5_x_StdUpgrade
+_reloadBootstrapPackages
+	"(re)load the bootstraPackageFileNames for GLASS"
+
+	| dir |
+	self log: '	reloading bootstrap packages from ', self bootstrapRepositoryDirectory.
+	dir := (self _globalNamed: 'ServerFileDirectory') on: self bootstrapRepositoryDirectory.
+	self targetGemStoneRelease reloadBootstrapPackageFileNames do: [:bootstrapPackageFileName |
+		| packageVersion |
+		packageVersion := bootstrapPackageFileName copyFrom: 1 to: bootstrapPackageFileName size - '.mcz' size.
+		self log: '			', packageVersion, '	', bootstrapPackageFileName .
+		(self _globalNamed: 'Gofer') new 
+			directory: dir;
+			version: packageVersion;
+			load ]
 %
 
 category: 'private'

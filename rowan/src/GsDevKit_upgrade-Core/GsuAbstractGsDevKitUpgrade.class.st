@@ -291,6 +291,15 @@ GsuAbstractGsDevKitUpgrade >> _prepareImage_user_class_bug46059_patchSource [
   ar ifNotNil: [ (ar at: 1) removeKey: (ar at: 2) ].'
 ]
 
+{ #category : 'private' }
+GsuAbstractGsDevKitUpgrade >> _reloadBootstrapPackages [
+	"(re)load the bootstraPackageFileNames for GLASS"
+
+	"reload can only be done when no method recompilation is required"
+
+	"noop"
+]
+
 { #category : 'bootstrapping' }
 GsuAbstractGsDevKitUpgrade >> bootstrapGsDevkit [
 

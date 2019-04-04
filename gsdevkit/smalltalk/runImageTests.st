@@ -7,7 +7,8 @@ Class {
 	#superclass : 'StashScript',
 	#instVars : [
 		'stoneName',
-		'sessionDescription'
+		'sessionDescription',
+		'externalSession'
 	],
 	#category : 'Stash-Scripts'
 }
@@ -20,10 +21,8 @@ runImageTests >> executeScript [
 			at: 'help'
 			ifAbsent: [ 
 				self installPrereqs.
-				opts at: 'stoneName' ifPresent: [:arg | 
-					stoneName := arg.
-					self sessionDescription ].
-				 ]
+				opts at: 'stoneName' ifPresent: [:arg | stoneName := arg ].
+				self runRemoteTests ]
 			ifPresent: [ self usage ]
 ]
 
@@ -35,6 +34,53 @@ runImageTests >> scriptOptions [
 			#('stoneName' nil #required).
 			#('test' nil #none).
 	}
+]
+
+{ #category : 'script execution' }
+runImageTests >> runRemoteTests [
+	[self externalSession 
+		executeBlock: [
+			| stream results defects |
+			stream := WriteStream on: String new.
+			stream 
+				nextPutAll: 'Running image test cases';	lf;
+				nextPutAll: '------------------------'; lf;
+				nextPutAll: '------------------------'; lf.
+			results := TestCase suite run .
+			defects := results defects.
+			stream nextPutAll: results printString; lf.
+			defects isEmpty 
+				ifTrue: [ stream nextPutAll: '------------------------'; lf ]
+				ifFalse: [
+					defects do: [:each | 
+						stream nextPutAll: each printString; lf ].
+				stream nextPutAll: '------------------------'; lf ].
+			^ stream contents ] ]
+	ensure: [ self externalSession logout ]
+]
+
+{ #category : 'accessing' }
+runImageTests >> externalSession [
+
+	^ externalSession ifNil: [
+			externalSession := GsExternalSession 
+				gemNRS: self sessionDescription gemNRS 
+				stoneNRS: self sessionDescription stoneNRS 
+				username: self sessionDescription userId 
+				password: self sessionDescription password.
+			externalSession login ]
+]
+
+{ #category : 'accessing' }
+runImageTests >> sessionDescription [
+
+	^ sessionDescription ifNil: [
+		sessionDescription := 
+			('$GS_HOME/sys/local/sessions/', stoneName) asFileReference 
+				readStreamDo: [:fileStream | 
+					| readStream |
+					readStream := ZnBufferedReadStream on: fileStream.
+					sessionDescription := STON fromStream: readStream ] ].
 ]
 
 { #category : 'prereqs' }
@@ -62,17 +108,6 @@ runImageTests >> installPrereqs [
 		loadFiletreeClassDirectory: '$GS_HOME/shared/repos/tode/repository/Topez-Common-Core.package/TDSessionDescription.class'
 		 projectName: 'runImageTests' 
 		packageName: 'runImageTests-SessionDescription'
-]
-
-{ #category : 'accessing' }
-runImageTests >> sessionDescription [
-
-	^ sessionDescription ifNil: [
-		('$GS_HOME/sys/local/sessions/', stoneName) asFileReference 
-			readStreamDo: [:fileStream | 
-				| readStream |
-				readStream := ZnBufferedReadStream on: fileStream.
-				sessionDescription := STON fromStream: readStream ] ].
 ]
 
 { #category : 'usage' }

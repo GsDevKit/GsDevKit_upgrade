@@ -10,7 +10,8 @@ Class {
 		'sessionDescription',
 		'imageType',
 		'gemStoneVersion',
-		'gemStoneId'
+		'gemStoneId',
+		'extentStage'
 	],
 	#category : 'Stash-Scripts'
 }
@@ -35,11 +36,32 @@ runImageTests >> scriptOptions [
 			#('stoneName' nil #required).
 			#('imageType' nil #required).
 			#('gemStoneVersion' nil #required).
+			#('stage' nil #optional).
 	}
 ]
 
 { #category : 'script execution' }
 runImageTests >> runTests [
+
+^ self sourceExtentName fullPath
+]
+
+{ #category : 'accessing' }
+runImageTests >> sourceExtentName [
+
+	"
+		snapshots/extent0_preparedSeasideImage_${imageType}_${gemStoneId}.dbf
+	"
+
+	^ self extentStage isEmpty
+		ifTrue: [ self _sourceExtentDir / ('extent0_', self imageType, '_', self gemStoneId , '.dbf') ]
+		ifFalse: [ self _sourceExtentDir / ('extent0_', self extentStage, '_', self imageType, '_', self gemStoneId , '.dbf') ]
+]
+
+{ #category : 'private' }
+runImageTests >> _sourceExtentDir [
+
+  ^ 'snapshots' asFileReference
 ]
 
 { #category : 'private' }
@@ -116,6 +138,16 @@ runImageTests >> _testBlock [
 					stream nextPutAll: each printString; lf ].
 					stream nextPutAll: '------------------------'; lf ].
 		stream contents ]
+]
+
+{ #category : 'accessing' }
+runImageTests >> extentStage [
+	"preparedSeaideImage. upgradeImage, or ''"
+
+	^ stoneName ifNil: [ 
+		extentStage := opts at: 'stage' 
+			ifPresent: [:arg | arg ]
+			ifAbsent: [ '' ] ]
 ]
 
 { #category : 'accessing' }
@@ -196,7 +228,7 @@ runImageTests >> usage [
 SYNOPSIS
 	runImageTests.st 	[-h|--help] \
 										--stoneName=<stone-name> --imageType=GLASS|GLASS1|TODE \
-										--gemStoneVersion=<gemstone-version> \
+										--gemStoneVersion=<gemstone-version> --stage=<extent-stage> \
 										[ -- <startTopaz-specific-options> ]
 DESCRIPTION
 
@@ -207,11 +239,17 @@ DESCRIPTION
 	`--gemStoneVersion` is the version of GemStone where the original script came from prior to upgrade.
 	3.2.15, 3.3.9, and 3.4.3 are the currently tested versions.
 
+	`--stage` is the stage of the upgrade process: 
+		- ``											original extent (in format of original stone). DEFAULT
+		- `upgradedImage`					extent with upgradedImage applied
+		- `preparedSeasideImage`	extent with upgradeSeasideImage applied
+
 EXAMPLES
 	runImageTests.st --help
 	runImageTests.st -h
 	runImageTests.st -h -- myStone -lq
 
-	runImageTests.st --stoneName=battery_339 imageType=GLASS gemStoneVersion=3.3.9
+	runImageTests.st --stoneName=battery_339 --imageType=GLASS --gemStoneVersion=3.3.9 --stage=preparedSeasideImage
+	runImageTests.st --stoneName=battery_339 --imageType=GLASS --gemStoneVersion=3.3.9 
 ') printString, dashes
 ]

@@ -23,6 +23,7 @@ runImageTests >> executeScript [
 	^ opts
 			at: 'help'
 			ifAbsent: [ 
+				opts at: 'edit' ifPresent: [ ^ self loadForEdit ].
 				self installPrereqs.
 				self runTests ]
 			ifPresent: [ self usage ]
@@ -33,6 +34,7 @@ runImageTests >> scriptOptions [
 	"specify the command line options"
 	^ {
 			#('help' $h #none).
+			#('edit' nil #none).
 			#('stoneName' nil #required).
 			#('imageType' nil #required).
 			#('gemStoneVersion' nil #required).
@@ -297,6 +299,24 @@ runImageTests >> installPrereqs [
 		packageName: 'runImageTests-SessionDescription'
 ]
 
+{ #category : 'editing' }
+runImageTests >> saveToDisk [
+	Rowan classTools stashClassTool 
+		loadFiletreeClassDirectory: self stashFile
+		projectName: 'runImageTests' 
+		packageName: 'runImageTests-SessionDescription'
+]
+
+{ #category : 'editing' }
+runImageTests >> loadForEdit [
+	Rowan classTools stashClassTool 
+		loadTonelClassFile: self stashFile
+		projectName: 'runImageTests' 
+		packageName: 'runImageTests-SessionDescription'.
+	System commit.
+	^ 'current stone NRS: ', System stoneName asString
+]
+
 { #category : 'usage' }
 runImageTests >> usage [
 	"Man page for script"
@@ -309,11 +329,13 @@ runImageTests >> usage [
 'NAME
 	runImageTests.st - example script, that can be used as a template to create your own script
 SYNOPSIS
-	runImageTests.st 	[-h|--help] \
-										--stoneName=<stone-name> --imageType=GLASS|GLASS1|TODE \
-										--gemStoneVersion=<gemstone-version> [ --stage=<extent-stage> ] \
-										--output=<output-file-path> \
-										[ -- <startTopaz-specific-options> ]
+	runImageTests.st \
+		[-h|--help] \
+		--edit \
+		--stoneName=<stone-name> --imageType=GLASS|GLASS1|TODE \
+		--gemStoneVersion=<gemstone-version> [ --stage=<extent-stage> ] \
+		--output=<output-file-path> \
+		[ -- <startTopaz-specific-options> ]
 DESCRIPTION
 
 	`--stoneName` is the name of the stone in which to run the tests.
@@ -328,10 +350,18 @@ DESCRIPTION
 		- `upgradedImage`					extent with upgradedImage applied
 		- `preparedSeasideImage`	extent with upgradeSeasideImage applied
 
+	`--edit` is used to load the script into the script stone and do a commit, so that a developer can
+	edit the script in the context of the development environment.
+
+	Current script stone NRS:
+		', System stoneName asString, '.
+
 EXAMPLES
 	runImageTests.st --help
 	runImageTests.st -h
 	runImageTests.st -h -- myStone -lq
+
+	runImageTests.st --edit
 
 	runImageTests.st --stoneName=battery_339 --imageType=GLASS --gemStoneVersion=3.3.9 --stage=preparedSeasideImage --output=run.log
 	runImageTests.st --stoneName=battery_339 --imageType=GLASS --gemStoneVersion=3.3.9  --output=run.log

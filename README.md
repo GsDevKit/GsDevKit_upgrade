@@ -1,3 +1,24 @@
+### Upgrading stone when image is not based on extent0.seaside.dbf
+```
+$GEMSTONE/seaside/bin/upgradeSeasideImage -s <stone-name> -P <custom-upgrade-start-script>
+```
+
+```smalltalk
+run
+	UserGlobals
+		at: #GsDevKit_Image_Upgrade
+		put: ((GsuAbstractGsDevKitUpgrade 
+						upgradeUserName: 'seaside'
+							upgradeSymbolDictName: #Seaside)
+						bootstrapApplicationLoadSpecs: {
+			{ 'Metacello' . 'github://dalehenrich/metacello-work:master/repository' } . 
+			{ 'GLASS1' . 'github://glassdb/glass:master/repository' . #( 'default' 'Base' 'Announcements') } . 
+			{ 'Seaside3' . 'github://SeasideSt/Seaside:master/repository' . #( 'CI') }
+	} ).
+	System commitTransaction
+%
+```
+
 ### Url for cloning project in Rowan
 ```
 file:$ROWAN_PROJECTS_HOME/GsDevKit_upgrade/rowan/specs/GsDevKit_upgrade.ston

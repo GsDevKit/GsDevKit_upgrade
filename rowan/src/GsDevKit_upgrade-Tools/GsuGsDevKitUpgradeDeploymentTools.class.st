@@ -39,8 +39,12 @@ GsuGsDevKitUpgradeDeploymentTools >> _projectDefinitionFor: specName [
 		readProjectSetForComponentProjectDefinition: projectDefinition.
 	packageNameToPlatformPropertiesMap := projectDefinition projectRef packageNameToPlatformPropertiesMap.
 	projectDefinition packageNames do: [:packageName |
-		"nasty hack for current deployment ..."
-		packageNameToPlatformPropertiesMap at: packageName put: 'GsDevKit_Upgrade_SymDict_private' ].
+		| dict |
+		dict := Dictionary new 
+			at: 'symbolDictName' 
+				put: 'GsDevKit_Upgrade_SymDict_private'; 
+			yourself.
+		packageNameToPlatformPropertiesMap at: packageName put:dict ].
 	^ projectDefinition
 		packageFormat: 'filetree';
 		projectHome: self _projectsHome;

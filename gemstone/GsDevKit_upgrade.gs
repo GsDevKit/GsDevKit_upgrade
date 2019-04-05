@@ -1471,7 +1471,9 @@ _reloadProjectNamed: projectName projectSpec: projectSpecOrNilOrString loads: lo
 			specs isEmpty
 				ifFalse: [ 
 					projectSpec := specs first.
-					loads ifNil: [ loadList := projectSpec loads ] ] ]
+					loads ifNil: [
+						loadList := projectSpec loads.
+						loadList ifNil: [ loadList := {}] ] ] ]
 		ifNotNil: [ 
 			(projectSpecOrNilOrString isKindOf: CharacterCollection)
 				ifTrue: [ repoDescription :=  projectSpecOrNilOrString. ]
@@ -3057,6 +3059,10 @@ _reloadExistingConfigurations
 		so reload the default copies of configurations. The configurations are expected to be present in
 		http://seaside.gemtalksystems.com/ss/MetacelloRepository"
 
+	self bootstrapApplicationLoadSpecs isEmpty 
+		ifTrue: [
+			"no need to reload _defaultExistingConfigurationOfNames ... GLASS was reloaded"
+			^ self ].
 	self _defaultExistingConfigurationOfNames do: [:configName |
 		(self _globalNamed: 'Gofer') new 
 			url: 'http://seaside.gemtalksystems.com/ss/MetacelloRepository';

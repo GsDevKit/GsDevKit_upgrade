@@ -37,17 +37,62 @@ runImageTests >> scriptOptions [
 			#('imageType' nil #required).
 			#('gemStoneVersion' nil #required).
 			#('stage' nil #optional).
+			#('output' nil #required).
 	}
 ]
 
 { #category : 'script execution' }
 runImageTests >> runTests [
+	| outputFile |
+	self newExtent: self sourceExtentPath fullName for: self stoneName.
+  outputFile := self _tmpFile.
+	self startTopaz: self sessionDescription withArgs: '-lq' doit: (self _sourceForBlock: self _testBlock) outputFileName: outputFile fullName.
+]
 
-^ self sourceExtentName fullPath
+{ #category : 'script execution' }
+runImageTests >> startTopaz: theSessionDescription withArgs: argString doit: doitString outputFileName: outputFileName  [
+
+	| inputFile hadError |
+Transcript cr; show: 'OUTPUT FROM TEST TOPAZ: ', outputFileName.
+	inputFile := self _tmpFile.
+	inputFile writeStreamDo: [:fileStream |
+		fileStream 
+			nextPutAll: (self _topazPreamble: theSessionDescription);
+			lf;
+
+			nextPutAll: 'output push ', outputFileName;
+			lf;
+
+			nextPutAll: 'run';
+			lf;
+			nextPutAll:doitString ;
+			lf;
+			nextPutAll: '%';
+			lf;
+			nextPutAll: 'errorCount';
+			lf;
+			nextPutAll: 'exit 0';
+			yourself.
+		fileStream flush ].
+	hadError := false.
+	[ self _performOnServer: (self gsDevKit_home / 'bin' / 'startTopaz') fullName, ' ', theSessionDescription stoneName, ' ', argString, ' < ', inputFile fullName ] 
+		on: Error
+		do: [:ex | "Transcript cr; show: ex description." hadError := true. ].
+"
+	outputFileName asFileReference readStreamDo: [:fileStream |
+		Transcript cr; show: fileStream contents ].
+"
+	hadError ifTrue: [ System logout "exit with error status" ]
+]
+
+{ #category : 'script execution' }
+runImageTests >> newExtent: sourceExtent for: targetStoneName [
+
+	self _performOnServer: (self gsDevKit_home / 'bin' / 'newExtent') fullName, ' -s ', sourceExtent, ' ', targetStoneName 
 ]
 
 { #category : 'accessing' }
-runImageTests >> sourceExtentName [
+runImageTests >> sourceExtentPath [
 
 	"
 		snapshots/extent0_preparedSeasideImage_${imageType}_${gemStoneId}.dbf
@@ -59,15 +104,21 @@ runImageTests >> sourceExtentName [
 ]
 
 { #category : 'private' }
+runImageTests >> gsDevKit_home [
+
+  ^ '$GS_HOME' asFileReference
+]
+
+{ #category : 'private' }
 runImageTests >> _sourceExtentDir [
 
-  ^ 'snapshots' asFileReference
+  ^ self workingDirectory / 'snapshots'
 ]
 
 { #category : 'private' }
 runImageTests >> _performOnServer: commandLine [
 
-  ^ self _performOnServer: command logging: true
+  ^ self _performOnServer: commandLine logging: true
 ]
 
 { #category : 'private' }
@@ -120,6 +171,14 @@ runImageTests >> _sourceForBlock: aBlock [
 ]
 
 { #category : 'private' }
+runImageTests >> _tmpFile [
+	| tmpFile |
+	tmpFile := self _performOnServer: 'mktemp'.
+	tmpFile := tmpFile copyFrom: 1 to: tmpFile size -1.
+	^ tmpFile asFileReference	
+]
+
+{ #category : 'private' }
 runImageTests >> _testBlock [
 	^ [
 		| stream results defects |
@@ -132,12 +191,30 @@ runImageTests >> _testBlock [
 		defects := results defects.
 		stream nextPutAll: results printString; lf.
 		defects isEmpty 
-			ifTrue: [ stream nextPutAll: '------------------------'; lf ]
+			ifTrue: [
+				stream nextPutAll: '------------------------'; lf.
+				Transcript cr; show: stream contents.
+				^true ]
 			ifFalse: [
 				defects do: [:each | 
 					stream nextPutAll: each printString; lf ].
-					stream nextPutAll: '------------------------'; lf ].
-		stream contents ]
+					stream nextPutAll: '------------------------'; lf.
+					Transcript cr; show: stream contents ].
+		^ false ]
+]
+
+{ #category : 'private' }
+runImageTests >> _topazPreamble: theSessionDescription [
+	^ '
+iferr 1 stk
+iferr 2 stack
+iferr 3 exit 1
+display oops
+display resultcheck
+limit bytes 200
+set u ', theSessionDescription userId, ' p ',theSessionDescription password, '
+login
+'
 ]
 
 { #category : 'accessing' }
@@ -148,6 +225,12 @@ runImageTests >> extentStage [
 		extentStage := opts at: 'stage' 
 			ifPresent: [:arg | arg ]
 			ifAbsent: [ '' ] ]
+]
+
+{ #category : 'accessing' }
+runImageTests >> outputFile [
+
+	^ opts at: 'output' ifPresent: [:arg | ^ arg ] 
 ]
 
 { #category : 'accessing' }
@@ -228,7 +311,8 @@ runImageTests >> usage [
 SYNOPSIS
 	runImageTests.st 	[-h|--help] \
 										--stoneName=<stone-name> --imageType=GLASS|GLASS1|TODE \
-										--gemStoneVersion=<gemstone-version> --stage=<extent-stage> \
+										--gemStoneVersion=<gemstone-version> [ --stage=<extent-stage> ] \
+										--output=<output-file-path> \
 										[ -- <startTopaz-specific-options> ]
 DESCRIPTION
 
@@ -249,7 +333,7 @@ EXAMPLES
 	runImageTests.st -h
 	runImageTests.st -h -- myStone -lq
 
-	runImageTests.st --stoneName=battery_339 --imageType=GLASS --gemStoneVersion=3.3.9 --stage=preparedSeasideImage
-	runImageTests.st --stoneName=battery_339 --imageType=GLASS --gemStoneVersion=3.3.9 
+	runImageTests.st --stoneName=battery_339 --imageType=GLASS --gemStoneVersion=3.3.9 --stage=preparedSeasideImage --output=run.log
+	runImageTests.st --stoneName=battery_339 --imageType=GLASS --gemStoneVersion=3.3.9  --output=run.log
 ') printString, dashes
 ]

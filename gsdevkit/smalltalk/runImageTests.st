@@ -16,119 +16,10 @@ Class {
 	#category : 'Stash-Scripts'
 }
 
-
-{ #category : 'script execution' }
-runImageTests >> executeScript [
-	"Called to initiate execution of the script"
-	^ opts
-			at: 'help'
-			ifAbsent: [ 
-				opts at: 'edit' ifPresent: [ ^ self loadForEdit ].
-				self installPrereqs.
-				self runTests ]
-			ifPresent: [ self usage ]
-]
-
-{ #category : 'script execution' }
-runImageTests >> scriptOptions [
-	"specify the command line options"
-	^ {
-			#('help' $h #none).
-			#('edit' nil #none).
-			#('stoneName' nil #required).
-			#('imageType' nil #required).
-			#('gemStoneVersion' nil #required).
-			#('stage' nil #optional).
-			#('output' nil #required).
-	}
-]
-
-{ #category : 'script execution' }
-runImageTests >> runTests [
-	| outputFile |
-	self newExtent: self sourceExtentPath fullName for: self stoneName.
-  outputFile := self _tmpFile.
-	self startTopaz: self sessionDescription withArgs: '-lq' doit: (self _sourceForBlock: self _testBlock) outputFileName: outputFile fullName.
-]
-
-{ #category : 'script execution' }
-runImageTests >> startTopaz: theSessionDescription withArgs: argString doit: doitString outputFileName: outputFileName  [
-
-	| inputFile hadError |
-Transcript cr; show: 'OUTPUT FROM TEST TOPAZ: ', outputFileName.
-	inputFile := self _tmpFile.
-	inputFile writeStreamDo: [:fileStream |
-		fileStream 
-			nextPutAll: (self _topazPreamble: theSessionDescription);
-			lf;
-
-			nextPutAll: 'output push ', outputFileName;
-			lf;
-
-			nextPutAll: 'run';
-			lf;
-			nextPutAll:doitString ;
-			lf;
-			nextPutAll: '%';
-			lf;
-			nextPutAll: 'errorCount';
-			lf;
-			nextPutAll: 'exit 0';
-			yourself.
-		fileStream flush ].
-	hadError := false.
-	[ self _performOnServer: (self gsDevKit_home / 'bin' / 'startTopaz') fullName, ' ', theSessionDescription stoneName, ' ', argString, ' < ', inputFile fullName ] 
-		on: Error
-		do: [:ex | "Transcript cr; show: ex description." hadError := true. ].
-"
-	outputFileName asFileReference readStreamDo: [:fileStream |
-		Transcript cr; show: fileStream contents ].
-"
-	hadError ifTrue: [ System logout "exit with error status" ]
-]
-
-{ #category : 'script execution' }
-runImageTests >> newExtent: sourceExtent for: targetStoneName [
-
-	self _performOnServer: (self gsDevKit_home / 'bin' / 'newExtent') fullName, ' -s ', sourceExtent, ' ', targetStoneName 
-]
-
-{ #category : 'accessing' }
-runImageTests >> sourceExtentPath [
-
-	"
-		snapshots/extent0_preparedSeasideImage_${imageType}_${gemStoneId}.dbf
-	"
-
-	^ self extentStage isEmpty
-		ifTrue: [ self _sourceExtentDir / ('extent0_', self imageType, '_', self gemStoneId , '.dbf') ]
-		ifFalse: [ self _sourceExtentDir / ('extent0_', self extentStage, '_', self imageType, '_', self gemStoneId , '.dbf') ]
-]
-
-{ #category : 'private' }
-runImageTests >> gsDevKit_home [
-
-  ^ '$GS_HOME' asFileReference
-]
-
-{ #category : 'private' }
-runImageTests >> _sourceExtentDir [
-
-  ^ self workingDirectory / 'snapshots'
-]
-
 { #category : 'private' }
 runImageTests >> _performOnServer: commandLine [
 
   ^ self _performOnServer: commandLine logging: true
-]
-
-{ #category : 'private' }
-runImageTests >> _performOnServer: commandLine status: statusBlock [
-
-	| performOnServerStatusArray |
-	performOnServerStatusArray := System _performOnServer: commandLine.
-	^ statusBlock value: performOnServerStatusArray
 ]
 
 { #category : 'private' }
@@ -165,19 +56,25 @@ runImageTests >> _performOnServer: commandLine logging: logging [
 ]
 
 { #category : 'private' }
+runImageTests >> _performOnServer: commandLine status: statusBlock [
+
+	| performOnServerStatusArray |
+	performOnServerStatusArray := System _performOnServer: commandLine.
+	^ statusBlock value: performOnServerStatusArray
+]
+
+{ #category : 'private' }
+runImageTests >> _sourceExtentDir [
+
+  ^ self workingDirectory / 'snapshots'
+]
+
+{ #category : 'private' }
 runImageTests >> _sourceForBlock: aBlock [
 
 	| source |
 	source := aBlock _sourceString.
 	^ source copyFrom: (source indexOf: $[) + 1 to: source size - 1.
-]
-
-{ #category : 'private' }
-runImageTests >> _tmpFile [
-	| tmpFile |
-	tmpFile := self _performOnServer: 'mktemp'.
-	tmpFile := tmpFile copyFrom: 1 to: tmpFile size -1.
-	^ tmpFile asFileReference	
 ]
 
 { #category : 'private' }
@@ -206,6 +103,14 @@ runImageTests >> _testBlock [
 ]
 
 { #category : 'private' }
+runImageTests >> _tmpFile [
+	| tmpFile |
+	tmpFile := self _performOnServer: 'mktemp'.
+	tmpFile := tmpFile copyFrom: 1 to: tmpFile size -1.
+	^ tmpFile asFileReference	
+]
+
+{ #category : 'private' }
 runImageTests >> _topazPreamble: theSessionDescription [
 	^ '
 iferr 1 stk
@@ -219,6 +124,18 @@ login
 '
 ]
 
+{ #category : 'script execution' }
+runImageTests >> executeScript [
+	"Called to initiate execution of the script"
+	^ opts
+			at: 'help'
+			ifAbsent: [ 
+				opts at: 'edit' ifPresent: [ ^ self loadForEdit ].
+				self installPrereqs.
+				self runTests ]
+			ifPresent: [ self usage ]
+]
+
 { #category : 'accessing' }
 runImageTests >> extentStage [
 	"preparedSeaideImage. upgradeImage, or ''"
@@ -227,18 +144,6 @@ runImageTests >> extentStage [
 		extentStage := opts at: 'stage' 
 			ifPresent: [:arg | arg ]
 			ifAbsent: [ '' ] ]
-]
-
-{ #category : 'accessing' }
-runImageTests >> outputFile [
-
-	^ opts at: 'output' ifPresent: [:arg | ^ arg ] 
-]
-
-{ #category : 'accessing' }
-runImageTests >> imageType [
-
-	^ stoneName ifNil: [ opts at: 'imageType' ifPresent: [:arg | imageType := arg ] ]
 ]
 
 { #category : 'accessing' }
@@ -254,22 +159,16 @@ runImageTests >> gemStoneVersion [
 			opts at: 'gemStoneVersion' ifPresent: [:arg | gemStoneVersion := arg ] ]
 ]
 
-{ #category : 'accessing' }
-runImageTests >> stoneName [
+{ #category : 'private' }
+runImageTests >> gsDevKit_home [
 
-	^ stoneName ifNil: [ opts at: 'stoneName' ifPresent: [:arg | stoneName := arg ] ]
+  ^ '$GS_HOME' asFileReference
 ]
 
 { #category : 'accessing' }
-runImageTests >> sessionDescription [
+runImageTests >> imageType [
 
-	^ sessionDescription ifNil: [
-		sessionDescription := 
-			('$GS_HOME/sys/local/sessions/', self stoneName) asFileReference 
-				readStreamDo: [:fileStream | 
-					| readStream |
-					readStream := ZnBufferedReadStream on: fileStream.
-					sessionDescription := STON fromStream: readStream ] ].
+	^ stoneName ifNil: [ opts at: 'imageType' ifPresent: [:arg | imageType := arg ] ]
 ]
 
 { #category : 'prereqs' }
@@ -300,14 +199,6 @@ runImageTests >> installPrereqs [
 ]
 
 { #category : 'editing' }
-runImageTests >> saveToDisk [
-	Rowan classTools stashClassTool 
-		loadFiletreeClassDirectory: self stashFile
-		projectName: 'runImageTests' 
-		packageName: 'runImageTests-SessionDescription'
-]
-
-{ #category : 'editing' }
 runImageTests >> loadForEdit [
 	Rowan classTools stashClassTool 
 		loadTonelClassFile: self stashFile
@@ -315,6 +206,114 @@ runImageTests >> loadForEdit [
 		packageName: 'runImageTests-SessionDescription'.
 	System commit.
 	^ 'current stone NRS: ', System stoneName asString
+]
+
+{ #category : 'script execution' }
+runImageTests >> newExtent: sourceExtent for: targetStoneName [
+
+	self _performOnServer: (self gsDevKit_home / 'bin' / 'newExtent') fullName, ' -s ', sourceExtent, ' ', targetStoneName 
+]
+
+{ #category : 'accessing' }
+runImageTests >> outputFile [
+
+	^ opts at: 'output' ifPresent: [:arg | ^ arg ] 
+]
+
+{ #category : 'script execution' }
+runImageTests >> runTests [
+	| outputFile |
+	self newExtent: self sourceExtentPath fullName for: self stoneName.
+  outputFile := self _tmpFile.
+	self startTopaz: self sessionDescription withArgs: '-lq' doit: (self _sourceForBlock: self _testBlock) outputFileName: outputFile fullName.
+]
+
+{ #category : 'editing' }
+runImageTests >> saveToDisk [
+	Rowan classTools stashClassTool 
+		loadFiletreeClassDirectory: self stashFile
+		projectName: 'runImageTests' 
+		packageName: 'runImageTests-SessionDescription'
+]
+
+{ #category : 'script execution' }
+runImageTests >> scriptOptions [
+	"specify the command line options"
+	^ {
+			#('help' $h #none).
+			#('edit' nil #none).
+			#('stoneName' nil #required).
+			#('imageType' nil #required).
+			#('gemStoneVersion' nil #required).
+			#('stage' nil #optional).
+			#('output' nil #required).
+	}
+]
+
+{ #category : 'accessing' }
+runImageTests >> sessionDescription [
+
+	^ sessionDescription ifNil: [
+		sessionDescription := 
+			('$GS_HOME/sys/local/sessions/', self stoneName) asFileReference 
+				readStreamDo: [:fileStream | 
+					| readStream |
+					readStream := ZnBufferedReadStream on: fileStream.
+					sessionDescription := STON fromStream: readStream ] ].
+]
+
+{ #category : 'accessing' }
+runImageTests >> sourceExtentPath [
+
+	"
+		snapshots/extent0_preparedSeasideImage_${imageType}_${gemStoneId}.dbf
+	"
+
+	^ self extentStage isEmpty
+		ifTrue: [ self _sourceExtentDir / ('extent0_', self imageType, '_', self gemStoneId , '.dbf') ]
+		ifFalse: [ self _sourceExtentDir / ('extent0_', self extentStage, '_', self imageType, '_', self gemStoneId , '.dbf') ]
+]
+
+{ #category : 'script execution' }
+runImageTests >> startTopaz: theSessionDescription withArgs: argString doit: doitString outputFileName: outputFileName [ 
+
+	| inputFile hadError |
+Transcript cr; show: 'OUTPUT FROM TEST TOPAZ: ', outputFileName.
+	inputFile := self _tmpFile.
+	inputFile writeStreamDo: [:fileStream |
+		fileStream 
+			nextPutAll: (self _topazPreamble: theSessionDescription);
+			lf;
+
+			nextPutAll: 'output push ', outputFileName;
+			lf;
+
+			nextPutAll: 'run';
+			lf;
+			nextPutAll:doitString ;
+			lf;
+			nextPutAll: '%';
+			lf;
+			nextPutAll: 'errorCount';
+			lf;
+			nextPutAll: 'exit 0';
+			yourself.
+		fileStream flush ].
+	hadError := false.
+	[ self _performOnServer: (self gsDevKit_home / 'bin' / 'startTopaz') fullName, ' ', theSessionDescription stoneName, ' ', argString, ' < ', inputFile fullName ] 
+		on: Error
+		do: [:ex | "Transcript cr; show: ex description." hadError := true. ].
+"
+	outputFileName asFileReference readStreamDo: [:fileStream |
+		Transcript cr; show: fileStream contents ].
+"
+	hadError ifTrue: [ System logout "exit with error status" ]
+]
+
+{ #category : 'accessing' }
+runImageTests >> stoneName [
+
+	^ stoneName ifNil: [ opts at: 'stoneName' ifPresent: [:arg | stoneName := arg ] ]
 ]
 
 { #category : 'usage' }

@@ -9,13 +9,7 @@ GsuGsDevKit_3_5_x_StdUpgrade >> _defaultExistingConfigurationOfNames [
 	" These two configurations are the only configurations that must be removed, before loading GLASS1 or GsDevKit or tODE"
 
 	| default |
-	default := { #ConfigurationOfGsMisc . #ConfigurationOfGsCore }.
-false ifTrue: [ 	self _glassLoaded 
-		ifTrue: [ 
-			"if we are loading GLASS, the ConfigurationOfGLASS needs to be reloaded as well"
-			default 
-				add: #ConfigurationOfGLASS;
-				add: #ConfigurationOfGsMonticello ] ].
+	default := { #ConfigurationOfGsMisc . #ConfigurationOfGsCore}.
 	^ default
 ]
 
@@ -67,6 +61,19 @@ GsuGsDevKit_3_5_x_StdUpgrade >> _reloadBootstrapPackages [
 			directory: dir;
 			version: packageVersion;
 			load ]
+]
+
+{ #category : 'private' }
+GsuGsDevKit_3_5_x_StdUpgrade >> _reloadExistingConfigurations [
+	"before #loadApplicationLoadSpecs, we removed configurations from the image, and there could be methods that still reference, 
+		so reload the default copies of configurations. The configurations are expected to be present in
+		http://seaside.gemtalksystems.com/ss/MetacelloRepository"
+
+	self _defaultExistingConfigurationOfNames do: [:configName |
+		(self _globalNamed: 'Gofer') new 
+			url: 'http://seaside.gemtalksystems.com/ss/MetacelloRepository';
+			package: configName asString;
+			load ].
 ]
 
 { #category : 'private' }
@@ -144,6 +151,8 @@ GsuGsDevKit_3_5_x_StdUpgrade >> prepareGsDevKitImage_loadApplicationCode [
 	"now load application"
 
 	self loadApplicationLoadSpecs.
+
+	self _reloadExistingConfigurations.
 
 	self log: '		load GsDevKit application code DONE (commit)'.
 ]

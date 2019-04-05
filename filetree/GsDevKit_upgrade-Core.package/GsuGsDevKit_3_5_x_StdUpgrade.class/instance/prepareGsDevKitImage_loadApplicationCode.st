@@ -13,4 +13,6 @@ prepareGsDevKitImage_loadApplicationCode
 
 	self loadApplicationLoadSpecs.
 
+	self _reloadExistingConfigurations.
+
 	self log: '		load GsDevKit application code DONE (commit)'.

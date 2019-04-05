@@ -202,8 +202,8 @@ runImageTests >> installPrereqs [
 runImageTests >> loadForEdit [
 	Rowan classTools stashClassTool 
 		loadTonelClassFile: self stashFile
-		projectName: 'runImageTests' 
-		packageName: 'runImageTests-SessionDescription'.
+		projectName: 'runImageTestsForEdit' 
+		packageName: 'runImageTestsForEdit-SessionDescription'.
 	System commit.
 	^ 'current stone NRS: ', System stoneName asString
 ]

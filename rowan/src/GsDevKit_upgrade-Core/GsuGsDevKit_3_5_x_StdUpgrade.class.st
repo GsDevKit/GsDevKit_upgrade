@@ -74,6 +74,7 @@ GsuGsDevKit_3_5_x_StdUpgrade >> _reloadExistingConfigurations [
 			"no need to reload _defaultExistingConfigurationOfNames ... GLASS was reloaded"
 			^ self ].
 	self _defaultExistingConfigurationOfNames do: [:configName |
+		self log: '		reloading existing configuration: ', configName asString.
 		(self _globalNamed: 'Gofer') new 
 			url: 'http://seaside.gemtalksystems.com/ss/MetacelloRepository';
 			package: configName asString;
@@ -148,9 +149,6 @@ GsuGsDevKit_3_5_x_StdUpgrade >> prepareGsDevKitImage_loadApplicationCode [
 	"load application code"
 
 	self log: 'Prepare gsdevkit - load GsDevKit application code'.
-
-	"force configurations to be reloaded if needed"
-	self removeExistingConfigurations.
 
 	"now load application"
 

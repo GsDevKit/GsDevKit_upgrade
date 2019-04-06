@@ -1128,6 +1128,8 @@ loadApplicationLoadSpecs
 			"(re)load the bootstraPackageFileNames for GLASS"
 			self _reloadBootstrapPackages ]
 		ifFalse:  [
+			"force configurations to be reloaded if needed"
+			self removeExistingConfigurations.
 			"load each of the projects listed in boolStrapApplicationLoadSpecs"
 			self _loadApplicationLoadSpecs: self bootstrapApplicationLoadSpecs ].
 
@@ -2663,6 +2665,8 @@ _reloadBootstrapPackages
 	"reload can only be done when no method recompilation is required"
 
 	"noop"
+
+	self log: '		_reloadBootstrapPackages noop'
 %
 
 ! Class implementation for 'GsuGsDevKit_3_2_x_BootstrapUpgrade'
@@ -2876,9 +2880,6 @@ prepareGsDevKitImage_loadApplicationCode
 
 	self log: 'Prepare gsdevkit - load GsDevKit application code'.
 
-	"force configurations to be reloaded if needed"
-	self removeExistingConfigurations.
-
 	"now load application"
 
 	self loadApplicationLoadSpecs.
@@ -3064,6 +3065,7 @@ _reloadExistingConfigurations
 			"no need to reload _defaultExistingConfigurationOfNames ... GLASS was reloaded"
 			^ self ].
 	self _defaultExistingConfigurationOfNames do: [:configName |
+		self log: '		reloading existing configuration: ', configName asString.
 		(self _globalNamed: 'Gofer') new 
 			url: 'http://seaside.gemtalksystems.com/ss/MetacelloRepository';
 			package: configName asString;

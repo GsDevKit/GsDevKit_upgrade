@@ -298,6 +298,8 @@ GsuAbstractGsDevKitUpgrade >> _reloadBootstrapPackages [
 	"reload can only be done when no method recompilation is required"
 
 	"noop"
+
+	self log: '		_reloadBootstrapPackages noop'
 ]
 
 { #category : 'bootstrapping' }

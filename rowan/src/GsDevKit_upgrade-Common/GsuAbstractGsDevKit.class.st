@@ -433,6 +433,8 @@ GsuAbstractGsDevKit >> loadApplicationLoadSpecs [
 			"(re)load the bootstraPackageFileNames for GLASS"
 			self _reloadBootstrapPackages ]
 		ifFalse:  [
+			"force configurations to be reloaded if needed"
+			self removeExistingConfigurations.
 			"load each of the projects listed in boolStrapApplicationLoadSpecs"
 			self _loadApplicationLoadSpecs: self bootstrapApplicationLoadSpecs ].
 

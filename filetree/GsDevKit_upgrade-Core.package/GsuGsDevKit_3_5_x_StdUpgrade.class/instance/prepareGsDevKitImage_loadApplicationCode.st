@@ -6,9 +6,6 @@ prepareGsDevKitImage_loadApplicationCode
 
 	self log: 'Prepare gsdevkit - load GsDevKit application code'.
 
-	"force configurations to be reloaded if needed"
-	self removeExistingConfigurations.
-
 	"now load application"
 
 	self loadApplicationLoadSpecs.

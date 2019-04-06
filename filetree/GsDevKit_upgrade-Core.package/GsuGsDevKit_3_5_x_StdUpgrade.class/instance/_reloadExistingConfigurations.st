@@ -9,6 +9,7 @@ _reloadExistingConfigurations
 			"no need to reload _defaultExistingConfigurationOfNames ... GLASS was reloaded"
 			^ self ].
 	self _defaultExistingConfigurationOfNames do: [:configName |
+		self log: '		reloading existing configuration: ', configName asString.
 		(self _globalNamed: 'Gofer') new 
 			url: 'http://seaside.gemtalksystems.com/ss/MetacelloRepository';
 			package: configName asString;

@@ -63,7 +63,7 @@ GsuAbstractGsDevKitUpgrade class >> _globalName [
 GsuAbstractGsDevKitUpgrade class >> _installSymDictInSymbolList [
 	| dictName symbolName session symbolList |
 
-	dictName := 'GsDevKit_DymDict'.
+	dictName := 'GsDevKit_SymDict'.
 	symbolName := dictName asSymbol.
 	session := GsCurrentSession currentSession.
 	symbolList := session symbolList.
@@ -300,6 +300,25 @@ GsuAbstractGsDevKitUpgrade >> _reloadBootstrapPackages [
 	"noop"
 
 	self log: '		_reloadBootstrapPackages noop'
+]
+
+{ #category : 'debugging' }
+GsuAbstractGsDevKitUpgrade >> _upgradeClassOops [
+	"answer a dictionary whose keys are class names and whose values are the oop of the named class."
+
+	"
+		(UserGlobals at: #GsDevKit_Image_Upgrade) _upgradeClassOops
+	or
+		(((AllUsers userWithId: 'SystemUser') 
+		objectNamed: #UserGlobals) 
+			at: #'GsDevKit_Image_Upgrade') _upgradeClassOops
+	"
+
+	| dict |
+	dict := Dictionary new.
+	self class _symbolDictionary keysAndValuesDo: [:className :class |
+		dict at: className put: class asOop ].
+	^dict
 ]
 
 { #category : 'bootstrapping' }

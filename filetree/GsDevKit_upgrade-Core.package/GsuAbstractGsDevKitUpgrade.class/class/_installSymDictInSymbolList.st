@@ -2,7 +2,7 @@ private
 _installSymDictInSymbolList
 	| dictName symbolName session symbolList |
 
-	dictName := 'GsDevKit_DymDict'.
+	dictName := 'GsDevKit_SymDict'.
 	symbolName := dictName asSymbol.
 	session := GsCurrentSession currentSession.
 	symbolList := session symbolList.

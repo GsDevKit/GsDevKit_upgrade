@@ -10,7 +10,7 @@ set u SystemUser p swordfish
 login
 
 run
-	UserGlobals at: #SeasideUpgradeUser put: 'DataCurator'.
+	UserGlobals at: #SeasideUpgradeUser put: 'Dev'.
 	System commitTransaction.
 %
 

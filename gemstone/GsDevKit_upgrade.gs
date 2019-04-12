@@ -3415,3 +3415,54 @@ _removeClassNamed: className
 				ifFalse: [ self log: '		DID NOT remove class named: ', className printString ] ]
 %
 
+category: 'blah'
+classmethod: GsPackagePolicy
+_previousVersion
+"For use in repository upgrade code, before upgradeimage completes, returns a 2 digit
+ SmallInteger."
+| prevVer hist |
+prevVer := 0 .
+(Globals at:#DbfHistory otherwise: nil) ifNotNil:[:h | | ofs |
+  hist := h .
+  ofs := hist _findLastString: 'upgrade to GemStone' startingAt: hist size
+               ignoreCase: true .
+  ofs == 0 ifTrue:[ 
+     (ImageVersion at: #gsVersion otherwise: nil ) ifNotNil:[:iVer |
+        ofs := 1 .
+        hist := '  v' , iVer, '  ' .
+     ].
+  ].
+  ofs ~~ 0 ifTrue:[ | subStr |
+    subStr := hist copyFrom: ofs to: hist size .
+    (hist matchPattern: { $* . 'v3.5.' . $* }) ifTrue:[ prevVer := 35 ] ifFalse:[
+    (hist matchPattern: { $* . 'v3.4.' . $* }) ifTrue:[ prevVer := 34 ] ifFalse:[
+    (hist matchPattern: { $* . 'v3.3.' . $* }) ifTrue:[ prevVer := 33 ] ifFalse:[
+    (hist matchPattern: { $* . 'v3.2.' . $* }) ifTrue:[ prevVer := 32 ] ]]].
+  ].
+].
+prevVer == 0 ifTrue:[ prevVer := self _originVersion ].
+^ prevVer
+%
+category: 'blah'
+classmethod: GsPackagePolicy
+_originVersion
+
+"For use in repository upgrade code, before upgradeimage completes, returns a 2 digit
+ SmallInteger."
+| prevVer |
+prevVer := 0 .
+(Globals at:#DbfHistory otherwise: nil) ifNotNil:[:hist |
+  (hist matchPattern: { $* . 'v3.5.' .  $? . ' kernel classes filein' . $* }) ifTrue:[
+    prevVer := 35 .
+  ] ifFalse:[
+  (hist matchPattern: { $* . 'v3.4.' .  $? . ' kernel classes filein' . $* }) ifTrue:[
+    prevVer := 34 .
+  ] ifFalse:[
+  (hist matchPattern: { $* . 'v3.3.' .  $? . ' kernel classes filein' . $* }) ifTrue:[
+    prevVer := 33 .
+  ] ifFalse:[
+  (hist matchPattern: { $* . 'v3.2.' .  $? . ' kernel classes filein' . $* }) ifTrue:[
+    prevVer := 32 .
+]]]]].
+^ prevVer
+%

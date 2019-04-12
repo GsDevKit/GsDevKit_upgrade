@@ -46,7 +46,7 @@
 run
 	UserGlobals
 		at: #GsDevKit_Image_Upgrade
-		put: (GsuAbstractGsDevKitUpgrade upgradeUserName: SeasideUpgradeUser).
+		put: (GsuAbstractGsDevKitUpgrade upgradeUserName: SeasideUpgradeUser upgradeSymbolDictName: #Seaside).
 	System commitTransaction
 %
 

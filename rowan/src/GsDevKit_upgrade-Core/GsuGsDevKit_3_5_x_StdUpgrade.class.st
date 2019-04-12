@@ -161,7 +161,7 @@ GsuGsDevKit_3_5_x_StdUpgrade >> prepareGsDevKitImage_loadApplicationCode [
 
 { #category : 'prepare gsdevkit  image' }
 GsuGsDevKit_3_5_x_StdUpgrade >> prepareGsDevKitImage_patch_compileMethodCategory [
-	"patch only needed suring standard upgrade ..."
+	"patch only needed during standard upgrade ..."
 
 	"will be overridden when Core package loaded"
 

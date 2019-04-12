@@ -1,6 +1,6 @@
 prepare gsdevkit  image
 prepareGsDevKitImage_patch_compileMethodCategory
-	"patch only needed suring standard upgrade ..."
+	"patch only needed during standard upgrade ..."
 
 	"will be overridden when Core package loaded"
 

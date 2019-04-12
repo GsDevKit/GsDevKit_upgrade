@@ -5,6 +5,12 @@ Class {
 }
 
 { #category : 'private' }
+GsuGsDevKit_3_5_x_Upgrade class >> _calculateUpgradeClass [
+
+	^ self
+]
+
+{ #category : 'private' }
 GsuGsDevKit_3_5_x_Upgrade >> _bootstrapRelease [
 
 	^ GsuGemStone_3_5_x_Release major: 3 minor: 5 patch: self _patchRelease

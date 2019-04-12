@@ -267,6 +267,21 @@ true.
 %
 
 doit
+(GsuGsDevKit_3_5_x_StdUpgrade
+	subclass: 'GsuGsDevKit_3_4_x_StdUpgrade'
+	instVarNames: #(  )
+	classVars: #(  )
+	classInstVars: #(  )
+	poolDictionaries: #()
+	inDictionary: GsDevKit_Upgrade_SymDict_private
+	options: #())
+		category: 'GsDevKit_upgrade-Core';
+		comment: '';
+		immediateInvariant.
+true.
+%
+
+doit
 (GsuAbstractGsDevKit
 	subclass: 'GsuGsDevKitBootstrap'
 	instVarNames: #( bootstrapGemStoneRelease )
@@ -2735,6 +2750,15 @@ minor
 
 ! Class implementation for 'GsuGsDevKit_3_5_x_Upgrade'
 
+!		Class methods for 'GsuGsDevKit_3_5_x_Upgrade'
+
+category: 'private'
+classmethod: GsuGsDevKit_3_5_x_Upgrade
+_calculateUpgradeClass
+
+	^ self
+%
+
 !		Instance methods for 'GsuGsDevKit_3_5_x_Upgrade'
 
 category: 'initialization'
@@ -3139,6 +3163,67 @@ _standardBaselineLoaded: baselineClassName
 	^ false
 %
 
+! Class implementation for 'GsuGsDevKit_3_4_x_StdUpgrade'
+
+!		Instance methods for 'GsuGsDevKit_3_4_x_StdUpgrade'
+
+category: 'prepare image pragma user'
+method: GsuGsDevKit_3_4_x_StdUpgrade
+prepareImage_pragmas_user
+	"In 3.4.0, the Pragma class is in the base, and the old Pragma class is be obsoleted,
+		so we need to collect all of the methods that have pragmas and then recompile them 
+		to use the new Pragma class ... when we are ready. "
+
+	"For 3.2.x, all methods need to be recompiled ... pragma data structures should be destroyed 
+		before all methods reloaded"
+
+	"For 3.3.x we'll need to recompile all methods that have pragmas, so that new structure is used"
+
+	"Part 2: collect methods that refrence the obsolete pragma class or have pragmas that 
+		need to be recomputed and need to be recompiled"
+
+	| pragmaClass oldPackagePolicyEnabled |
+
+	(pragmaClass := self upgradeSymbolDict at: #Pragma ifAbsent: [])
+		ifNil: [ ^ self log: '	No Pragma class found in ', self upgradeSymbolDict name asString, ' symbol dictionary' ].
+	self log: '	Finding all methods with pragmas for later recompile(', GsPackagePolicy current enabled printString, ')'.
+	self log: '	Old pragma class ', pragmaClass name printString, '[', pragmaClass asOop printString, '] -- will be made obsolete'.
+
+	"need to make sure that this method is used so that we can extract pragmas from old structures"
+	self log: '	Installing ...oldPragma>>'.
+	(pragmaClass class
+		compileMethod: self _prepareImage_pragmas_withPragmas_source 
+		dictionaries: self upgradeUserProfile symbolList 
+		category: 'Updatting the Method Dictionary -- during upgrade') ifNotNil: [:ar | self error: 'did not compile' ].
+
+	oldPackagePolicyEnabled := GsPackagePolicy current instVarAt: 1.
+	self log: '	GsPackagePolicy currently ', (oldPackagePolicyEnabled ifTrue: [ 'enabled.'] ifFalse: ['disabled.']).
+	GsPackagePolicy current instVarAt: 1 put: true.
+
+	self log: '	Finding methods with pragmas for user: ', self upgradeUserName printString.
+	self log: '		Pragma ', (self _globalNamed: 'Pragma') asOop printString.
+	self log: '		System myUserProfile: ', System myUserProfile userId.
+	(((ClassOrganizer newWithRoot: Object forUserId: self upgradeUserName) allSubclassesOf: Object), { Object })
+		do: [ :cls | 
+		  {cls.
+		  (cls class)}
+			do: [ :beh | 
+				| methodDict |
+				methodDict :=  beh _fullMethodDictEnv0.
+			  methodDict keys
+				do: [ :sel | 
+				  (methodDict at: sel otherwise: nil)
+					ifNotNil: [ :meth | 
+					  (beh pragmasForMethod: meth) isEmpty
+						ifFalse: [ 
+							self methodsWithPragmas add: meth.
+							self log: '		', beh name asString, (beh isMeta ifTrue: [' class'] ifFalse: ['']), '>>', sel printString ] ] ] ] ].
+
+	GsPackagePolicy current instVarAt: 1 put: oldPackagePolicyEnabled.
+
+	self log: '	... finished finding methods with pragmas'
+%
+
 ! Class implementation for 'GsuGsDevKitBootstrap'
 
 !		Class methods for 'GsuGsDevKitBootstrap'
@@ -3441,54 +3526,3 @@ _removeClassNamed: className
 				ifFalse: [ self log: '		DID NOT remove class named: ', className printString ] ]
 %
 
-category: 'blah'
-classmethod: GsPackagePolicy
-_previousVersion
-"For use in repository upgrade code, before upgradeimage completes, returns a 2 digit
- SmallInteger."
-| prevVer hist |
-prevVer := 0 .
-(Globals at:#DbfHistory otherwise: nil) ifNotNil:[:h | | ofs |
-  hist := h .
-  ofs := hist _findLastString: 'upgrade to GemStone' startingAt: hist size
-               ignoreCase: true .
-  ofs == 0 ifTrue:[ 
-     (ImageVersion at: #gsVersion otherwise: nil ) ifNotNil:[:iVer |
-        ofs := 1 .
-        hist := '  v' , iVer, '  ' .
-     ].
-  ].
-  ofs ~~ 0 ifTrue:[ | subStr |
-    subStr := hist copyFrom: ofs to: hist size .
-    (hist matchPattern: { $* . 'v3.5.' . $* }) ifTrue:[ prevVer := 35 ] ifFalse:[
-    (hist matchPattern: { $* . 'v3.4.' . $* }) ifTrue:[ prevVer := 34 ] ifFalse:[
-    (hist matchPattern: { $* . 'v3.3.' . $* }) ifTrue:[ prevVer := 33 ] ifFalse:[
-    (hist matchPattern: { $* . 'v3.2.' . $* }) ifTrue:[ prevVer := 32 ] ]]].
-  ].
-].
-prevVer == 0 ifTrue:[ prevVer := self _originVersion ].
-^ prevVer
-%
-category: 'blah'
-classmethod: GsPackagePolicy
-_originVersion
-
-"For use in repository upgrade code, before upgradeimage completes, returns a 2 digit
- SmallInteger."
-| prevVer |
-prevVer := 0 .
-(Globals at:#DbfHistory otherwise: nil) ifNotNil:[:hist |
-  (hist matchPattern: { $* . 'v3.5.' .  $? . ' kernel classes filein' . $* }) ifTrue:[
-    prevVer := 35 .
-  ] ifFalse:[
-  (hist matchPattern: { $* . 'v3.4.' .  $? . ' kernel classes filein' . $* }) ifTrue:[
-    prevVer := 34 .
-  ] ifFalse:[
-  (hist matchPattern: { $* . 'v3.3.' .  $? . ' kernel classes filein' . $* }) ifTrue:[
-    prevVer := 33 .
-  ] ifFalse:[
-  (hist matchPattern: { $* . 'v3.2.' .  $? . ' kernel classes filein' . $* }) ifTrue:[
-    prevVer := 32 .
-]]]]].
-^ prevVer
-%

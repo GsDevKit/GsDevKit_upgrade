@@ -44,7 +44,7 @@ prepareImage_pragmas_user
 				do: [ :sel | 
 				  (methodDict at: sel otherwise: nil)
 					ifNotNil: [ :meth | 
-					  (beh pragmasForMethod: meth) isEmpty
+					  (beh pragmasForMethod: sel) isEmpty
 						ifFalse: [ 
 							self methodsWithPragmas add: meth.
 							self log: '		', beh name asString, (beh isMeta ifTrue: [' class'] ifFalse: ['']), '>>', sel printString ] ] ] ] ].

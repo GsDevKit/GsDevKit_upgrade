@@ -503,7 +503,9 @@ category: 'prepare gsdevkit image'
 method: GsuAbstractGemStoneRelease
 prepareGsDevKitImage_patch_compileMethodCategory:  aGsDevKitUpgrade
 
-	aGsDevKitUpgrade prepareGsDevKitImage_patch_compileMethodCategory
+	aGsDevKitUpgrade 
+		prepareGsDevKitImage_patch_compileMethodCategory;
+		prepareGsDevKitImage_user_patches
 %
 
 category: 'prepare gsdevkit image'
@@ -2037,6 +2039,15 @@ prepareGsDevKitImage_resetExistingGlobalState
 
 category: 'prepare gsdevkit  image'
 method: GsuAbstractGsDevKitUpgrade
+prepareGsDevKitImage_user_patches
+
+	"Needed for installing GsdevKit/GLASS - pre-load patch of a method needed to install user code"
+
+	"noop"
+%
+
+category: 'prepare gsdevkit  image'
+method: GsuAbstractGsDevKitUpgrade
 prepareGsDevKitImage_validation
 	"verify that all methods visible to this user have been recompiled."
 
@@ -2770,18 +2781,19 @@ patch
 	^ self _patchRelease
 %
 
-category: 'prepare image'
+category: 'prepare gsdevkit image'
 method: GsuGsDevKit_3_5_x_Upgrade
-prepareImage_patches
+prepareGsDevKitImage_user_patches
 
-	"Needed for installing GsdevKit/GLASS - should be run as System User"
+	"Needed for installing GsdevKit/GLASS - pre-load patch of a method needed to install user code
+		will be overridden when GLASS/GLASS1/GsDevKit is installed"
 
-	super prepareImage_patches.
-	self log: '	patch Behavior >> _primitiveCompileMethod:symbolList:category:oldLitVars:intoMethodDict:intoCategories:intoPragmas:environmentId:'.
-	(Behavior
-		compileMethod: self _prepareImage_behavior_patchSource 
+	super prepareGsDevKitImage_user_patches.
+	self log: '	patch Behavior class >> parseSelector:for:'.
+	(Behavior class
+		compileMethod: self _prepareImage_behavior_class_parseSelectorSource 
 		dictionaries: self upgradeUserProfile symbolList 
-		category:  '*Core35x') ifNotNil: [:ar | self error: 'did not compile' ]
+		category:  '*core-squeak') ifNotNil: [:ar | self error: 'did not compile' ]
 %
 
 category: 'initialization'
@@ -2816,17 +2828,31 @@ _patchRelease
 
 category: 'private'
 method: GsuGsDevKit_3_5_x_Upgrade
-_prepareImage_behavior_patchSource
+_prepareImage_behavior_class_parseSelectorSource
 
-	^ '_primitiveCompileMethod: sourceString symbolList: aSymbolList category: categorySymbol oldLitVars: litVarArray intoMethodDict: aMethodDict intoCategories: aCategDict intoPragmas: ignored environmentId: environmentId
-  ^ self
-    _primitiveCompileMethod: sourceString
-    symbolList: aSymbolList
-    category: categorySymbol
-    oldLitVars: litVarArray
-    intoMethodDict: aMethodDict
-    intoCategories: aCategDict
-    environmentId: environmentId'
+	^ 'parseSelector: methodString for: aBehavior
+	| mDict cDict meth undefinedSymbolList |
+	mDict := GsMethodDictionary new.
+	cDict := GsMethodDictionary new.
+	undefinedSymbolList := GsSession currentSession symbolList
+		objectNamed: #''UndefinedSymbolList''.
+	undefinedSymbolList == nil
+		ifTrue: [ undefinedSymbolList := SymbolList new ].
+	meth := aBehavior
+		_primitiveCompileMethod: methodString
+		symbolList: GsSession currentSession symbolList , undefinedSymbolList
+		category: #''xxxyyz''
+		oldLitVars: nil
+		intoMethodDict: mDict
+		intoCategories: cDict
+		environmentId: 0.
+	meth class ~~ GsNMethod
+		ifTrue: [ 
+			"if error slot is nil, then the method wasn''t compiled because of errors"
+			(meth at: 2) == nil
+				ifFalse: [ ^ nil ].
+			meth := meth at: 1 ].
+	^ meth selector asString'
 %
 
 ! Class implementation for 'GsuGsDevKit_3_5_x_BootstrapUpgrade'
@@ -2912,7 +2938,7 @@ prepareGsDevKitImage_loadApplicationCode
 category: 'prepare gsdevkit  image'
 method: GsuGsDevKit_3_5_x_StdUpgrade
 prepareGsDevKitImage_patch_compileMethodCategory
-	"patch only needed suring standard upgrade ..."
+	"patch only needed during standard upgrade ..."
 
 	"will be overridden when Core package loaded"
 

@@ -188,7 +188,9 @@ GsuAbstractGemStoneRelease >> prepareGsDevKitImage_loadApplicationCode:  aGsDevK
 { #category : 'prepare gsdevkit image' }
 GsuAbstractGemStoneRelease >> prepareGsDevKitImage_patch_compileMethodCategory:  aGsDevKitUpgrade [
 
-	aGsDevKitUpgrade prepareGsDevKitImage_patch_compileMethodCategory
+	aGsDevKitUpgrade 
+		prepareGsDevKitImage_patch_compileMethodCategory;
+		prepareGsDevKitImage_user_patches
 ]
 
 { #category : 'prepare gsdevkit image' }

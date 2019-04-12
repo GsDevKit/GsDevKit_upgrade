@@ -639,6 +639,14 @@ GsuAbstractGsDevKitUpgrade >> prepareGsDevKitImage_resetExistingGlobalState [
 ]
 
 { #category : 'prepare gsdevkit  image' }
+GsuAbstractGsDevKitUpgrade >> prepareGsDevKitImage_user_patches [
+
+	"Needed for installing GsdevKit/GLASS - pre-load patch of a method needed to install user code"
+
+	"noop"
+]
+
+{ #category : 'prepare gsdevkit  image' }
 GsuAbstractGsDevKitUpgrade >> prepareGsDevKitImage_validation [
 	"verify that all methods visible to this user have been recompiled."
 

@@ -4,42 +4,42 @@
 !
 ! Name -createGsDevKit_upgrade.topaz
 !
-! Purpose:
-! 	topaz script for creating the default upgrade object, using the default values 
-!		for options.
+!  Purpose:
+!   topaz script for creating the default upgrade object, using the default values 
+!    for options.
 !
-!		To customize the upgrade edit this scrpt with the desired values and define the
-!			path to your script using the -P option to the upgradeSeasideImage shell 
-!			script:
+!    To customize the upgrade edit this scrpt with the desired values and define the
+!      path to your script using the -P option to the upgradeSeasideImage shell 
+!      script:
 !
-!				(GsuAbstractGsDevKitUpgrade
-!					upgradeUserName: 'seaside' 										"default is 'DataCurator'"
-!						upgradeSymbolDictName: #Seaside)						"default is #UserGlobals"
-!							bootstrapPostLoadClassList: nil;					"default is { #SecureHashAlgorithm . #MCFileTreeFileDirectoryUtils  }"
-!							bootstrapRepositoryDirectory: nil;				"default is GsPackageLibrary getMonticelloRepositoryDirectory"
-!							bootstrapApplicationLoadSpecs: nil;				"default depends upon what is installed in image. Add your application
-!																													spec to end of list or arrange to reload your application after
-!																													upgradeSeasideImage completes:
-!																														GLASS			- { 
-!																																					{ 'ConfigurationOfGLASS' . 
-!																																						'1.0-beta.9.2.2' . 
-!																																						#('default') . 
-!																																						nil "use bootstrapRepositoryDirectory -- GsPackageLibrary getMonticelloRepositoryDirectory by default"
-!																																					} }
-!																														"when upgrading from 3.2.x the ConfigurationOfGLASS spec should be included as the first entry"
-!																														GLASS1		- { 
-!																																					{ 'Metacello' . 'github://dalehenrich/metacello-work:master/repository' }.
-!																																					{ 'GLASS1' } . 'github://glassdb/glass:master/repository' . #( 'default' 'Base' 'Announcements') }"
-!																														tODE			- { 
-!																																					{ 'Metacello' . 'github://dalehenrich/metacello-work:master/repository' }.
-!																																					{ 'Tode' . 'github://dalehenrich/tode:master/repository' . #( 'GemStone Dev' ) } }"
-!																														GsDevKit	- { 
-!																																					{ 'Metacello' . 'github://dalehenrich/metacello-work:master/repository' }.
-!																																					{ 'GsDevKit' . 'github://GsDevKit/GsDevKit:master/repository' . #( 'default' 'Base' 'Announcements') } }"
-!							bootstrapExistingConfigurationList: nil;	"default is list of ConfigurationOf classes in upgradeSymbolDictName"
-!							yourself
+!        (GsuAbstractGsDevKitUpgrade
+!          upgradeUserName: 'seaside'                     "default is 'DataCurator'"
+!            upgradeSymbolDictName: #Seaside)            "default is #UserGlobals"
+!              bootstrapPostLoadClassList: nil;          "default is { #SecureHashAlgorithm . #MCFileTreeFileDirectoryUtils  }"
+!              bootstrapRepositoryDirectory: nil;        "default is GsPackageLibrary getMonticelloRepositoryDirectory"
+!              bootstrapApplicationLoadSpecs: nil;        "default depends upon what is installed in image. Add your application
+!                                                          spec to end of list or arrange to reload your application after
+!                                                          upgradeSeasideImage completes:"
+!                                                           "GLASS"       { 
+!                                                                          { 'ConfigurationOfGLASS' . 
+!                                                                            '1.0-beta.9.2.2' . 
+!                                                                            #('default') . 
+!                                                                            nil "use bootstrapRepositoryDirectory -- GsPackageLibrary getMonticelloRepositoryDirectory by default"
+!                                                                          } }
+!                                                            "when upgrading from 3.2.x the ConfigurationOfGLASS spec should be included as the first entry"
+!                                                            "GLASS1"     { 
+!                                                                          { 'Metacello' . 'github://dalehenrich/metacello-work:master/repository' }.
+!                                                                          { 'GLASS1' } . 'github://glassdb/glass:master/repository' . #( 'default' 'Base' 'Announcements') }
+!                                                            "tODE"       { 
+!                                                                          { 'Metacello' . 'github://dalehenrich/metacello-work:master/repository' }.
+!                                                                          { 'Tode' . 'github://dalehenrich/tode:master/repository' . #( 'GemStone Dev' ) } }"
+!                                                            "GsDevKit"   { 
+!                                                                          { 'Metacello' . 'github://dalehenrich/metacello-work:master/repository' }.
+!                                                                          { 'GsDevKit' . 'github://GsDevKit/GsDevKit:master/repository' . #( 'default' 'Base' 'Announcements') } }
+!              "bootstrapExistingConfigurationList: nil;  "default is list of ConfigurationOf classes in upgradeSymbolDictName"
+!              yourself
 !
-!			See https://github.com/GsDevKit/GsDevKit_upgrade/blob/master/README.md for additional details.
+!      See https://github.com/GsDevKit/GsDevKit_upgrade/blob/master/README.md for additional details.
 !
 !=======================================================================
 

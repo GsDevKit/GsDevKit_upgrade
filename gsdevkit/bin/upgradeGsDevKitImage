@@ -57,7 +57,28 @@ export upgradeDir="$GS_HOME/shared/repos/GsDevKit_upgrade/gemstone"
 pushd "${upgradeLogDir}" >& /dev/null
   # start upgradeSeasideImage
 	rm -f *.log *.out
-  echo "STARTING GsdevKit_upgrad upgradeImage "
+startTopaz $GEMSTONE_NAME -lq << EOF
+	iferr 1 stk
+	iferr 2 stack
+	iferr 3 exit 1
+	display oops
+	limit bytes 200
+	set u Dev p swordfish
+	login
+	run
+	| ug |
+	ug := ((AllUsers userWithId: 'DataCurator') 
+		objectNamed: #UserGlobals).
+	ug associationsDo: [:assoc |
+		(#( Transcript MethodVersionHistory_UniqueInstance Smalltalk UndefinedSymbolList UndefinedSymbols SqueakWorkspace) includes: assoc key)
+			ifTrue: [ UserGlobals add: assoc ]].
+%
+	commit
+	logout
+	errorCount
+	exit	
+EOF
+  echo "STARTING GsdevKit_upgrade upgradeImage "
 	startTopaz $GEMSTONE_NAME -lq < $GS_HOME/shared/repos/GsDevKit_upgrade/bin/installGsDevKit_upgrade
 	startTopaz $GEMSTONE_NAME -lq < $GS_HOME/shared/repos/GsDevKit_upgrade/bin/prepareGsDevKitImage
 	startTopaz $GEMSTONE_NAME -lq < $GS_HOME/shared/repos/GsDevKit_upgrade/bin/prepareGsDevKitImage_pragma_user

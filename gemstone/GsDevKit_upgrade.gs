@@ -1063,7 +1063,11 @@ bootstrapApplicationLoadSpecs
 	^ bootstrapApplicationLoadSpecs
 		ifNil: [ 
 			"only set the default if the current user is the upgrade user"
-			self upgradeUserName = System myUserProfile userId ifFalse: [ ^#() ].
+			self upgradeUserName = System myUserProfile userId 
+				ifFalse: [ 
+					self log: '	load ConfigurationOfGLASS -- upgradeUserName (', self upgradeUserName , 
+						') ~= current userId (', System myUserProfile userId , ')'.
+					^#() ].
 			bootstrapApplicationLoadSpecs := self _defaultBootstrapApplicationLoadSpecs ]
 %
 

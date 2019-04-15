@@ -4,6 +4,14 @@ Class {
 	#category : 'GsDevKit_upgrade-Core'
 }
 
+{ #category : 'prepare gsdevkit  image' }
+GsuGsDevKit_3_4_x_StdUpgrade >> prepareGsDevKitImage_user_patches [
+
+	"Needed for installing GsdevKit/GLASS - pre-load patch of a method needed to install user code"
+
+	"noop"
+]
+
 { #category : 'prepare image pragma user' }
 GsuGsDevKit_3_4_x_StdUpgrade >> prepareImage_pragmas_user [
 	"In 3.4.0, the Pragma class is in the base, and the old Pragma class is be obsoleted,

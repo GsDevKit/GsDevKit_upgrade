@@ -3171,6 +3171,15 @@ _standardBaselineLoaded: baselineClassName
 
 !		Instance methods for 'GsuGsDevKit_3_4_x_StdUpgrade'
 
+category: 'prepare gsdevkit  image'
+method: GsuGsDevKit_3_4_x_StdUpgrade
+prepareGsDevKitImage_user_patches
+
+	"Needed for installing GsdevKit/GLASS - pre-load patch of a method needed to install user code"
+
+	"noop"
+%
+
 category: 'prepare image pragma user'
 method: GsuGsDevKit_3_4_x_StdUpgrade
 prepareImage_pragmas_user

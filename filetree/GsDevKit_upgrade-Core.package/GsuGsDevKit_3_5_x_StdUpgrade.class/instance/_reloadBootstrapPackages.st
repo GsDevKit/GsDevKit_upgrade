@@ -3,6 +3,10 @@ _reloadBootstrapPackages
 	"(re)load the bootstraPackageFileNames for GLASS"
 
 	| dir |
+	self skipLoadApplication
+		ifTrue: [ 
+			self log: '	skip reloading bootstrap packages'.
+			^ self ].
 	self log: '	reloading bootstrap packages from ', self bootstrapRepositoryDirectory.
 	dir := (self _globalNamed: 'ServerFileDirectory') on: self bootstrapRepositoryDirectory.
 	self targetGemStoneRelease reloadBootstrapPackageFileNames do: [:bootstrapPackageFileName |

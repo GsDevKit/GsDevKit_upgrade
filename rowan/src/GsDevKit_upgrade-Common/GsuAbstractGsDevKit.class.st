@@ -8,7 +8,8 @@ Class {
 		'bootstrapPostLoadClassList',
 		'bootstrapRepositoryDirectory',
 		'bootstrapApplicationLoadSpecs',
-		'bootstrapExistingConfigurationList'
+		'bootstrapExistingConfigurationList',
+		'skipLoadApplication'
 	],
 	#category : 'GsDevKit_upgrade-Common'
 }
@@ -439,8 +440,11 @@ GsuAbstractGsDevKit >> loadApplicationLoadSpecs [
 		ifFalse:  [
 			"force configurations to be reloaded if needed"
 			self removeExistingConfigurations.
-			"load each of the projects listed in boolStrapApplicationLoadSpecs"
-			self _loadApplicationLoadSpecs: self bootstrapApplicationLoadSpecs ].
+			self skipLoadApplication
+				ifTrue: [ self log: '	skip loading of bootstrapApplicationLoadSpecs' ]
+				ifFalse: [ 
+					"load each of the projects listed in boolStrapApplicationLoadSpecs"
+					self _loadApplicationLoadSpecs: self bootstrapApplicationLoadSpecs ] ].
 
 	"Now load the entire configuration to pick up user application code and to ensure
 		that the in-memory package state is correct"
@@ -479,6 +483,18 @@ GsuAbstractGsDevKit >> removeExistingConfigurations [
 	(self _globalNamed: 'MCCacheRepository') 
 		ifNotNil: [:mCCacheRepository | 
 			mCCacheRepository setDefault: (self _globalNamed: 'MCDictionaryRepository') new ].
+]
+
+{ #category : 'accessing' }
+GsuAbstractGsDevKit >> skipLoadApplication [
+
+	^ skipLoadApplication ifNil: [ skipLoadApplication := false ]
+]
+
+{ #category : 'accessing' }
+GsuAbstractGsDevKit >> skipLoadApplication: aBool [
+
+	skipLoadApplication := aBool
 ]
 
 { #category : 'accessing' }

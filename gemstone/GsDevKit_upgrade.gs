@@ -133,7 +133,7 @@ true.
 doit
 (Object
 	subclass: 'GsuAbstractGsDevKit'
-	instVarNames: #( upgradeUserName upgradeSymbolDict upgradeSymbolDictName bootstrapPostLoadClassList bootstrapRepositoryDirectory bootstrapApplicationLoadSpecs bootstrapExistingConfigurationList )
+	instVarNames: #( upgradeUserName upgradeSymbolDict upgradeSymbolDictName bootstrapPostLoadClassList bootstrapRepositoryDirectory bootstrapApplicationLoadSpecs bootstrapExistingConfigurationList skipLoadApplication )
 	classVars: #(  )
 	classInstVars: #(  )
 	poolDictionaries: #()
@@ -1151,8 +1151,11 @@ loadApplicationLoadSpecs
 		ifFalse:  [
 			"force configurations to be reloaded if needed"
 			self removeExistingConfigurations.
-			"load each of the projects listed in boolStrapApplicationLoadSpecs"
-			self _loadApplicationLoadSpecs: self bootstrapApplicationLoadSpecs ].
+			self skipLoadApplication
+				ifTrue: [ self log: '	skip loading of bootstrapApplicationLoadSpecs' ]
+				ifFalse: [ 
+					"load each of the projects listed in boolStrapApplicationLoadSpecs"
+					self _loadApplicationLoadSpecs: self bootstrapApplicationLoadSpecs ] ].
 
 	"Now load the entire configuration to pick up user application code and to ensure
 		that the in-memory package state is correct"
@@ -1193,6 +1196,20 @@ removeExistingConfigurations
 	(self _globalNamed: 'MCCacheRepository') 
 		ifNotNil: [:mCCacheRepository | 
 			mCCacheRepository setDefault: (self _globalNamed: 'MCDictionaryRepository') new ].
+%
+
+category: 'accessing'
+method: GsuAbstractGsDevKit
+skipLoadApplication
+
+	^ skipLoadApplication ifNil: [ skipLoadApplication := false ]
+%
+
+category: 'accessing'
+method: GsuAbstractGsDevKit
+skipLoadApplication: aBool
+
+	skipLoadApplication := aBool
 %
 
 category: 'accessing'
@@ -3115,6 +3132,10 @@ _reloadBootstrapPackages
 	"(re)load the bootstraPackageFileNames for GLASS"
 
 	| dir |
+	self skipLoadApplication
+		ifTrue: [ 
+			self log: '	skip reloading bootstrap packages'.
+			^ self ].
 	self log: '	reloading bootstrap packages from ', self bootstrapRepositoryDirectory.
 	dir := (self _globalNamed: 'ServerFileDirectory') on: self bootstrapRepositoryDirectory.
 	self targetGemStoneRelease reloadBootstrapPackageFileNames do: [:bootstrapPackageFileName |

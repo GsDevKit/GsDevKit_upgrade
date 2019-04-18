@@ -47,10 +47,12 @@ run
 	UserGlobals
 		at: #GsDevKit_Image_Upgrade
 		put: 
-	(GsuGsDevKit_3_4_x_StdUpgrade 
+	((GsuGsDevKit_3_4_x_StdUpgrade 
 		upgradeUserName: SeasideUpgradeUser 
 		upgradeSymbolDictName: #Seaside
-		sourceGemStoneRelease: (GsuGemStone_3_3_x_Release major: 3 minor: 3 patch: 9)).
+		sourceGemStoneRelease: (GsuGemStone_3_3_x_Release major: 3 minor: 3 patch: 9))
+			skipLoadApplication: true;
+			yourself).
 	System commitTransaction
 %
 

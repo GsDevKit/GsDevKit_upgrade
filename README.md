@@ -28,6 +28,9 @@ GemStone/S:
 
 I believe that there are developers using each of these environments and 
 therefore need to be considered when it comes to upgrading.
+The basick idea is that once each of these environments has been upgraded, it
+should be straightforward for the develper to reload the reast of their 
+projects.
 
 The following sections provide a bit of information about each of the 
 environments before we get serious about taling upgrade.
@@ -75,8 +78,7 @@ changes are tested against all supported releases.
 [**tODE**][15] dates back to 2012, when I began work on a development environment that
 supported development using **Metacello**, **FileTree**, and git.
 **tODE** is built on top **GLASS1**.
-**tODE** is integrated with **GsDevKit_home** 
-
+ 
 ### GsDevKit
 **GsDevKit** dates back to 2014, when it was decided to rebrand GLASS1 as 
 GsDevKit.
@@ -97,11 +99,15 @@ There are now three different upgrade scenarios:
 3. [Upgrades requiring project reloads](#upgrades-requiring-project-reloads)
 #### Upgrades requiring method recompilation
 This upgrade scenario is triggered when a db is upgraded to a version of
-GemStone where the shape of the GsNMethod class has changed (3.0 and 3.3 version boundaries)
+GemStone where the shape of the GsNMethod class has changed (3.0 and 3.3
+version boundaries).
 In this scenario, an error will occur if an attempt is made to invoke a method
 that has not been recompiled to the new class format.
 
-To upgrade using a **Monticello**-based package system, it is necessary to *bootstrap* the **Monticello** loading code 
+To upgrade using a **Monticello**-based package system, it is necessary to 
+*bootstrap* the **Monticello** loading code into the image, using code that has
+already upgraded by `upgradeImage`.
+
 #### Upgrades where session method structure is reset
 #### Upgrades requiring project reloads
 

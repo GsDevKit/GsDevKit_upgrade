@@ -1,6 +1,10 @@
 # Upgrading GLASS/GsDevKit Applications to GemStone 3.5.0
 ## Intro
-## Installation
+With the release of GemStone 3.5.0, the `$GEMSTONE/bin/upgradeImage` script
+step no longer uncoditionally resets the session method data strcutures for
+all users.
+As a result, the `$GEMSTONE/seaside/bin/upgradeSeasideImage`
+## GsDefKit_home Installation
 ```
 cd $GS_HOME/shared/repos
 git clone https://github.com/GsDevKit/GsDevKit_upgrade.git
@@ -9,6 +13,12 @@ stoneName=upgrade_solo
 version=3.5.0
 GsDevKit_upgrade/scripts/install.sh $stoneName $version
 ```
+
+
+
+-------------------------------
+-------------------------------
+
 
 ### default upgrade script
 ```smalltalk

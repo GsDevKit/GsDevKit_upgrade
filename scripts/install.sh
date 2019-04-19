@@ -3,7 +3,7 @@
 #	install stash and Rowan, then create a stash solo extent to be used for 
 #	running the deployment script
 #
-set -e 
+set -ex 
 
 cd $GS_HOME/shared/repos
 

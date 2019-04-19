@@ -7,7 +7,7 @@ git clone https://github.com/GsDevKit/GsDevKit_upgrade.git
 
 stoneName=upgrade_solo
 version=3.5.0
-GsDefKit_upgrade/scripts/install.sh $stoneName $version
+GsDevKit_upgrade/scripts/install.sh $stoneName $version
 ```
 
 ### default upgrade script

@@ -17,10 +17,10 @@ all GLASS/GsDevKit users have been able to move their GemStone installations
 to GsDevKit_home, so splitting functionality across `upgradeSeasideImage` has
 made life more difficult for non-GsDevKit_home users.
 
-1. [BACKGROUND: The GLASS/GLASS1/tODE/GsDevKit Story](#background-the-glass-glass1-tode-gsdevkit-story)
+1. [BACKGROUND: The GLASS/GLASS1/tODE/GsDevKit Story](##background-the-glassglass1todegsdevkit-story)
 2. [`upgradeSeasideImage` 101](#upgradeseasidesmage-101)
-3. [GsDevKit_upgrade](#gsdevkit-upgrade)
-4. [GsDevKit_home Installation](#gsdevkit-home-installation)
+3. [GsDevKit_upgrade](#gsdevkitupgrade)
+4. [GsDevKit_home Installation](#gsdevkithome-installation)
 
 ## BACKGROUND: The GLASS/GLASS1/tODE/GsDevKit Story
 There are currently 4 different environments for open source development in 

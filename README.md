@@ -24,7 +24,7 @@ file and an `extent0.seaside.dbf` file.
 `extent0.dbf`is an extent file with the standard GemStone class library
 installed.
 `extent0.seaside.dbf` is an extent file with the standard GemStone/S class
-library installed as well as **ConfigurationOfGLASS** version 1.0-beta.9.\* .
+library installed as well as **ConfigurationOfGLASS** version 1.0-beta.9.\*.
 
 For the puposes of this document an extent with just the 
 **ConfigurationOfGLASS** installed will be called **GLASS**.
@@ -34,13 +34,26 @@ For the puposes of this document an extent with just the
 **GLASS** does not include support for **[Metacello][6]** nor
 **[FileTree][7]**.
 
-Every version of GemStone/S 64 since [2.4.5.1][8] (released in 2013) includes
+Every version of GemStone/S 64 since [2.4.4][8] (released in 2010) includes
 basically the same version of **GLASS**.
-This level of compatibility between between GemStone 2.4.5.1 and GemStone 3.5.0
+This level of compatibility between between GemStone 2.4.4 and GemStone 3.5.0
 and all the versions in between means that there is a an upgrade path for your
 application from one version of GemStone to another. 
 
+### GLASS upgrades
+If you have an application that is based solely on **GLASS**, the upgrade
+process involves running `$GEMSTONE/bin/upgradeImage` to upgrade all of the
+GemStone kernel classes and then bootstrapping **ConfigurationOfGLASS** version
+1.0-beta.9.\* into the image ... following essentially the same procedure used
+to create `extent0.seaside.dbf`.
 
+### GLASS1
+**GLASS1** dates back to 2012, when the first work began using
+**[Metacello][6]**, **[FileTree][7]** and git-based repositories for managing
+Smalltalk source code.
+GLASS1.0-beta.9.1 was the first common version between 
+**[ConfigurationOfGLASS-dkh.224.mcz][10]** managed on GemSource][10] and 
+**[BaselineOfGLASS1][9]** managed on [GitHub][11].
 
 ## GsDevKit_upgrade
 ### Upgrade Challenges
@@ -158,4 +171,6 @@ file:$ROWAN_PROJECTS_HOME/GsDevKit_upgrade/rowan/specs/GsDevKit_upgrade.ston
 [6]: https://github.com/Metacello/metacello
 [7]: https://github.com/dalehenrich/filetree
 [8]: https://gemtalksystems.com/products/gs64/versions24x/
-
+[9]: https://github.com/glassdb/glass/tree/044b42d4601d5ca3789ade45c7a3e6bcdca9c7f9/repository
+[10]: http://seaside.gemtalksystems.com/ss/MetacelloRepository.html
+[11]: https://github.com/glassdb/glass

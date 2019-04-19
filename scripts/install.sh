@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 #
-#	create a stash solo extent to be used for running the deployment script
+#	install stash and Rowan, then create a stash solo extent to be used for 
+#	running the deployment script
 #
+set -e 
 
 cd $GS_HOME/shared/repos
 
@@ -9,12 +11,22 @@ if [ ! -d "stash" ] ; then
 	git clone https://github.com/dalehenrich/stash.git
 fi
 
-stoneName=stash_solo_3.5.0
+if [ $# -ne 2 ] ; then
+	echo "missing two required arguments <stone-name> <gemstone-version>"
+	exit 1
+else
+	stoneName="$1"
+	version="$2"
+	shift
+	shift
+fi
 
-$GS_HOME/shared/repos/stash/bin/install.sh $stoneName 3.5.0
+$GS_HOME/shared/repos/stash/bin/install.sh $stoneName $version
 
 projectSpecUrl="file:$GS_HOME/shared/repos/GsDevKit_upgrade/rowan/specs/GsDevKit_upgrade.ston"
 $GS_HOME/shared/repos/stash/scripts/rowan.st --install="$projectSpecUrl"
+
+$GS_HOME/shared/repos/stash/scripts/snapshot.st solo.dbf
 
 stopStone -b $stoneName
 

@@ -1,4 +1,14 @@
-## Upgrading GLASS/GsDevKit Applications to GemStone 3.5.0
+# Upgrading GLASS/GsDevKit Applications to GemStone 3.5.0
+## Intro
+## Installation
+```
+cd $GS_HOME/shared/repos
+git clone https://github.com/GsDevKit/GsDevKit_upgrade.git
+
+stoneName=upgrade_solo
+version=3.5.0
+GsDefKit_upgrade/scripts/install.sh $stoneName $version
+```
 
 ### default upgrade script
 ```smalltalk

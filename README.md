@@ -18,7 +18,20 @@ to GsDevKit_home, so splitting functionality across `upgradeSeasideImage` has
 made life more difficult for non-GsDevKit_home users.
 
 
-## The GLASS/GLASS1/GsDevKit Story
+## The GLASS/GLASS1/tODE/GsDevKit Story
+There are currently 4 different environments for open source development in 
+GemStone/S:
+1. [GLASS](#glass) - The original environment for running [Seaside][17] on GemStone.
+2. [GLASS1](#glass1) - The core of GemTalk System's [Open Source Development Kit][18].
+3. [tODE](#tODE) - The primary development environment for GemTalk System's [Open Source Development Kit][18].
+4. [GsDevKit](#gsdevkit) - The eventual successor to **GLASS1**.
+
+I believe that there are developers using each of these environments and 
+therefore need to be considered when it comes to upgrading.
+
+The following sections provide a bit of information about each of the 
+environments before we get serious about taling upgrade.
+
 ### GLASS
 With every release of GemStone/S 64, GemTalk Systems ships an `extent0.dbf`
 file and an `extent0.seaside.dbf` file.
@@ -61,7 +74,8 @@ changes are tested against all supported releases.
 ### tODE
 [**tODE**][15] dates back to 2012, when I began work on a development environment that
 supported development using **Metacello**, **FileTree**, and git.
-**tODE** was built on top **GLASS1**
+**tODE** is built on top **GLASS1**.
+**tODE** is integrated with **GsDevKit_home** 
 
 ### GsDevKit
 **GsDevKit** dates back to 2014, when it was decided to rebrand GLASS1 as 
@@ -216,3 +230,5 @@ file:$ROWAN_PROJECTS_HOME/GsDevKit_upgrade/rowan/specs/GsDevKit_upgrade.ston
 [14]: https://github.com/GemTalk/Rowan
 [15]: https://github.com/dalehenrich/tode
 [16]: https://www.youtube.com/watch?feature=player_embedded&v=FGkdXwGtfd8
+[17]: https://github.com/SeasideSt/Seaside
+[18]: https://gemtalksystems.com/small-business/gsdevkit/

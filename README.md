@@ -34,8 +34,8 @@ For the puposes of this document an extent with just the
 **GLASS** does not include support for **[Metacello][6]** nor
 **[FileTree][7]**.
 
-Every version of GemStone/S 64 since 2.4.8 (release in 2016) includes basically the
-same version of **GLASS**. 
+Every version of GemStone/S 64 since [2.4.5.1][8] (released in 2013) includes
+basically the same version of **GLASS**. 
 
 
 ## GsDevKit_upgrade
@@ -152,3 +152,6 @@ file:$ROWAN_PROJECTS_HOME/GsDevKit_upgrade/rowan/specs/GsDevKit_upgrade.ston
 [4]: http://ss3.gemtalksystems.com/
 [5]: http://www.squeaksource.com/
 [6]: https://github.com/Metacello/metacello
+[7]: https://github.com/dalehenrich/filetree
+[8]: https://gemtalksystems.com/products/gs64/versions24x/
+

@@ -40,7 +40,7 @@ This level of compatibility between between GemStone 2.4.4 and GemStone 3.5.0
 and all the versions in between means that there is a an upgrade path for your
 application from one version of GemStone to another. 
 
-### GLASS upgrades
+#### GLASS upgrades
 If you have an application that is based solely on **GLASS**, the upgrade
 process involves running `$GEMSTONE/bin/upgradeImage` to upgrade all of the
 GemStone kernel classes and then bootstrapping **ConfigurationOfGLASS** version
@@ -51,9 +51,26 @@ to create `extent0.seaside.dbf`.
 **GLASS1** dates back to 2012, when the first work began using
 **[Metacello][6]**, **[FileTree][7]** and git-based repositories for managing
 Smalltalk source code.
+
 GLASS1.0-beta.9.1 was the first common version between 
 **[ConfigurationOfGLASS-dkh.224.mcz][10]** managed on GemSource][10] and 
 **[BaselineOfGLASS1][9]** managed on [GitHub][11].
+
+GLASS1 is supported (read tested) for GemStone versions 2.4.8 through 3.4.3
+(currently the lastest released version of GemStone/S).
+
+GLASS1 follows the principle of continuous delivery where every release to the
+`master` branch can be safely used in production.
+There are no API breaking changes commited to the `master` branch and the
+changes are tested against all supported releases.
+
+### GLASS1/GsDevKit/upgrades
+As mentioned earlier there are now two different upgrade scenarios:
+1. [Upgrades requiring method recompilation](#upgrades-requiring-method-recompilation).
+2. [Upgrades requiring project reloads](#upgrades-requiring-project-reloads)
+#### Upgrades requiring method recompilation
+#### Upgrades requiring project reloads
+### tODE upgrades
 
 ## GsDevKit_upgrade
 ### Upgrade Challenges

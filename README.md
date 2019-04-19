@@ -17,6 +17,7 @@ all GLASS/GsDevKit users have been able to move their GemStone installations
 to GsDevKit_home, so splitting functionality across `upgradeSeasideImage` has
 made life more difficult for non-GsDevKit_home users.
 
+
 ## The GLASS/GLASS1/GsDevKit Story
 ### GLASS
 With every release of GemStone/S 64, GemTalk Systems ships an `extent0.dbf`
@@ -40,13 +41,6 @@ This level of compatibility between between GemStone 2.4.4 and GemStone 3.5.0
 and all the versions in between means that there is a an upgrade path for your
 application from one version of GemStone to another. 
 
-#### GLASS upgrades
-If you have an application that is based solely on **GLASS**, the upgrade
-process involves running `$GEMSTONE/bin/upgradeImage` to upgrade all of the
-GemStone kernel classes and then bootstrapping **ConfigurationOfGLASS** version
-1.0-beta.9.\* into the image ... following essentially the same procedure used
-to create `extent0.seaside.dbf`.
-
 ### GLASS1
 **GLASS1** dates back to 2012, when the first work began using
 **[Metacello][6]**, **[FileTree][7]** and git-based repositories for managing
@@ -64,13 +58,39 @@ GLASS1 follows the principle of continuous delivery where every release to the
 There are no API breaking changes commited to the `master` branch and the
 changes are tested against all supported releases.
 
-### GLASS1/GsDevKit/upgrades
-As mentioned earlier there are now two different upgrade scenarios:
+### tODE
+[**tODE**][15] dates back to 2012, when I began work on a development environment that
+supported development using **Metacello**, **FileTree**, and git.
+**tODE** was built on top **GLASS1**
+
+### GsDevKit
+**GsDevKit** dates back to 2014, when it was decided to rebrand GLASS1 as 
+GsDevKit.
+The [GsDevKit organization][13] was created and the [GsDevKit project][12] was
+created as a fork of the [glass project][11].
+There is no real difference between the code in **GsDevKit** and **GLASS1** other 
+than the name of the *BaselineOf*.
+
+The mechanics of converting a **GLASS1** project to **GsDevKit** has kept me 
+from pushing for developers to do the conversion.
+Perhaps when [Rowan][14] is released the conversion from **GLASS1** to 
+**GsDevKit** will be practical.
+
+## Upgrade scenarios
+There are now three different upgrade scenarios:
 1. [Upgrades requiring method recompilation](#upgrades-requiring-method-recompilation).
-2. [Upgrades requiring project reloads](#upgrades-requiring-project-reloads)
+2. [Upgrades where session method structure is reset](#upgrades-where-session-method-structure-is-reset)
+3. [Upgrades requiring project reloads](#upgrades-requiring-project-reloads)
 #### Upgrades requiring method recompilation
+This upgrade scenario is triggered when a db is upgraded to a version of
+GemStone where the shape of the GsNMethod class has changed (3.0 and 3.3 version boundaries)
+In this scenario, an error will occur if an attempt is made to invoke a method
+that has not been recompiled to the new class format.
+
+To upgrade using a **Monticello**-based package system, it is necessary to *bootstrap* the **Monticello** loading code 
+#### Upgrades where session method structure is reset
 #### Upgrades requiring project reloads
-### tODE upgrades
+
 
 ## GsDevKit_upgrade
 ### Upgrade Challenges
@@ -191,3 +211,8 @@ file:$ROWAN_PROJECTS_HOME/GsDevKit_upgrade/rowan/specs/GsDevKit_upgrade.ston
 [9]: https://github.com/glassdb/glass/tree/044b42d4601d5ca3789ade45c7a3e6bcdca9c7f9/repository
 [10]: http://seaside.gemtalksystems.com/ss/MetacelloRepository.html
 [11]: https://github.com/glassdb/glass
+[12]: https://github.com/GsDevKit/GsDevKit
+[13]: https://github.com/GsDevKit
+[14]: https://github.com/GemTalk/Rowan
+[15]: https://github.com/dalehenrich/tode
+[16]: https://www.youtube.com/watch?feature=player_embedded&v=FGkdXwGtfd8

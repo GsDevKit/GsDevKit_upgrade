@@ -35,7 +35,11 @@ For the puposes of this document an extent with just the
 **[FileTree][7]**.
 
 Every version of GemStone/S 64 since [2.4.5.1][8] (released in 2013) includes
-basically the same version of **GLASS**. 
+basically the same version of **GLASS**.
+This level of compatibility between between GemStone 2.4.5.1 and GemStone 3.5.0
+and all the versions in between means that there is a an upgrade path for your
+application from one version of GemStone to another. 
+
 
 
 ## GsDevKit_upgrade

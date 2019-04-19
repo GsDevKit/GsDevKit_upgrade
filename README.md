@@ -17,7 +17,26 @@ all GLASS/GsDevKit users have been able to move their GemStone installations
 to GsDevKit_home, so splitting functionality across `upgradeSeasideImage` has
 made life more difficult for non-GsDevKit_home users.
 
-## GLASS/GLASS1/GsDevKit
+## The GLASS/GLASS1/GsDevKit Story
+### GLASS
+With every release of GemStone, GemTalk Systems ships an `extent0.dbf` file and
+an `extent0.seaside.dbf` file.
+`extent0.dbf`is an extent file with the standard GemStone class library
+installed.
+`extent0.seaside.dbf` is an extent file with the standard GemStone class
+library installed as well as **ConfigurationOfGLASS** version 1.0-beta.9.2.1
+installed.
+
+For the puposes of this document an extent with just the 
+**ConfigurationOfGLASS** installed will be called a **GLASS** installation.
+
+**GLASS** uses **Monticello** packages and repositories (i.e., [GemSource][3],
+[SS3][4], and [SqueakSource][5]).
+**GLASS** does not include support for **[Metacello][6]** nor
+**[FileTree][7]**.
+
+
+
 ## GsDevKit_upgrade
 ### Upgrade Challenges
 #### Method recompilation - crossing the 3.0 ad 3.3 version boundaries
@@ -128,3 +147,7 @@ file:$ROWAN_PROJECTS_HOME/GsDevKit_upgrade/rowan/specs/GsDevKit_upgrade.ston
 
 [1]: https://github.com/GsDevKit/GsDevKit_home
 [2]: https://github.com/GsDevKit/GsDevKit_home/blob/master/bin/upgradeStone
+[3]: http://seaside.gemtalksystems.com/ss/
+[4]: http://ss3.gemtalksystems.com/
+[5]: http://www.squeaksource.com/
+[6]: https://github.com/Metacello/metacello

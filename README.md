@@ -1,16 +1,29 @@
 # Upgrading GLASS/GsDevKit Applications to GemStone 3.5.0
 With the release of GemStone 3.5.0, the `$GEMSTONE/bin/upgradeImage` script
-step no longer unconditionally resets the session method data strcutures for
-all users.
+no longer unconditionally resets the session method data strcutures for all 
+users.
 The session method data structures are only reset when method recompilation is
 required, i.e., crossing 3.0 or 3.3 version boundaries.
-As a result, the `$GEMSTONE/seaside/bin/upgradeSeasideImage` needed to change.
 
-## $GEMSTONE/seaside/bin/upgradeSeasideImage
+With the change in `upgradeImage`, the 
+`$GEMSTONE/seaside/bin/upgradeSeasideImage` script was going to have to change,
+so it seemed like a good time to make some radical changes to the script.
+
 In recent years, some of the `upgradeSeasideImage` functionality had been 
-distrbuted into the [GsDevKit_home project][1]
+distrbuted into the [GsDevKit_home project][1] in the form of an 
+[upgradeStone][2] script. 
+While greatly simplifying the upgrade process for the GsDevKit_home users, not
+all GLASS/GsDevKit users have been able to move their GemStone installations
+to GsDevKit_home, so splitting functionality across `upgradeSeasideImage` has
+made life more difficult for non-GsDevKit_home users.
 
-## GsDefKit_home Installation
+## GLASS/GLASS1/GsDevKit
+## GsDevKit_upgrade
+### Upgrade Challenges
+#### Method recompilation - crossing the 3.0 ad 3.3 version boundaries
+#### Reloading projects to pick up version-specific changes
+
+## GsDevKit_home Installation
 ```
 cd $GS_HOME/shared/repos
 git clone https://github.com/GsDevKit/GsDevKit_upgrade.git
@@ -114,3 +127,4 @@ file:$ROWAN_PROJECTS_HOME/GsDevKit_upgrade/rowan/specs/GsDevKit_upgrade.ston
 ```
 
 [1]: https://github.com/GsDevKit/GsDevKit_home
+[2]: https://github.com/GsDevKit/GsDevKit_home/blob/master/bin/upgradeStone

@@ -19,22 +19,23 @@ made life more difficult for non-GsDevKit_home users.
 
 ## The GLASS/GLASS1/GsDevKit Story
 ### GLASS
-With every release of GemStone, GemTalk Systems ships an `extent0.dbf` file and
-an `extent0.seaside.dbf` file.
+With every release of GemStone/S 64, GemTalk Systems ships an `extent0.dbf`
+file and an `extent0.seaside.dbf` file.
 `extent0.dbf`is an extent file with the standard GemStone class library
 installed.
-`extent0.seaside.dbf` is an extent file with the standard GemStone class
-library installed as well as **ConfigurationOfGLASS** version 1.0-beta.9.2.1
-installed.
+`extent0.seaside.dbf` is an extent file with the standard GemStone/S class
+library installed as well as **ConfigurationOfGLASS** version 1.0-beta.9.\* .
 
 For the puposes of this document an extent with just the 
-**ConfigurationOfGLASS** installed will be called a **GLASS** installation.
+**ConfigurationOfGLASS** installed will be called **GLASS**.
 
 **GLASS** uses **Monticello** packages and repositories (i.e., [GemSource][3],
 [SS3][4], and [SqueakSource][5]).
 **GLASS** does not include support for **[Metacello][6]** nor
 **[FileTree][7]**.
 
+Every version of GemStone/S 64 since 2.4.8 (release in 2016) includes basically the
+same version of **GLASS**. 
 
 
 ## GsDevKit_upgrade

@@ -92,8 +92,9 @@ from pushing for developers to do the conversion.
 Perhaps when [Rowan][14] is released the conversion from **GLASS1** to 
 **GsDevKit** will be practical.
 
-## Upgrade scenarios
-There are now three different upgrade scenarios:
+## `upgradeSeasideImage` 101
+
+There are now three different upgrade scenarios for:
 1. [Upgrades requiring method recompilation](#upgrades-requiring-method-recompilation).
 2. [Upgrades where session method structure is reset](#upgrades-where-session-method-structure-is-reset)
 3. [Upgrades requiring project reloads](#upgrades-requiring-project-reloads)
@@ -110,6 +111,7 @@ that has already been upgraded by `$GEMSTONE/binupgradeImage`:
 1. the code used to create `extent0.seaside.dbf` *is* upgraded by 
 `$GEMSTONE/binupgradeImage`, so it is used to *bootstrap* **GLASS** into the
 image
+2. *bootstrap* **Metacello** and **FileTree** into the image.
 
 #### Upgrades where session method structure is reset
 #### Upgrades requiring project reloads

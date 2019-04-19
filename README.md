@@ -105,8 +105,11 @@ In this scenario, an error will occur if an attempt is made to invoke a method
 that has not been recompiled to the new class format.
 
 To upgrade using a **Monticello**-based package system, it is necessary to 
-*bootstrap* the **Monticello** loading code into the image, using code that has
-already upgraded by `upgradeImage`.
+*bootstrap* the **Monticello** loading code into the image, using only code
+that has already been upgraded by `$GEMSTONE/binupgradeImage`:
+1. the code used to create `extent0.seaside.dbf` *is* upgraded by 
+`$GEMSTONE/binupgradeImage`, so it is used to *bootstrap* **GLASS** into the
+image
 
 #### Upgrades where session method structure is reset
 #### Upgrades requiring project reloads

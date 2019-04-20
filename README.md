@@ -104,7 +104,7 @@ Typically this involves:
 1. patching key methods in the image that need to be functional **before** 
 they are loaded in the normal course of installation.
 
-  A good example of this would be a private method in a GemStone/S kernel class 
+  - A good example of this would be a private method in a GemStone/S kernel class 
   (say **Behavior**) that is no longer present in the current version of GemStone
   that is called in the process of loading a **Monticello** package.
 

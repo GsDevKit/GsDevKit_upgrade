@@ -155,7 +155,9 @@ When the process is complete the image should be completely upgraded.
 #### Upgrades where session method structure is reset
 Up until 3.5.0, this is the scenario that occurred whether or not method
 recompilation is required.
-Again, the simplest way to do this is to follow the [same steps as those used when method recompilation is required](#bootstrap-glass-glass1gsdevkit-tode).
+Again, the simplest way to do this is to follow the [same steps as those used
+when method recompilation is
+required](#bootstrap-glass---glass1gsdevkit---tode).
 
 #### Upgrades where projects can be reloaded
 

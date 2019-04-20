@@ -103,16 +103,29 @@ version can be loaded and made functional.
 Typically this involves:
 1. patching key methods in the image that need to be functional **before** 
 they are loaded in the normal course of installation.
-
   - A good example of this would be a private method in a GemStone/S kernel class 
-  (say **Behavior**) that is no longer present in the current version of GemStone
-  that is called in the process of loading a **Monticello** package.
-
+  (say **Behavior**) that is no longer present in the current version of GemStone,
+  but is called in the process of loading a **Monticello** package.
+2. Making classes obsolete that are no longer needed in the new version of
+GemStone.
+  - A good example of this is the **Pragma** class that has been part of the 
+  **GLASS** since 2007. In 3.4.0, we added **Pragma** as a kernl class in
+  GemStone. There can't be two **Pragma** classes so `upgradeSeasideImage`
+  needs to make sure that the old **Pragma** class is made obsolete (that way
+  any references to the obsolete **Pragma** class post upgrade will result in 
+  an error), make sure that any methods that reference the obsolete **Pragma** class
+  are recompiled, and finally make sure that instances of the obsolete **Pragma**
+  class that may be stored in the classmethod meta data are removed.
+3. Clear **Monticello** caches and remove any **ConfigurationOf** classes that
+may need to be refreshed before the package loading can take place.
+4. Determine which of 4 environments are present in the system and arrange to
+load/bootstrap the environement into the image.
 
 There are now three different upgrade scenarios for:
 1. [Upgrades requiring method recompilation](#upgrades-requiring-method-recompilation).
 2. [Upgrades where session method structure is reset](#upgrades-where-session-method-structure-is-reset)
 3. [Upgrades requiring project reloads](#upgrades-requiring-project-reloads)
+
 #### Upgrades requiring method recompilation
 This upgrade scenario is triggered when a db is upgraded to a version of
 GemStone where the shape of the GsNMethod class has changed (3.0 and 3.3

@@ -121,11 +121,12 @@ may need to be refreshed before the package loading can take place.
 4. Determine which of 4 environments (GLASS/GLASS1/tODE/GsDevKit) are present
 in the system and arrange to load/bootstrap the environement into the image.
 
-### Loading/BootStrapping GLASS/GLASS1/tODE/GsDevKit
-There are now three different upgrade scenarios for:
+### BootStrapping/Loading GLASS/GLASS1/tODE/GsDevKit
+Once we know which environment we are going to bootstrap/load, we must take into account the state of the existing system post `upgradeImage`.
+There are three different upgrade scenarios for the image state post `upgradeImagd`:
 1. [Upgrades requiring method recompilation](#upgrades-requiring-method-recompilation).
 2. [Upgrades where session method structure is reset](#upgrades-where-session-method-structure-is-reset)
-3. [Upgrades requiring project reloads](#upgrades-requiring-project-reloads)
+3. [Upgrades where projects can be reloaded](#upgrades-where-projects-can-be-reloaded)
 
 #### Upgrades requiring method recompilation
 This upgrade scenario is triggered when a db is upgraded to a version of
@@ -136,14 +137,27 @@ that has not been recompiled to the new class format.
 
 To upgrade using a **Monticello**-based package system, it is necessary to 
 *bootstrap* the **Monticello** loading code into the image, using only code
-that has already been upgraded by `$GEMSTONE/binupgradeImage`:
-1. the code used to create `extent0.seaside.dbf` *is* upgraded by 
-`$GEMSTONE/binupgradeImage`, so it is used to *bootstrap* **GLASS** into the
-image
-2. *bootstrap* **Metacello** and **FileTree** into the image.
+that has already been upgraded by `$GEMSTONE/binupgradeImage`.
+
+##### Bootstrap GLASS - GLASS1/GsDevKit - tODE
+The simplest way to do this is:
+1. remove all of the methods in classes owned by GLASS/GLASS1/tODE/GsDevKit and
+all of the extension methods for GemStone kernel classes in the 
+GLASS/GLASS1/tODE/GsDevKit packages.
+2. use the `extent0.seaside.dbf` *bootstrap* process whereby the **GLASS**
+packages are installed, followed by the **GLASS1** or **GsDeVKit** packages (if
+called for), followed by the **tODE** packages.
+3. have the developer use the standard development tools to load their packages, 
+restoring the methods for all of their application classes.
+
+When the process is complete the image should be completely upgraded.
 
 #### Upgrades where session method structure is reset
-#### Upgrades requiring project reloads
+Up until 3.5.0, this is the scenario that occurred whether or not method
+recompilation is required.
+Again, the simplest way to do this is to follow the [same steps as those used when method recompilation is required](#bootstrap-glass-glass1gsdevkit-tode).
+
+#### Upgrades where projects can be reloaded
 
 
 ## GsDevKit_upgrade

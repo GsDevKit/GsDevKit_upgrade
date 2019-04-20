@@ -118,9 +118,10 @@ GemStone.
   class that may be stored in the classmethod meta data are removed.
 3. Clear **Monticello** caches and remove any **ConfigurationOf** classes that
 may need to be refreshed before the package loading can take place.
-4. Determine which of 4 environments are present in the system and arrange to
-load/bootstrap the environement into the image.
+4. Determine which of 4 environments (GLASS/GLASS1/tODE/GsDevKit) are present
+in the system and arrange to load/bootstrap the environement into the image.
 
+### Loading/BootStrapping GLASS/GLASS1/tODE/GsDevKit
 There are now three different upgrade scenarios for:
 1. [Upgrades requiring method recompilation](#upgrades-requiring-method-recompilation).
 2. [Upgrades where session method structure is reset](#upgrades-where-session-method-structure-is-reset)

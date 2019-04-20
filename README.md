@@ -23,8 +23,8 @@ made life more difficult for non-GsDevKit_home users.
 4. [GsDevKit_home Installation](#gsdevkit_home-installation)
 
 ## BACKGROUND: The GLASS/GLASS1/tODE/GsDevKit Story
-There are currently 4 different environments for open source development in 
-GemStone/S:
+There are currently 4 different code environments for open source development
+in GemStone/S:
 1. [GLASS](#glass) - The original environment for running [Seaside][17] on GemStone.
 2. [GLASS1](#glass1) - The core of GemTalk System's [Open Source Development Kit][18].
 3. [tODE](#tODE) - The primary development environment for GemTalk System's [Open Source Development Kit][18].
@@ -33,11 +33,11 @@ GemStone/S:
 I believe that there are developers using each of these environments and 
 therefore need to be considered when it comes to upgrading.
 The basick idea is that once each of these environments has been upgraded, it
-should be straightforward for the develper to reload the reast of their 
+should be straightforward for the develper to reload the rest of their 
 projects.
 
 The following sections provide a bit of information about each of the 
-environments before we get serious about taling upgrade.
+environments before we get serious talking about upgrades.
 
 ### GLASS
 With every release of GemStone/S 64, GemTalk Systems ships an `extent0.dbf`
@@ -97,6 +97,17 @@ Perhaps when [Rowan][14] is released the conversion from **GLASS1** to
 **GsDevKit** will be practical.
 
 ## `upgradeSeasideImage` 101
+The job of `upgradeSeasideImage` is to pave the way so that the 
+GLASS/GLASS1/tODE/GsDevKit code that is appropriate for the target GemStone
+version can be loaded and made functional.
+Typically this involves:
+1. patching key methods in the image that need to be functional **before** 
+they are loaded in the normal course of installation.
+
+  A good example of this would be a private method in a GemStone/S kernel class 
+  (say **Behavior**) that is no longer present in the current version of GemStone
+  that is called in the process of loading a **Monticello** package.
+
 
 There are now three different upgrade scenarios for:
 1. [Upgrades requiring method recompilation](#upgrades-requiring-method-recompilation).

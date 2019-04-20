@@ -19,8 +19,8 @@ made life more difficult for non-GsDevKit_home users.
 
 1. [BACKGROUND: The GLASS/GLASS1/tODE/GsDevKit Story](#background-the-glassglass1todegsdevkit-story)
 2. [`upgradeSeasideImage` 101](#upgradeseasideimage-101)
-3. [GsDevKit_upgrade](#gsdevkit_upgrade)
-4. [GsDevKit_home Installation](#gsdevkit_home-installation)
+3. [`upgradeSeasideImage` man page](#upgradeseasideimage-man-page]
+3. [Customizing GsDevKit_upgrade](#customizing-gsdevkit_upgrade)
 
 ## BACKGROUND: The GLASS/GLASS1/tODE/GsDevKit Story
 There are currently 4 different code environments for open source development
@@ -161,26 +161,7 @@ required](#bootstrap-glass---glass1gsdevkit---tode).
 
 #### Upgrades where projects can be reloaded
 
-
-## GsDevKit_upgrade
-### Upgrade Challenges
-#### Method recompilation - crossing the 3.0 ad 3.3 version boundaries
-#### Reloading projects to pick up version-specific changes
-
-## GsDevKit_home Installation
-```
-cd $GS_HOME/shared/repos
-git clone https://github.com/GsDevKit/GsDevKit_upgrade.git
-
-stoneName=upgrade_solo
-version=3.5.0
-GsDevKit_upgrade/scripts/install.sh $stoneName $version
-```
-
--------------------------------
--------------------------------
-
-
+## `upgradeSeasideImage` man page
 ### default upgrade script
 ```smalltalk
 run
@@ -211,61 +192,29 @@ run
 %
 ```
 
-### Url for cloning project in Rowan
+## Customizing GsDevKit_upgrade
+### GsDevKit_home Installation
+```
+cd $GS_HOME/shared/repos
+git clone https://github.com/GsDevKit/GsDevKit_upgrade.git
+
+stoneName=upgrade_solo
+version=3.5.0
+GsDevKit_upgrade/scripts/install.sh $stoneName $version
+```
+### GsDevKit_upgrade development process
+1. create a new branch in the GsDevKit_upgrade clone
+1. fork the [GsDevKit_upgrade project][19] if you want to share your changes with the rest of the community
+1. load and save packages from/to the filetree repository using a development image of your choice
+2. use >>deployment script<< to upgdate `GsDevKit_upgrade.gs` file in checkout with your changes
+3. test upgrade using the new `GsDevKit_upgrade.gs` file
+4. use >>deployment script<< to update the tonel repository with your final edits.
+5. update your fork and issue a pull request against [GsDevKit_upgrade project][19] to share your changes.
+-------------------------------
+-------------------------------
+## Url for cloning project in Rowan
 ```
 file:$ROWAN_PROJECTS_HOME/GsDevKit_upgrade/rowan/specs/GsDevKit_upgrade.ston
-```
-### Rowan tool API for GsDevKit_upgrade
-```smalltalk
-"both topaz and filetree format deployments should be created when a new version is released"
-
-"deploy topaz filein"
-	Rowan projectTools gsuDeploy deployTopazFilein.
-
-"deploy filetree repository"
-	Rowan projectTools gsuDeploy deployFiletreeRepository.
-```
-### Rowan project creation script
-```smalltalk
-"Create GsDevKit_upgrade project"
-
-	| projectUrl projectName configurationNames groupNames comment projectHome
-		cpd packageName |
-
-	projectName := 'GsDevKit_upgrade'.
-	configurationNames := #( 'Main' ).
-	groupNames := #( 'core' ).
-	projectUrl := 'https://github.com/GsDevKit/', projectName.
-	comment := 'Support for upgrading GsDevKit images to GemStone 3.5.x and beyond'.
-
-	projectHome := '$ROWAN_PROJECTS_HOME'.
-
-"create project definition"
-	cpd := RwComponentProjectDefinition
-		projectName: projectName 
-			configurationNames: configurationNames 
-			groupNames: groupNames 
-			useGit: true 
-			projectUrl: projectUrl 
-			comment: comment.
-
-"create package definitions"
-	cpd
-		addPackageNamed: projectName, '-Core' 
-			toComponentNamed: 'Main' 
-			withConditions: #( 'common' ) 
-			andGroup: 'core';
-		yourself.
-
-"create class and method definitions"
-	packageName := projectName, '-Core'.
-
-"prepare to export component project definition"
-	cpd projectHome: projectHome.
-	cpd repositoryRoot ensureDeleteAll.
-
-"create component project on disk"
-	cpd create.
 ```
 
 [1]: https://github.com/GsDevKit/GsDevKit_home
@@ -286,3 +235,4 @@ file:$ROWAN_PROJECTS_HOME/GsDevKit_upgrade/rowan/specs/GsDevKit_upgrade.ston
 [16]: https://www.youtube.com/watch?feature=player_embedded&v=FGkdXwGtfd8
 [17]: https://github.com/SeasideSt/Seaside
 [18]: https://gemtalksystems.com/small-business/gsdevkit/
+[19]: [1]: https://github.com/GsDevKit/GsDevKit_upgrade

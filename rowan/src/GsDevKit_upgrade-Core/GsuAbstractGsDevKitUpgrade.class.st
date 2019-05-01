@@ -448,7 +448,7 @@ GsuAbstractGsDevKitUpgrade >> prepareGsDevKitImage_bug46217_patch [
 	self log: 'Prepare gsdevkit - patch 46217'.
 
 	GsPackageLibrary 
-	  installMonticelloPackagesHome: (GsCurrentSession currentSession objectNamed: #'UserGlobals') 
+	  installMonticelloPackagesHome: self upgradeSymbolDictName 
 	  during: [:globals | 
 		(Class
 		  compileMethod: self _prepareImage_class_bug46217_patchSource
@@ -516,7 +516,7 @@ GsuAbstractGsDevKitUpgrade >> prepareGsDevKitImage_enableSessionMethods [
 	policy := GsPackagePolicy current.
 	targetSymbolDictionary := GsCurrentSession currentSession objectNamed:  self upgradeSymbolDictName.
 	(targetSymbolDictionary isKindOf: SymbolDictionary)
-	   ifFalse: [nil error: self upgradeSymbolDict, ' must be the name of a SymbolDictionary'].
+	   ifFalse: [ self  error: self upgradeSymbolDictName, ' must be the name of a SymbolDictionary' ].
 	policy homeSymbolDict:  targetSymbolDictionary.
 	policy externalSymbolList: Array new.
 
@@ -900,10 +900,9 @@ GsuAbstractGsDevKitUpgrade >> prepareImage_user_bug46059 [
 
 	"until bug is fixed - should be run as SystemUser"
 
-	| package symbolDict class theSymbolList |
 	self log: '	patch MCGemStonePlatform >> removeClassFromSystem: (bug 46217)'.
 	GsPackageLibrary 
-		installMonticelloPackagesHome: (GsCurrentSession currentSession objectNamed: #'UserGlobals') 
+		installMonticelloPackagesHome: self upgradeSymbolDictName 
 		during: [:globals | 
 			(Class
 			compileMethod: self _prepareImage_user_class_bug46059_patchSource

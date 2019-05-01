@@ -1443,8 +1443,6 @@ category: 'logging'
 method: GsuAbstractGsDevKit
 _logUpgradeParameters
 
-	| enabled |
-	 
 	self log: '	session methods ', (GsPackagePolicy enabled ifTrue: [ '(enabled)' ] ifFalse: [ '(disabled)' ]).
 	self _singletonUpgradeParameters do: [:selectorSymbol |
 		self log: '	', selectorSymbol asString, ' : ', (self perform: selectorSymbol) ].
@@ -1941,7 +1939,6 @@ prepareGsDevKitImage_existingConfigurationList
 	"Generate list of loaded configuration classes to be removed only the #_defaultExistingConfigurationOfNames need be removed,
 		since they will be used during loading of GLASS, GLASS1, GsDevKit, and tODE"
 
-	| requiredConfigurations |
 	self bootstrapExistingConfigurationList isEmpty ifFalse: [ "already set" ^ self ].
 	self log: '	create existing configuration list (commit)'.
 
@@ -2378,7 +2375,6 @@ prepareImage_user_bug46059
 
 	"until bug is fixed - should be run as SystemUser"
 
-	| package symbolDict class theSymbolList |
 	self log: '	patch MCGemStonePlatform >> removeClassFromSystem: (bug 46217)'.
 	GsPackageLibrary 
 		installMonticelloPackagesHome: (GsCurrentSession currentSession objectNamed: #'UserGlobals') 

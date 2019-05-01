@@ -533,7 +533,6 @@ GsuAbstractGsDevKitUpgrade >> prepareGsDevKitImage_existingConfigurationList [
 	"Generate list of loaded configuration classes to be removed only the #_defaultExistingConfigurationOfNames need be removed,
 		since they will be used during loading of GLASS, GLASS1, GsDevKit, and tODE"
 
-	| requiredConfigurations |
 	self bootstrapExistingConfigurationList isEmpty ifFalse: [ "already set" ^ self ].
 	self log: '	create existing configuration list (commit)'.
 

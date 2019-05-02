@@ -5,7 +5,7 @@ prepareImage_user_bug46059
 
 	self log: '	patch MCGemStonePlatform >> removeClassFromSystem: (bug 46217)'.
 	GsPackageLibrary 
-		installMonticelloPackagesHome: self upgradeSymbolDictName 
+		installMonticelloPackagesHome: self upgradeSymbolDict
 		during: [:globals | 
 			(Class
 			compileMethod: self _prepareImage_user_class_bug46059_patchSource

@@ -7,7 +7,7 @@ prepareGsDevKitImage_enableSessionMethods
 	policy := GsPackagePolicy current.
 	targetSymbolDictionary := GsCurrentSession currentSession objectNamed:  self upgradeSymbolDictName.
 	(targetSymbolDictionary isKindOf: SymbolDictionary)
-	   ifFalse: [nil error: self upgradeSymbolDict, ' must be the name of a SymbolDictionary'].
+	   ifFalse: [ self  error: self upgradeSymbolDictName, ' must be the name of a SymbolDictionary' ].
 	policy homeSymbolDict:  targetSymbolDictionary.
 	policy externalSymbolList: Array new.
 

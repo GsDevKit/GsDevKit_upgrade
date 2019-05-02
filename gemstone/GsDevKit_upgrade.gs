@@ -1464,8 +1464,6 @@ category: 'logging'
 method: GsuAbstractGsDevKit
 _logUpgradeParameters
 
-	| enabled |
-	 
 	self log: '	session methods ', (GsPackagePolicy enabled ifTrue: [ '(enabled)' ] ifFalse: [ '(disabled)' ]).
 	self _singletonUpgradeParameters do: [:selectorSymbol |
 		self log: '	', selectorSymbol asString, ' : ', (self perform: selectorSymbol) ].
@@ -1873,7 +1871,7 @@ prepareGsDevKitImage_bug46217_patch
 	self log: 'Prepare gsdevkit - patch 46217'.
 
 	GsPackageLibrary 
-	  installMonticelloPackagesHome: (GsCurrentSession currentSession objectNamed: #'UserGlobals') 
+	  installMonticelloPackagesHome: self upgradeSymbolDict
 	  during: [:globals | 
 		(Class
 		  compileMethod: self _prepareImage_class_bug46217_patchSource
@@ -1944,7 +1942,7 @@ prepareGsDevKitImage_enableSessionMethods
 	policy := GsPackagePolicy current.
 	targetSymbolDictionary := GsCurrentSession currentSession objectNamed:  self upgradeSymbolDictName.
 	(targetSymbolDictionary isKindOf: SymbolDictionary)
-	   ifFalse: [nil error: self upgradeSymbolDict, ' must be the name of a SymbolDictionary'].
+	   ifFalse: [ self  error: self upgradeSymbolDictName, ' must be the name of a SymbolDictionary' ].
 	policy homeSymbolDict:  targetSymbolDictionary.
 	policy externalSymbolList: Array new.
 
@@ -1962,7 +1960,6 @@ prepareGsDevKitImage_existingConfigurationList
 	"Generate list of loaded configuration classes to be removed only the #_defaultExistingConfigurationOfNames need be removed,
 		since they will be used during loading of GLASS, GLASS1, GsDevKit, and tODE"
 
-	| requiredConfigurations |
 	self bootstrapExistingConfigurationList isEmpty ifFalse: [ "already set" ^ self ].
 	self log: '	create existing configuration list (commit)'.
 
@@ -2408,10 +2405,9 @@ prepareImage_user_bug46059
 
 	"until bug is fixed - should be run as SystemUser"
 
-	| package symbolDict class theSymbolList |
 	self log: '	patch MCGemStonePlatform >> removeClassFromSystem: (bug 46217)'.
 	GsPackageLibrary 
-		installMonticelloPackagesHome: (GsCurrentSession currentSession objectNamed: #'UserGlobals') 
+		installMonticelloPackagesHome: self upgradeSymbolDict
 		during: [:globals | 
 			(Class
 			compileMethod: self _prepareImage_user_class_bug46059_patchSource

@@ -214,8 +214,6 @@ GsuAbstractGsDevKit >> _loadApplicationLoadSpecs: applicationLoadSpecs [
 { #category : 'logging' }
 GsuAbstractGsDevKit >> _logUpgradeParameters [
 
-	| enabled |
-	 
 	self log: '	session methods ', (GsPackagePolicy enabled ifTrue: [ '(enabled)' ] ifFalse: [ '(disabled)' ]).
 	self _singletonUpgradeParameters do: [:selectorSymbol |
 		self log: '	', selectorSymbol asString, ' : ', (self perform: selectorSymbol) ].

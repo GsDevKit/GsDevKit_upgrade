@@ -56,6 +56,26 @@ exit
 EOF
 
 
+# ========================================================================================
+# Enable using the Seaside symbol dictionary for the upgrade
+topaz -l <<EOF
+login
+run
+| policy |
+policy := GsPackagePolicy current.
+policy homeSymbolDict: Seaside.
+
+"Create session methods for any classes classes not in the target Symbol Dictionary.
+ (Cannot use #currentSymbolList since it may not have been loaded yet.)"
+policy externalSymbolList: (GsCurrentSession currentSession symbolList asArray copyWithout: Seaside).
+%
+commit
+logout
+errorCount
+exit
+EOF
+
+
 # We need the home directory for GsDevKit_home, since the upgrade scripts use that model
 export GS_HOME=/var/lib/files/gs
 export upgradeLogDir=/home/gs/data/upgradeLogDir
@@ -123,13 +143,9 @@ run
 
 currentReport := Metacello registrationsReport.
 
-expectedReport := 'BaselineOfSton [baseline:25aace1] from github://GsDevKit/ston:gemstone/repository
-BaselineOfGrease [baseline:643c2bb] from github://GsDevKit/Grease:master/repository
-BaselineOfZodiac [baseline:9657392] from github://GsDevKit/zodiac:gs_master/repository
+expectedReport := 'BaselineOfGrease [baseline:643c2bb] from github://GsDevKit/Grease:master/repository
 BaselineOfMetacello [baseline:e3f75d3] from github://dalehenrich/metacello-work:master/repository
-BaselineOfRB [baseline:a9e9137] from github://dalehenrich/rb:dev/repository
 BaselineOfSeaside3 [baseline:2984ce1] from github://GsDevKit/Seaside31:gs_master/repository
-BaselineOfPharoCompatibility [baseline:f65fbf6] from github://glassdb/PharoCompatibility:master/repository
 BaselineOfFileTree [baseline:1b11ee4] from github://dalehenrich/filetree:gemstone2.4/repository
 BaselineOfGLASS1 [baseline:e63cf82] from github://glassdb/glass:master/repository
 BaselineOfGsApplicationTools [baseline:898232b] from github://GsDevKit/gsApplicationTools:master/repository

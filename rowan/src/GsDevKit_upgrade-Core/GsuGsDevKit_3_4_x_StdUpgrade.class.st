@@ -15,7 +15,7 @@ GsuGsDevKit_3_4_x_StdUpgrade >> prepareGsDevKitImage_bug46217_patch [
 	self log: 'Prepare gsdevkit - patch 46217'.
 
 	GsPackageLibrary 
-	  installMonticelloPackagesHome: (GsCurrentSession currentSession objectNamed: #'UserGlobals') 
+	  installMonticelloPackagesHome: self upgradeSymbolDict
 	  during: [:globals | 
 		(Class
 		  compileMethod: self _prepareImage_class_bug46217_patchSource

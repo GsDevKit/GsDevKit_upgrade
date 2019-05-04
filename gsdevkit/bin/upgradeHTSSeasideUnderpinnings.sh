@@ -114,6 +114,33 @@ pushd "${upgradeLogDir}" >& /dev/null
 	echo "5. Finished prepareGsDevKitImage_user"
 popd
 
+
+# ========================================================================================
+# Clean up left-overs from SystemUser
+topaz -l <<EOF
+display resultcheck
+level 0
+limit bytes 2000
+limit lev1bytes 2000
+display oops
+iferr 1 stk
+iferr 2 stack
+iferr 3 input pop
+set user SystemUser password swordfish gemstone $stoneName
+login
+
+run
+	UserGlobals removeKey: #'GsDevKit_Image_Upgrade' ifAbsent: [].
+	UserGlobals removeKey: #'GsDevKit_Upgrade_Cache' ifAbsent: [].
+System commitTransaction.
+%
+
+expectvalue 0
+errorcount
+exit
+EOF
+
+
 # ========================================================================================
 # Reset passwords for the users which were changed
 topaz -l <<EOF

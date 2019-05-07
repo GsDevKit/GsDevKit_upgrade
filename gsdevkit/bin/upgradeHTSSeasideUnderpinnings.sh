@@ -126,7 +126,7 @@ display oops
 iferr 1 stk
 iferr 2 stack
 iferr 3 input pop
-set user SystemUser password swordfish gemstone $stoneName
+set user SystemUser password swordfish gemstone $stone
 login
 
 run

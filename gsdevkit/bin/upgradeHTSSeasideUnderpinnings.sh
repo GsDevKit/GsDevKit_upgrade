@@ -41,19 +41,21 @@ set user Dev password swordfish gemstone $stone
 EOF
 
 
+######################## SHOULD BE UNNECESSARY - DELETE ONCE SO PROVEN
 # ========================================================================================
 # Unregister unused projects
-topaz -l <<EOF
-login
-run
-(Metacello registrations reject: [:each | each loadedInImage])
-	do: [:each | each unregisterProject].
-%
-commit
-logout
-errorCount
-exit
-EOF
+# topaz -l <<EOF
+# login
+# run
+# (Metacello registrations reject: [:each | each loadedInImage])
+# do: [:each | each unregisterProject].
+# %
+# commit
+# logout
+# errorCount
+# exit
+# EOF
+######################## SHOULD BE UNNECESSARY - DELETE ONCE SO PROVEN
 
 
 # ========================================================================================
@@ -112,6 +114,19 @@ pushd "${upgradeLogDir}" >& /dev/null
 	topaz -l -T 500MB <$GS_HOME/shared/repos/GsDevKit_upgrade/bin/prepareGsDevKitImage_user >$upgradeLogDir/prepareGsDevKitImage_user.log
 	[ $? -eq 0 ] || exitAfterError "prepareGsDevKitImage_user"
 	echo "5. Finished prepareGsDevKitImage_user"
+
+echo "Quitting after finishing Dale's stuff and before loading the application code (Grease, GLASS, Seaside, etc.)"
+exit
+	echo "6. Starting loadApplication_user (Metacello, Grease, GLASS, Seaside, etc.)"
+	topaz -l <$GS_HOME/shared/repos/GsDevKit_upgrade/bin/loadApplication_user >$upgradeLogDir/loadApplication_user.log
+	[ $? -eq 0 ] || exitAfterError "loadApplication_user"
+	echo "6. Finished loadApplication_user"
+
+	echo "7. Starting reloadSessionMethods_user"
+echo "##### Not implemented yet #####"
+#	topaz -l <$GS_HOME/shared/repos/GsDevKit_upgrade/bin/reloadSessionMethods_user >$upgradeLogDir/reloadSessionMethods_user.log
+	[ $? -eq 0 ] || exitAfterError "reloadSessionMethods_user"
+	echo "6. Finished reloadSessionMethods_user"
 popd
 
 

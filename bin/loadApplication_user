@@ -1,0 +1,22 @@
+#
+# login as .topazini user (Development user - Dev)
+#
+############################################################################
+#
+#
+iferr 1 stk
+iferr 2 stack
+# iferr 3 exit 1
+display oops
+limit bytes 200
+
+login
+
+input $GS_HOME/shared/repos/GsDevKit_upgrade/bin/loadApplication_user.topaz
+
+commit
+
+errorCount
+
+exit 
+

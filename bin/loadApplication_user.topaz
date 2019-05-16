@@ -1,0 +1,90 @@
+# Expect to be logged in as the development user (Dev)
+
+# Trim the symbol list to exclude symbol dictionaries unrelated to Seaside, Grease, and GLASS.
+RUN
+| userProfile symbolList toRemove keeper |
+userProfile := System myUserProfile.
+symbolList := userProfile symbolList.
+
+toRemove := {Published. PDFtalkLibrary. PDFtalk}.
+keeper := Dictionary new.
+toRemove do: [:eachDict |
+	| index |
+	index := symbolList indexOf: eachDict.
+	keeper at: index put: eachDict].
+keeper keys asSortedCollection reverseDo: [:index |
+	userProfile removeDictionaryAt: index].
+UserGlobals at: #keeper put: keeper.
+System commit.
+%
+
+RUN
+GsDeployer bulkMigrate: [
+	Metacello new
+		baseline: 'Gofer';
+		repository: 'filetree:///var/lib/files/gs/shared/repos/Gofer/repository';
+		lock; get.
+
+	Metacello new
+		baseline: 'Metacello';
+		repository: 'filetree:///var/lib/files/gs/shared/repos/metacello-work/repository';
+		lock; get.
+
+	Metacello new
+		baseline: 'FileTree';
+		repository: 'filetree:///var/lib/files/gs/shared/repos/filetree/repository';
+		lock; get.
+
+	Metacello new
+		baseline: 'GLASS1';
+		repository: 'filetree:///var/lib/files/gs/shared/repos/glass/repository';
+		lock; get.
+
+	Metacello new
+		baseline: 'ZincHTTPComponents';
+		repository: 'filetree:///var/lib/files/gs/shared/repos/zinc/repository';
+		lock; get.
+
+	Metacello new
+		baseline: 'Grease';
+		repository: 'filetree:///var/lib/files/gs/shared/repos/Grease/repository';
+		lock; get.
+
+	Metacello new
+		baseline: 'GsApplicationTools';
+		repository: 'filetree:///var/lib/files/gs/shared/repos/gsApplicationTools/repository';
+		lock; get.
+
+	Metacello new
+		baseline: 'Metacello';
+		repository: 'filetree:///var/lib/files/gs/shared/repos/metacello-work/repository';
+		load.
+
+	Metacello new
+		baseline: 'GLASS1';
+		repository: 'filetree:///var/lib/files/gs/shared/repos/glass/repository';
+		load: #( 'default' 'Base' 'Announcements' ).
+
+	Metacello new
+		baseline: 'Seaside3';
+		repository: 'filetree:///var/lib/files/gs/shared/repos/Seaside31/repository';
+		get;
+		load: #('Development' 'Examples' 'Zinc' 'Welcome').
+].
+System commit.
+%
+
+# Restore the symbol list to include all the TRAX symbol dictionaries once more.
+RUN
+| userProfile symbolList toRemove keeper |
+keeper := UserGlobals at: #keeper.
+userProfile := System myUserProfile.
+
+keeper keys asSortedCollection do: [:index |
+	| dict |
+	dict := keeper at: index.
+	userProfile insertDictionary: dict at: index].
+UserGlobals removeKey: #keeper ifAbsent: [].
+System commit.
+%
+

@@ -19,7 +19,7 @@ made life more difficult for non-GsDevKit_home users.
 
 1. [BACKGROUND: The GLASS/GLASS1/tODE/GsDevKit Story](#background-the-glassglass1todegsdevkit-story)
 2. [`upgradeSeasideImage` 101](#upgradeseasideimage-101)
-3. [`upgradeSeasideImage` man page](#upgradeseasideimage-man-page]
+3. [`upgradeSeasideImage` man page](#upgradeseasideimage-man-page)
 3. [Customizing GsDevKit_upgrade](#customizing-gsdevkit_upgrade)
 
 ## BACKGROUND: The GLASS/GLASS1/tODE/GsDevKit Story

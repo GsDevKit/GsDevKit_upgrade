@@ -32,6 +32,7 @@ logout
 errorCount
 exit
 EOF
+[ $? -eq 0 ] || exitAfterError "Set password to swordfish"
 
 
 # ========================================================================================
@@ -39,6 +40,7 @@ EOF
 cat <<EOF >~/.topazini
 set user Dev password swordfish gemstone $stone
 EOF
+[ $? -eq 0 ] || exitAfterError "Create .topazini"
 
 
 ######################## SHOULD BE UNNECESSARY - DELETE ONCE SO PROVEN
@@ -55,8 +57,8 @@ EOF
 # errorCount
 # exit
 # EOF
+#[ $? -eq 0 ] || exitAfterError "Unregister projects"
 ######################## SHOULD BE UNNECESSARY - DELETE ONCE SO PROVEN
-
 
 # ========================================================================================
 # Enable using the Seaside symbol dictionary for the upgrade
@@ -76,6 +78,7 @@ logout
 errorCount
 exit
 EOF
+[ $? -eq 0 ] || exitAfterError "Setup package policy"
 
 
 # We need the home directory for GsDevKit_home, since the upgrade scripts use that model
@@ -83,7 +86,7 @@ export GS_HOME=/var/lib/files/gs
 export upgradeLogDir=/home/gs/data/upgradeLogDir
 export upgradeDir="$GS_HOME/shared/repos/GsDevKit_upgrade/gemstone"
 
-pushd "${upgradeLogDir}" /dev/null
+pushd "${upgradeLogDir}" >& /dev/null
   echo "STARTING GsdevKit_upgrade upgradeImage "
 	echo "1. Starting installGsDevKit_upgrade"
 #	startTopaz $GEMSTONE_NAME -lq < $GS_HOME/shared/repos/GsDevKit_upgrade/bin/installGsDevKit_upgrade
@@ -152,6 +155,7 @@ expectvalue 0
 errorcount
 exit
 EOF
+[ $? -eq 0 ] || exitAfterError "Cleanup UserGlobals"
 
 
 # ========================================================================================
@@ -167,6 +171,7 @@ logout
 errorCount
 exit
 EOF
+[ $? -eq 0 ] || exitAfterError "Revert Dev password"
 
 # ========================================================================================
 # Check whether we ended up with the versions we expect.
@@ -222,7 +227,7 @@ fi
 }
 
 exitAfterError () {
-	echo "Failed in $@"
+	echo "Failed in `basename $0` step $@"
 	cleanup_topazini
 	exit 2
 }

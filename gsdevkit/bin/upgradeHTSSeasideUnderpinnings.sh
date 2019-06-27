@@ -82,7 +82,7 @@ EOF
 
 
 # We need the home directory for GsDevKit_home, since the upgrade scripts use that model
-export GS_HOME=/var/lib/files/gs
+export GS_HOME=$reposDir/../..
 export upgradeLogDir=/home/gs/data/upgradeLogDir
 export upgradeDir="$GS_HOME/shared/repos/GsDevKit_upgrade/gemstone"
 
@@ -173,48 +173,6 @@ exit
 EOF
 [ $? -eq 0 ] || exitAfterError "Revert Dev password"
 
-# ========================================================================================
-# Check whether we ended up with the versions we expect.
-# Initially, we start the release cycle with the status quo, so we get a report of what was
-# downloaded for develpoment of the release. After that initial download, we look for 
-# repetition of the same download, so that we can detect an unexpected update to the projects
-# while we are running the upgrade through to production.
-
-topaz -l <<EOF
-set user Dev password $password gemstone $stone
-login
-run
-| currentReport expectedReport |
-
-currentReport := Metacello registrationsReport.
-
-expectedReport := 'BaselineOfGrease [baseline:643c2bb] from github://GsDevKit/Grease:master/repository
-BaselineOfMetacello [baseline:e3f75d3] from github://dalehenrich/metacello-work:master/repository
-BaselineOfSeaside3 [baseline:2984ce1] from github://GsDevKit/Seaside31:gs_master/repository
-BaselineOfFileTree [baseline:1b11ee4] from github://dalehenrich/filetree:gemstone2.4/repository
-BaselineOfGLASS1 [baseline:e63cf82] from github://glassdb/glass:master/repository
-BaselineOfGsApplicationTools [baseline:898232b] from github://GsDevKit/gsApplicationTools:master/repository
-BaselineOfZincHTTPComponents [baseline:811da98] from github://GsDevKit/zinc:gs_master/repository
-ConfigurationOfGsMisc 0.243 from http://seaside.gemtalksystems.com/ss/MetacelloRepository
-ConfigurationOfGsMonticello 0.244.3 from http://seaside.gemtalksystems.com/ss/MetacelloRepository
-ConfigurationOfGLASS 1.0-beta.9.2.1 from http://seaside.gemtalksystems.com/ss/MetacelloRepository
-ConfigurationOfMetacelloPreview 1.0.0-beta.32.1 from github://dalehenrich/metacello-work:configuration
-ConfigurationOfGsSqueakCommon 0.9.4 from http://seaside.gemtalksystems.com/ss/MetacelloRepository
-ConfigurationOfGsOB 0.242.1 from http://seaside.gemtalksystems.com/ss/MetacelloRepository
-ConfigurationOfGofer 1.0.5.1 from http://seaside.gemtalksystems.com/ss/metacello
-ConfigurationOfGoferProjectLoader 1.0-alpha2.2 from http://seaside.gemtalksystems.com/ss/MetacelloRepository
-ConfigurationOfGsCore 0.249 from http://seaside.gemtalksystems.com/ss/MetacelloRepository
-'.
-
-expectedReport = currentReport
-    ifTrue:  ['Metacello registrations are as expected']
-    ifFalse: ['UNEXPECTED Metacello registrations!
-', currentReport].
-%
-logout
-errorCount
-exit
-EOF
 
 
 cleanup_topazini () {

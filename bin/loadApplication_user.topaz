@@ -22,52 +22,52 @@ RUN
 GsDeployer bulkMigrate: [
 	Metacello new
 		baseline: 'Gofer';
-		repository: 'filetree:///var/lib/files/gs/shared/repos/Gofer/repository';
+		repository: 'filetree://$reposDir/Gofer/repository';
 		lock; get.
 
 	Metacello new
 		baseline: 'Metacello';
-		repository: 'filetree:///var/lib/files/gs/shared/repos/metacello-work/repository';
+		repository: 'filetree://$reposDir/metacello-work/repository';
 		lock; get.
 
 	Metacello new
 		baseline: 'FileTree';
-		repository: 'filetree:///var/lib/files/gs/shared/repos/filetree/repository';
+		repository: 'filetree://$reposDir/filetree/repository';
 		lock; get.
 
 	Metacello new
 		baseline: 'GLASS1';
-		repository: 'filetree:///var/lib/files/gs/shared/repos/glass/repository';
+		repository: 'filetree://$reposDir/glass/repository';
 		lock; get.
 
 	Metacello new
 		baseline: 'ZincHTTPComponents';
-		repository: 'filetree:///var/lib/files/gs/shared/repos/zinc/repository';
+		repository: 'filetree://$reposDir/zinc/repository';
 		lock; get.
 
 	Metacello new
 		baseline: 'Grease';
-		repository: 'filetree:///var/lib/files/gs/shared/repos/Grease/repository';
+		repository: 'filetree://$reposDir/Grease/repository';
 		lock; get.
 
 	Metacello new
 		baseline: 'GsApplicationTools';
-		repository: 'filetree:///var/lib/files/gs/shared/repos/gsApplicationTools/repository';
+		repository: 'filetree://$reposDir/gsApplicationTools/repository';
 		lock; get.
 
 	Metacello new
 		baseline: 'Metacello';
-		repository: 'filetree:///var/lib/files/gs/shared/repos/metacello-work/repository';
+		repository: 'filetree://$reposDir/metacello-work/repository';
 		load.
 
 	Metacello new
 		baseline: 'GLASS1';
-		repository: 'filetree:///var/lib/files/gs/shared/repos/glass/repository';
+		repository: 'filetree://$reposDir/glass/repository';
 		load: #( 'default' 'Base' 'Announcements' ).
 
 	Metacello new
 		baseline: 'Seaside3';
-		repository: 'filetree:///var/lib/files/gs/shared/repos/Seaside31/repository';
+		repository: 'filetree://$reposDir/Seaside31/repository';
 		get;
 		load: #('Development' 'Examples' 'Zinc' 'Welcome').
 ].

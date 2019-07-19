@@ -7,6 +7,14 @@ die () {
 }
 [ "$#" -eq 2 ] || die "2 arguments required (stone name and password for Dev)"
 
+
+exitAfterError () {
+	echo "Failed in `basename $0` step $@"
+	cleanup_topazini
+	exit 2
+}
+
+
 stone=$1
 password=$2
 
@@ -184,11 +192,6 @@ then
 fi
 }
 
-exitAfterError () {
-	echo "Failed in `basename $0` step $@"
-	cleanup_topazini
-	exit 2
-}
 cleanup_topazini
 exit 0
 

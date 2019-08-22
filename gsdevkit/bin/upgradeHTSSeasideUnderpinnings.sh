@@ -90,7 +90,7 @@ EOF
 
 
 # We need the home directory for GsDevKit_home, since the upgrade scripts use that model
-export GS_HOME=$reposDir/../..
+export GS_HOME=$GS_REPOS_DIR/../..
 export upgradeLogDir=/home/gs/data/upgradeLogDir
 export upgradeDir="$GS_HOME/shared/repos/GsDevKit_upgrade/gemstone"
 

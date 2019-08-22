@@ -22,52 +22,52 @@ RUN
 GsDeployer bulkMigrate: [
 	Metacello new
 		baseline: 'Gofer';
-		repository: 'filetree://$reposDir/Gofer/repository';
+		repository: 'filetree://$GS_REPOS_DIR/Gofer/repository';
 		lock; get.
 
 	Metacello new
 		baseline: 'Metacello';
-		repository: 'filetree://$reposDir/metacello-work/repository';
+		repository: 'filetree://$GS_REPOS_DIR/metacello-work/repository';
 		lock; get.
 
 	Metacello new
 		baseline: 'FileTree';
-		repository: 'filetree://$reposDir/filetree/repository';
+		repository: 'filetree://$GS_REPOS_DIR/filetree/repository';
 		lock; get.
 
 	Metacello new
 		baseline: 'GLASS1';
-		repository: 'filetree://$reposDir/glass/repository';
+		repository: 'filetree://$GS_REPOS_DIR/glass/repository';
 		lock; get.
 
 	Metacello new
 		baseline: 'ZincHTTPComponents';
-		repository: 'filetree://$reposDir/zinc/repository';
+		repository: 'filetree://$GS_REPOS_DIR/zinc/repository';
 		lock; get.
 
 	Metacello new
 		baseline: 'Grease';
-		repository: 'filetree://$reposDir/Grease/repository';
+		repository: 'filetree://$GS_REPOS_DIR/Grease/repository';
 		lock; get.
 
 	Metacello new
 		baseline: 'GsApplicationTools';
-		repository: 'filetree://$reposDir/gsApplicationTools/repository';
+		repository: 'filetree://$GS_REPOS_DIR/gsApplicationTools/repository';
 		lock; get.
 
 	Metacello new
 		baseline: 'Metacello';
-		repository: 'filetree://$reposDir/metacello-work/repository';
+		repository: 'filetree://$GS_REPOS_DIR/metacello-work/repository';
 		load.
 
 	Metacello new
 		baseline: 'GLASS1';
-		repository: 'filetree://$reposDir/glass/repository';
+		repository: 'filetree://$GS_REPOS_DIR/glass/repository';
 		load: #( 'default' 'Base' 'Announcements' ).
 
 	Metacello new
 		baseline: 'Seaside3';
-		repository: 'filetree://$reposDir/Seaside31/repository';
+		repository: 'filetree://$GS_REPOS_DIR/Seaside31/repository';
 		get;
 		load: #('Development' 'Examples' 'Zinc' 'Welcome').
 ].

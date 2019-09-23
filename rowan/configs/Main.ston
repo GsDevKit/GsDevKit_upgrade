@@ -1,15 +1,10 @@
 RwProjectLoadConfiguration {
 	#name : 'Main',
 	#comment : 'Support for upgrading GsDevKit/GLASS images ... post upgradeImage operations',
-	#projectName : 'GsDevKit_upgrade',
 	#version : '0.1.0',
-	#definedGroupNames : {
-		'core' : [ ],
-		'tools' : [ 'core' ]
-		},
-	#configurationNames : [ 
+	#configurationNames : [
 		'Bootstrap'
-		],
+	],
 	#conditionalPackages : {
 		[
 			'common'
@@ -31,9 +26,17 @@ RwProjectLoadConfiguration {
 		'gemstone' : {
 			'SystemUser' : {
 				#packageNameToPlatformPropertiesMap : {
-					'GsDevKit_upgrade-ToolExtensions' : { 'symbolDictName' : 'RowanTools' }
+					'GsDevKit_upgrade-ToolExtensions' : {
+						'symbolDictName' : 'RowanTools'
+					}
 				}
 			}
 		}
+	},
+	#definedGroupNames : {
+		'core' : [ ],
+		'tools' : [
+			'core'
+		]
 	}
 }

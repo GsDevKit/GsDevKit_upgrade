@@ -1,0 +1,40 @@
+#!/usr/bin/gemstone/topaz
+#
+# If you are using GsDevKit_home[1] and have stash[2] installed, this topaz 
+#	script can be directly executed:
+#
+#		$ROWAN_PROJECTS_HOME/GsDevKit_upgrade/scripts/install.tpz <gsdevkit-stone-name> -lq
+#
+# If you are not using GsDevKit_home, you can directly run this script as long as
+# 	1. $GEMSTONE is defined
+# 	2. $GEMSTONE/bin is you path
+#	then execute using the following invocation
+#
+#		$ROWAN_PROJECTS_HOME/GsDevKit_upgrade/scripts/install.tpz -lq
+#
+#	[1] https://github.com/GsDevKit/GsDevKit_home
+# [2] https://github.com/dalehenrich/stash
+#
+	omit pushonly
+  iferr 1 stk
+  iferr 2 stack
+
+  set u SystemUser p swordfish
+  login
+
+
+  run
+"install GsDevKit_upgrade project"
+	| url projectSetDefinition |
+	url := 'file:$ROWAN_PROJECTS_HOME/GsDevKit_upgrade/rowan/specs/GsDevKit_upgrade_v2.0.ston'.
+	(RwComponentProjectDefinition newForUrl: url)
+		load.
+  true
+%
+  commit
+
+	logout
+
+  errorCount
+
+

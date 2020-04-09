@@ -1,0 +1,23 @@
+! Install as user SeasideCodeLibrarian into symbol dictionary Seaside32 from filetree repositories.
+!
+
+run
+UserGlobals
+	at: #GsDevKit_Image_Upgrade
+	put: ((GsuAbstractGsDevKitUpgrade
+			upgradeUserName: 'SeasideCodeLibrarian'
+			upgradeSymbolDictName: #Seaside32)
+				bootstrapApplicationLoadSpecs: {
+					{ 'Metacello' .
+						" 'github://dalehenrich/metacello-work:master/repository' "		'filetree://$GS_REPOS_DIR/metacello-work/repository' } .
+					{ 'GLASS1' .
+						" 'github://glassdb/glass:master/repository' "					'filetree://$GS_REPOS_DIR/glass/repository' .					
+						#( 'default' 'Base' 'Announcements') } .
+					{ 'Seaside3' .
+						" 'github://SeasideSt/Seaside:master/repository' "				'filetree://$GS_REPOS_DIR/Seaside/repository' .
+						" #( 'CI') "
+						#('Development' 'JQuery' 'Examples' 'Zinc' 'Welcome') }
+					} ).
+System commitTransaction
+%
+

@@ -2,7 +2,9 @@ RwSimpleProjectLoadComponentV2 {
 	#name : 'Core',
 	#condition : 'common',
 	#projectNames : [ ],
-	#componentNames : [ ],
+	#componentNames : [
+		'tools/Core'
+	],
 	#packageNames : [
 		'GsDevKit_upgrade-Core',
 		'GsDevKit_upgrade-Common',

@@ -9,6 +9,7 @@
 !
 !=======================================================================
 ! Class Declarations
+! Generated file, do not Edit
 
 doit
 (Object
@@ -18,7 +19,8 @@ doit
 	classInstVars: #(  )
 	poolDictionaries: #()
 	inDictionary: GsDevKit_Upgrade_SymDict_private
-	options: #())
+	options: #()
+)
 		category: 'GsDevKit_upgrade-Common';
 		comment: '';
 		immediateInvariant.
@@ -33,7 +35,8 @@ doit
 	classInstVars: #(  )
 	poolDictionaries: #()
 	inDictionary: GsDevKit_Upgrade_SymDict_private
-	options: #())
+	options: #()
+)
 		category: 'GsDevKit_upgrade-Common';
 		comment: '';
 		immediateInvariant.
@@ -48,7 +51,8 @@ doit
 	classInstVars: #(  )
 	poolDictionaries: #()
 	inDictionary: GsDevKit_Upgrade_SymDict_private
-	options: #())
+	options: #()
+)
 		category: 'GsDevKit_upgrade-Common';
 		comment: '';
 		immediateInvariant.
@@ -63,7 +67,8 @@ doit
 	classInstVars: #(  )
 	poolDictionaries: #()
 	inDictionary: GsDevKit_Upgrade_SymDict_private
-	options: #())
+	options: #()
+)
 		category: 'GsDevKit_upgrade-Common';
 		comment: '';
 		immediateInvariant.
@@ -78,7 +83,8 @@ doit
 	classInstVars: #(  )
 	poolDictionaries: #()
 	inDictionary: GsDevKit_Upgrade_SymDict_private
-	options: #())
+	options: #()
+)
 		category: 'GsDevKit_upgrade-Common';
 		comment: '';
 		immediateInvariant.
@@ -93,7 +99,8 @@ doit
 	classInstVars: #(  )
 	poolDictionaries: #()
 	inDictionary: GsDevKit_Upgrade_SymDict_private
-	options: #())
+	options: #()
+)
 		category: 'GsDevKit_upgrade-Common';
 		comment: '';
 		immediateInvariant.
@@ -108,7 +115,8 @@ doit
 	classInstVars: #(  )
 	poolDictionaries: #()
 	inDictionary: GsDevKit_Upgrade_SymDict_private
-	options: #())
+	options: #()
+)
 		category: 'GsDevKit_upgrade-Common';
 		comment: '';
 		immediateInvariant.
@@ -123,7 +131,8 @@ doit
 	classInstVars: #(  )
 	poolDictionaries: #()
 	inDictionary: GsDevKit_Upgrade_SymDict_private
-	options: #())
+	options: #()
+)
 		category: 'GsDevKit_upgrade-Common';
 		comment: '';
 		immediateInvariant.
@@ -138,7 +147,8 @@ doit
 	classInstVars: #(  )
 	poolDictionaries: #()
 	inDictionary: GsDevKit_Upgrade_SymDict_private
-	options: #())
+	options: #()
+)
 		category: 'GsDevKit_upgrade-Common';
 		comment: '';
 		immediateInvariant.
@@ -153,7 +163,8 @@ doit
 	classInstVars: #(  )
 	poolDictionaries: #()
 	inDictionary: GsDevKit_Upgrade_SymDict_private
-	options: #())
+	options: #()
+)
 		category: 'GsDevKit_upgrade-Core';
 		comment: 'I am the abstract upgrade driver for upgading GsDevKit/GLASS repositories.
 
@@ -184,7 +195,8 @@ doit
 	classInstVars: #(  )
 	poolDictionaries: #()
 	inDictionary: GsDevKit_Upgrade_SymDict_private
-	options: #())
+	options: #()
+)
 		category: 'GsDevKit_upgrade-Core';
 		comment: '';
 		immediateInvariant.
@@ -199,7 +211,8 @@ doit
 	classInstVars: #(  )
 	poolDictionaries: #()
 	inDictionary: GsDevKit_Upgrade_SymDict_private
-	options: #())
+	options: #()
+)
 		category: 'GsDevKit_upgrade-Core';
 		comment: '';
 		immediateInvariant.
@@ -214,7 +227,8 @@ doit
 	classInstVars: #(  )
 	poolDictionaries: #()
 	inDictionary: GsDevKit_Upgrade_SymDict_private
-	options: #())
+	options: #()
+)
 		category: 'GsDevKit_upgrade-Core';
 		comment: '';
 		immediateInvariant.
@@ -229,7 +243,8 @@ doit
 	classInstVars: #(  )
 	poolDictionaries: #()
 	inDictionary: GsDevKit_Upgrade_SymDict_private
-	options: #())
+	options: #()
+)
 		category: 'GsDevKit_upgrade-Core';
 		comment: '';
 		immediateInvariant.
@@ -244,7 +259,8 @@ doit
 	classInstVars: #(  )
 	poolDictionaries: #()
 	inDictionary: GsDevKit_Upgrade_SymDict_private
-	options: #())
+	options: #()
+)
 		category: 'GsDevKit_upgrade-Core';
 		comment: '';
 		immediateInvariant.
@@ -259,7 +275,8 @@ doit
 	classInstVars: #(  )
 	poolDictionaries: #()
 	inDictionary: GsDevKit_Upgrade_SymDict_private
-	options: #())
+	options: #()
+)
 		category: 'GsDevKit_upgrade-Core';
 		comment: '';
 		immediateInvariant.
@@ -274,7 +291,8 @@ doit
 	classInstVars: #(  )
 	poolDictionaries: #()
 	inDictionary: GsDevKit_Upgrade_SymDict_private
-	options: #())
+	options: #()
+)
 		category: 'GsDevKit_upgrade-Bootstrap';
 		comment: '';
 		immediateInvariant.
@@ -426,7 +444,7 @@ category: 'accessing'
 method: GsuAbstractGemStoneRelease
 patch
 
-	^ patch ifNil: [ patch := self class _previousPatchVersionFor: 'v', self major asString, '.', self minor asString, '.' ]
+	^ patch ifNil: [ patch := self class _previousPatchVersionFor: self major asString, '.', self minor asString, '.' ]
 %
 
 category: 'accessing'
@@ -1612,7 +1630,7 @@ upgradeUserName: aString upgradeSymbolDictName: aSymbol
 	^ self _calculateUpgradeClass
 		upgradeUserName: aString 
 		upgradeSymbolDictName: aSymbol 
-		sourceGemStoneRelease: self _calculatePreviousRelease
+		sourceGemStoneRelease: self _calculateUpgradedVersion
 %
 
 category: 'instance creation'
@@ -1629,26 +1647,26 @@ upgradeUserName: aString upgradeSymbolDictName: aSymbol sourceGemStoneRelease: s
 
 category: 'private'
 classmethod: GsuAbstractGsDevKitUpgrade
-_calculatePreviousRelease
+_calculateUpgradeClass
 
-	| previousGemStoneVersionInt |
-	previousGemStoneVersionInt := GsPackagePolicy perform: #'_previousVersion'.
-	previousGemStoneVersionInt = 35
-		ifTrue: [ ^ GsuGemStone_3_5_x_Release new ].
-	previousGemStoneVersionInt = 34
-		ifTrue: [ ^ GsuGemStone_3_4_x_Release new ].
-	previousGemStoneVersionInt = 33
-		ifTrue: [ ^ GsuGemStone_3_3_x_Release new ].
-	previousGemStoneVersionInt = 32
-		ifTrue: [ ^ GsuGemStone_3_2_x_Release new ].
-	self error: 'Upgrades from GemStone versions earlier than 3.2.0', ' are not currently supported.'
+	^ GsuGsDevKit_3_5_x_Upgrade
 %
 
 category: 'private'
 classmethod: GsuAbstractGsDevKitUpgrade
-_calculateUpgradeClass
+_calculateUpgradedVersion
 
-	^ GsuGsDevKit_3_5_x_Upgrade
+	| upgradedVersionInt |
+	upgradedVersionInt := self _upgradedVersionInt.
+	upgradedVersionInt = 35
+		ifTrue: [ ^ GsuGemStone_3_5_x_Release new ].
+	upgradedVersionInt = 34
+		ifTrue: [ ^ GsuGemStone_3_4_x_Release new ].
+	upgradedVersionInt = 33
+		ifTrue: [ ^ GsuGemStone_3_3_x_Release new ].
+	upgradedVersionInt = 32
+		ifTrue: [ ^ GsuGemStone_3_2_x_Release new ].
+	self error: 'Upgrades from GemStone versions earlier than 3.2.0', ' are not currently supported.'
 %
 
 category: 'private'
@@ -1695,6 +1713,51 @@ _symbolDictionary: aSymbolDictionary
 
 	((AllUsers userWithId: 'SystemUser') objectNamed: #UserGlobals) at: self _globalName put: aSymbolDictionary.
 	TheSymbolDictionary:= aSymbolDictionary
+%
+
+category: 'private'
+classmethod: GsuAbstractGsDevKitUpgrade
+_upgradedVersionInt
+	"return a 2 digit SmallInteger that represents the GemStone version being upgraded from"
+
+	| ofs hist |
+	(hist := Globals at: #'DbfHistory' otherwise: nil)
+		ifNil: [ ^ GsPackagePolicy _originVersion ].
+	ofs := hist
+		_findLastString: 'upgrade to GemStone'
+		startingAt: hist size
+		ignoreCase: true.
+	ofs > 0
+		ifTrue: [ 
+			"Trim off the last upgrade version so we can get the previous."
+			hist := hist copyFrom: 1 to: ofs - 1 ].
+	ofs == 0
+		ifTrue: [ 
+			(ImageVersion at: #'gsVersion' otherwise: nil)
+				ifNotNil: [ :iVer | 
+					ofs := 1.
+					hist := '  v' , iVer , '  ' ] ].
+	ofs ~~ 0
+		ifTrue: [ 
+			#(35 34 33 32)
+				do: [ :ver | 
+					| num vStr |
+					num := ScaledDecimal numerator: ver denominator: 10 scale: 1.
+					vStr := 'v' , num asString , '.'.
+					(hist
+						matchPattern:
+							{$*.
+							vStr.
+							$*})
+						ifTrue: [ ^ ver ].
+					vStr := ' ' , num asString , '.'.
+					(hist
+						matchPattern:
+							{$*.
+							vStr.
+							$*})
+						ifTrue: [ ^ ver ] ] ].
+	^ GsPackagePolicy _originVersion
 %
 
 !		Instance methods for 'GsuAbstractGsDevKitUpgrade'

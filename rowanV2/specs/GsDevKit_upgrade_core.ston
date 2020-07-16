@@ -8,6 +8,7 @@ RwLoadSpecificationV2 {
 		'Core'
 	],
 	#customConditionalAttributes : [
+		'tools'
 	],
 	#comment : 'Load the core classes'
 }

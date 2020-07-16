@@ -7,7 +7,7 @@ Class {
 { #category : 'private' }
 GsuGsDevKitUpgradeDeploymentTools >> _defaultDeploySpecName [
 
-	^  'GsDevKit_upgrade_deploy.ston'
+	^  'GsDevKit_upgrade_core.ston'
 ]
 
 { #category : 'private' }
@@ -32,9 +32,9 @@ GsuGsDevKitUpgradeDeploymentTools >> _projectDefinitionFor: specName [
 	| projectRoot specUrlString projectDefinition packageNameToPlatformPropertiesMap |
 
 	projectRoot := self _projectsHome / self _projectName.
-	specUrlString :=  'file:' , projectRoot fullName,  '/rowan/specs/', specName.
-	projectDefinition := RwComponentProjectDefinition newForUrl: specUrlString.
-	projectDefinition projectHome: self _projectsHome.
+	specUrlString :=  'file:' , projectRoot fullName,  '/rowanV2/specs/', specName.
+	projectDefinition := Rowan projectFromUrl: specUrlString.
+	projectDefinition projectsHome: self _projectsHome.
 	Rowan projectTools read 
 		readProjectSetForComponentProjectDefinition: projectDefinition.
 	packageNameToPlatformPropertiesMap := projectDefinition projectRef packageNameToPlatformPropertiesMap.
@@ -52,17 +52,36 @@ GsuGsDevKitUpgradeDeploymentTools >> _projectDefinitionFor: specName [
 ]
 
 { #category : 'private' }
+GsuGsDevKitUpgradeDeploymentTools >> _projectFor: specName customConditionalAttributes: customConditionalAttributes [
+	| projectRoot specUrlString project |
+	projectRoot := self _projectsHome / self _projectName.
+	specUrlString := 'file:' , projectRoot fullName , '/rowanV2/specs/' , specName.
+	project := (Rowan
+		projectFromUrl: specUrlString
+		projectsHome: self _projectsHome
+		customConditionalAttributes: customConditionalAttributes) defined.
+	project packageNames
+		do: [ :packageName | 
+			project
+				gemstoneSetSymbolDictName: 'GsDevKit_Upgrade_SymDict_private'
+				forPackageNamed: packageName ].
+	^ project
+]
+
+{ #category : 'private' }
 GsuGsDevKitUpgradeDeploymentTools >> _projectName [
 
 	^ 'GsDevKit_upgrade'
 ]
 
 { #category : 'private' }
-GsuGsDevKitUpgradeDeploymentTools >> _projectSetFor: specName [
-
-	^ (RwProjectSetDefinition new)
-		addProject: (self _projectDefinitionFor: specName);
-		yourself.
+GsuGsDevKitUpgradeDeploymentTools >> _projectSetFor: specName customConditionalAttributes: customConditionalAttributes [
+	^ RwProjectSetDefinition new
+		addProject:
+				(self
+						_projectFor: specName
+						customConditionalAttributes: customConditionalAttributes) _resolvedProject;
+		yourself
 ]
 
 { #category : 'private' }
@@ -81,6 +100,7 @@ GsuGsDevKitUpgradeDeploymentTools >> deployFiletreeRepository [
 GsuGsDevKitUpgradeDeploymentTools >> deployFiletreeRepository: deploymentName specName: specName [
 
 	| projectDefinition projectSetDefinition visitor deploymentDir projectSetModification |
+self halt.
 	projectDefinition := self _projectDefinitionFor: specName.
 	projectDefinition
 		packagesPath: deploymentName;
@@ -112,17 +132,27 @@ GsuGsDevKitUpgradeDeploymentTools >> deployTopazFilein: topazFileName spec: spec
 
 { #category : 'topaz' }
 GsuGsDevKitUpgradeDeploymentTools >> deployTopazFilein: topazFileName topazFileHeader: topazFileHeader spec: specName [
-
-	| projectSetDefinition visitor deploymentDir projectSetModification |
-	projectSetDefinition := self _projectSetFor: specName.
-
-	deploymentDir := self _projectsHome / self _projectName/ 'gemstone'.
+	| projectSetDefinition visitor deploymentDir projectSetModification topazFileNameMap |
+	projectSetDefinition := self
+		_projectSetFor: specName
+		customConditionalAttributes: {}.	"no tools"
+	deploymentDir := self _projectsHome / self _projectName / 'gemstone'.
 	deploymentDir ensureCreateDirectory.
-	projectSetModification := projectSetDefinition compareAgainstBase: RwProjectSetDefinition new.
-	visitor := RwGsModificationTopazWriterVisitor new
+	topazFileNameMap := Dictionary new.
+	topazFileNameMap at: topazFileName put: {}.
+	projectSetDefinition keys
+		do: [ :projectName | 
+			| projectDefinition |
+			projectDefinition := projectSetDefinition projectNamed: projectName.
+			projectDefinition packageNames
+				do: [ :packageName | (topazFileNameMap at: topazFileName) add: packageName ] ].
+	projectSetModification := projectSetDefinition
+		compareAgainstBase: RwProjectSetDefinition new.
+	visitor := RwGsModificationTopazWriterVisitorV2 new
 		repositoryRootPath: deploymentDir;
 		topazFilename: topazFileName;
 		topazFileHeader: topazFileHeader;
+		topazFilenamePackageNamesMap: topazFileNameMap;
 		yourself.
-	visitor visit: projectSetModification.
+	visitor visit: projectSetModification
 ]

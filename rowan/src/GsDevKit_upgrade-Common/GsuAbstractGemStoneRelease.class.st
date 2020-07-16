@@ -136,7 +136,7 @@ GsuAbstractGemStoneRelease >> minor: anInteger [
 { #category : 'accessing' }
 GsuAbstractGemStoneRelease >> patch [
 
-	^ patch ifNil: [ patch := self class _previousPatchVersionFor: 'v', self major asString, '.', self minor asString, '.' ]
+	^ patch ifNil: [ patch := self class _previousPatchVersionFor: self major asString, '.', self minor asString, '.' ]
 ]
 
 { #category : 'prepare gsdevkit image' }

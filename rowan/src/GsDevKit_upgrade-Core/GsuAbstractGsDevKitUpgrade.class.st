@@ -32,25 +32,25 @@ Class {
 }
 
 { #category : 'private' }
-GsuAbstractGsDevKitUpgrade class >> _calculatePreviousRelease [
-
-	| previousGemStoneVersionInt |
-	previousGemStoneVersionInt := GsPackagePolicy perform: #'_previousVersion'.
-	previousGemStoneVersionInt = 35
-		ifTrue: [ ^ GsuGemStone_3_5_x_Release new ].
-	previousGemStoneVersionInt = 34
-		ifTrue: [ ^ GsuGemStone_3_4_x_Release new ].
-	previousGemStoneVersionInt = 33
-		ifTrue: [ ^ GsuGemStone_3_3_x_Release new ].
-	previousGemStoneVersionInt = 32
-		ifTrue: [ ^ GsuGemStone_3_2_x_Release new ].
-	self error: 'Upgrades from GemStone versions earlier than 3.2.0', ' are not currently supported.'
-]
-
-{ #category : 'private' }
 GsuAbstractGsDevKitUpgrade class >> _calculateUpgradeClass [
 
 	^ GsuGsDevKit_3_5_x_Upgrade
+]
+
+{ #category : 'private' }
+GsuAbstractGsDevKitUpgrade class >> _calculateUpgradedVersion [
+
+	| upgradedVersionInt |
+	upgradedVersionInt := self _upgradedVersionInt.
+	upgradedVersionInt = 35
+		ifTrue: [ ^ GsuGemStone_3_5_x_Release new ].
+	upgradedVersionInt = 34
+		ifTrue: [ ^ GsuGemStone_3_4_x_Release new ].
+	upgradedVersionInt = 33
+		ifTrue: [ ^ GsuGemStone_3_3_x_Release new ].
+	upgradedVersionInt = 32
+		ifTrue: [ ^ GsuGemStone_3_2_x_Release new ].
+	self error: 'Upgrades from GemStone versions earlier than 3.2.0', ' are not currently supported.'
 ]
 
 { #category : 'private' }
@@ -95,6 +95,50 @@ GsuAbstractGsDevKitUpgrade class >> _symbolDictionary: aSymbolDictionary [
 	TheSymbolDictionary:= aSymbolDictionary
 ]
 
+{ #category : 'private' }
+GsuAbstractGsDevKitUpgrade class >> _upgradedVersionInt [
+	"return a 2 digit SmallInteger that represents the GemStone version being upgraded from"
+
+	| ofs hist |
+	(hist := Globals at: #'DbfHistory' otherwise: nil)
+		ifNil: [ ^ GsPackagePolicy _originVersion ].
+	ofs := hist
+		_findLastString: 'upgrade to GemStone'
+		startingAt: hist size
+		ignoreCase: true.
+	ofs > 0
+		ifTrue: [ 
+			"Trim off the last upgrade version so we can get the previous."
+			hist := hist copyFrom: 1 to: ofs - 1 ].
+	ofs == 0
+		ifTrue: [ 
+			(ImageVersion at: #'gsVersion' otherwise: nil)
+				ifNotNil: [ :iVer | 
+					ofs := 1.
+					hist := '  v' , iVer , '  ' ] ].
+	ofs ~~ 0
+		ifTrue: [ 
+			#(35 34 33 32)
+				do: [ :ver | 
+					| num vStr |
+					num := ScaledDecimal numerator: ver denominator: 10 scale: 1.
+					vStr := 'v' , num asString , '.'.
+					(hist
+						matchPattern:
+							{$*.
+							vStr.
+							$*})
+						ifTrue: [ ^ ver ].
+					vStr := ' ' , num asString , '.'.
+					(hist
+						matchPattern:
+							{$*.
+							vStr.
+							$*})
+						ifTrue: [ ^ ver ] ] ].
+	^ GsPackagePolicy _originVersion
+]
+
 { #category : 'instance creation' }
 GsuAbstractGsDevKitUpgrade class >> sourceGemStoneRelease: sourceRelease [
 
@@ -127,7 +171,7 @@ GsuAbstractGsDevKitUpgrade class >> upgradeUserName: aString upgradeSymbolDictNa
 	^ self _calculateUpgradeClass
 		upgradeUserName: aString 
 		upgradeSymbolDictName: aSymbol 
-		sourceGemStoneRelease: self _calculatePreviousRelease
+		sourceGemStoneRelease: self _calculateUpgradedVersion
 ]
 
 { #category : 'instance creation' }

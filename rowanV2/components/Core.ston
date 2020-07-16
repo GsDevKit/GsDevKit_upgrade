@@ -1,0 +1,9 @@
+RwSimpleProjectLoadComponentV2 {
+	#name : 'Core',
+	#condition : 'common',
+	#packageNames: [
+		'GsDevKit_upgrade-Core',
+		'GsDevKit_upgrade-Common',
+		'GsDevKit_upgrade-Bootstrap'
+	]
+}

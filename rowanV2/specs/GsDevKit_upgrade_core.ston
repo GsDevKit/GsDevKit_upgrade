@@ -1,0 +1,13 @@
+RwLoadSpecificationV2 {
+	#specName : 'GsDevKit_upgrade_core',
+	#projectName : 'GsDevKit_upgrade',
+	#gitUrl : 'https://github.com/GsDevKit/GsDevKit_upgrade',
+	#revision : 'master',
+	#projectSpecFile : 'rowanV2/project.ston',
+	#componentNames : [
+		'Core'
+	],
+	#customConditionalAttributes : [
+	],
+	#comment : 'Load the core classes'
+}

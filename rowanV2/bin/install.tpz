@@ -1,0 +1,13 @@
+#!/usr/local/bin/smalltalk/gemstone/topaz
+
+  set user SystemUser p swordfish
+  login
+
+	display classoops
+
+run
+(RwResolvedProject 
+	projectFromUrl: 'file:$ROWAN_PROJECTS_HOME/GsDevKit_upgrade/rowanV2/specs/GsDevKit_upgrade_core.ston' 
+	diskUrl: 'file:$ROWAN_PROJECTS_HOME/GsDevKit_upgrade') load
+%
+commit

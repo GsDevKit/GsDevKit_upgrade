@@ -3,6 +3,6 @@ prepareImage_userPatches: aGsDevKitUpgrade
 	"Opportunity for target image to perform user-specific preparation"
 
 	aGsDevKitUpgrade 
-		log: 'Prepare image user - patches';
+		timeStampedLog: 'Prepare image user - patches';
 		prepareImage_user_removeSessionMethods;
 		prepareImage_user_bug46059

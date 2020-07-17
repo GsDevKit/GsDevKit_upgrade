@@ -3,7 +3,7 @@ prepareImage_user_bug46059
 
 	"until bug is fixed - should be run as SystemUser"
 
-	self log: '	patch MCGemStonePlatform >> removeClassFromSystem: (bug 46217)'.
+	self timeStampedLog: '	patch MCGemStonePlatform >> removeClassFromSystem: (bug 46217)'.
 	GsPackageLibrary 
 		installMonticelloPackagesHome: self upgradeSymbolDict
 		during: [:globals | 

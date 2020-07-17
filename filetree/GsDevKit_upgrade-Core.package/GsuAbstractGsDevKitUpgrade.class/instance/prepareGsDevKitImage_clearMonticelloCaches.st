@@ -3,7 +3,7 @@ prepareGsDevKitImage_clearMonticelloCaches
 
 	" clear caches - those that are unneeded or create problem during initial bootstrap load"
 
-	self log: 'Prepare gsdevkit - clear Monticello caches'.
+	self timeStampedLog: 'Prepare gsdevkit - clear Monticello caches'.
 
 	"MCDefinition clearInstances"
 	(self _globalNamed: 'MCDefinition') _classVars at: #Instances put: nil.

@@ -33,7 +33,7 @@ _loadApplicationLoadSpecs: applicationLoadSpecs
 								versionString := loadSpec at: 2.
 								loadList := loadSpec at: 3.
 								repoPath := (loadSpec at: 4) ifNil: [ self bootstrapRepositoryDirectory ].
-								self log: '		', configurationClassName printString, ' version ', versionString printString , ' loads: ', loadList printString, ' from: ', repoPath printString.
+								self timeStampedLog: '		', configurationClassName printString, ' version ', versionString printString , ' loads: ', loadList printString, ' from: ', repoPath printString.
 								(self _globalNamed: 'GsDeployer') bulkMigrate: [ 
 									| projectName |
 									projectName := loadSpec at: 1.

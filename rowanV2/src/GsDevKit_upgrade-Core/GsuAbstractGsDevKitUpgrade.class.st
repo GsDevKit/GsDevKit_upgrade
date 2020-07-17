@@ -32,25 +32,25 @@ Class {
 }
 
 { #category : 'private' }
-GsuAbstractGsDevKitUpgrade class >> _calculatePreviousRelease [
-
-	| previousGemStoneVersionInt |
-	previousGemStoneVersionInt := GsPackagePolicy perform: #'_previousVersion'.
-	previousGemStoneVersionInt = 35
-		ifTrue: [ ^ GsuGemStone_3_5_x_Release new ].
-	previousGemStoneVersionInt = 34
-		ifTrue: [ ^ GsuGemStone_3_4_x_Release new ].
-	previousGemStoneVersionInt = 33
-		ifTrue: [ ^ GsuGemStone_3_3_x_Release new ].
-	previousGemStoneVersionInt = 32
-		ifTrue: [ ^ GsuGemStone_3_2_x_Release new ].
-	self error: 'Upgrades from GemStone versions earlier than 3.2.0', ' are not currently supported.'
-]
-
-{ #category : 'private' }
 GsuAbstractGsDevKitUpgrade class >> _calculateUpgradeClass [
 
 	^ GsuGsDevKit_3_5_x_Upgrade
+]
+
+{ #category : 'private' }
+GsuAbstractGsDevKitUpgrade class >> _calculateUpgradedVersion [
+
+	| upgradedVersionInt |
+	upgradedVersionInt := self _upgradedVersionInt.
+	upgradedVersionInt = 35
+		ifTrue: [ ^ GsuGemStone_3_5_x_Release new ].
+	upgradedVersionInt = 34
+		ifTrue: [ ^ GsuGemStone_3_4_x_Release new ].
+	upgradedVersionInt = 33
+		ifTrue: [ ^ GsuGemStone_3_3_x_Release new ].
+	upgradedVersionInt = 32
+		ifTrue: [ ^ GsuGemStone_3_2_x_Release new ].
+	self error: 'Upgrades from GemStone versions earlier than 3.2.0', ' are not currently supported.'
 ]
 
 { #category : 'private' }
@@ -95,6 +95,50 @@ GsuAbstractGsDevKitUpgrade class >> _symbolDictionary: aSymbolDictionary [
 	TheSymbolDictionary:= aSymbolDictionary
 ]
 
+{ #category : 'private' }
+GsuAbstractGsDevKitUpgrade class >> _upgradedVersionInt [
+	"return a 2 digit SmallInteger that represents the GemStone version being upgraded from"
+
+	| ofs hist |
+	(hist := Globals at: #'DbfHistory' otherwise: nil)
+		ifNil: [ ^ GsPackagePolicy _originVersion ].
+	ofs := hist
+		_findLastString: 'upgrade to GemStone'
+		startingAt: hist size
+		ignoreCase: true.
+	ofs > 0
+		ifTrue: [ 
+			"Trim off the last upgrade version so we can get the previous."
+			hist := hist copyFrom: 1 to: ofs - 1 ].
+	ofs == 0
+		ifTrue: [ 
+			(ImageVersion at: #'gsVersion' otherwise: nil)
+				ifNotNil: [ :iVer | 
+					ofs := 1.
+					hist := '  v' , iVer , '  ' ] ].
+	ofs ~~ 0
+		ifTrue: [ 
+			#(35 34 33 32)
+				do: [ :ver | 
+					| num vStr |
+					num := ScaledDecimal numerator: ver denominator: 10 scale: 1.
+					vStr := 'v' , num asString , '.'.
+					(hist
+						matchPattern:
+							{$*.
+							vStr.
+							$*})
+						ifTrue: [ ^ ver ].
+					vStr := ' ' , num asString , '.'.
+					(hist
+						matchPattern:
+							{$*.
+							vStr.
+							$*})
+						ifTrue: [ ^ ver ] ] ].
+	^ GsPackagePolicy _originVersion
+]
+
 { #category : 'instance creation' }
 GsuAbstractGsDevKitUpgrade class >> sourceGemStoneRelease: sourceRelease [
 
@@ -127,7 +171,7 @@ GsuAbstractGsDevKitUpgrade class >> upgradeUserName: aString upgradeSymbolDictNa
 	^ self _calculateUpgradeClass
 		upgradeUserName: aString 
 		upgradeSymbolDictName: aSymbol 
-		sourceGemStoneRelease: self _calculatePreviousRelease
+		sourceGemStoneRelease: self _calculateUpgradedVersion
 ]
 
 { #category : 'instance creation' }
@@ -353,14 +397,18 @@ GsuAbstractGsDevKitUpgrade >> buildString [
 
 { #category : 'logging' }
 GsuAbstractGsDevKitUpgrade >> logUpgradeParameters [
-
-	self log: 'Upgrade parameters'.
+	self timeStampedLog: 'Upgrade parameters'.
 
 	self bannerLogDash.
+
+	self
+		log:
+			'Upgrading from ' , self sourceGemStoneRelease printString , ' to '
+				, self printString.
 
 	self _logUpgradeParameters.
 
-	self bannerLogDash.
+	self bannerLogDash
 ]
 
 { #category : 'accessing' }
@@ -432,7 +480,7 @@ GsuAbstractGsDevKitUpgrade >> prepareGsDevKitImage_bootstrapGsDevkit [
 
 	"install GLASS from scratch"
 
-	self log: 'Prepare gsdevkit - bootstrap GLASS1'.
+	self timeStampedLog: 'Prepare gsdevkit - bootstrap GLASS1'.
 
 	self upgradeGlass1
 ]
@@ -445,7 +493,7 @@ GsuAbstractGsDevKitUpgrade >> prepareGsDevKitImage_bug46217_patch [
 		during upgrade unexpected classes should not be removed during the
 		bootstrap operation"
 
-	self log: 'Prepare gsdevkit - patch 46217'.
+	self timeStampedLog: 'Prepare gsdevkit - patch 46217'.
 
 	GsPackageLibrary 
 	  installMonticelloPackagesHome: self upgradeSymbolDict
@@ -469,7 +517,7 @@ GsuAbstractGsDevKitUpgrade >> prepareGsDevKitImage_clearMetacelloCaches [
 	"Metacello caches used in calculating default values for application load specs, so cache
 		application load specs before clearing the Metacello cache"
 
-	self log: 'Prepare gsdevkit - clear Metacello caches'.
+	self timeStampedLog: 'Prepare gsdevkit - clear Metacello caches'.
 
 	self bootstrapApplicationLoadSpecs.
 	(self _globalNamed: #MetacelloProjectRegistration)
@@ -484,7 +532,7 @@ GsuAbstractGsDevKitUpgrade >> prepareGsDevKitImage_clearMonticelloCaches [
 
 	" clear caches - those that are unneeded or create problem during initial bootstrap load"
 
-	self log: 'Prepare gsdevkit - clear Monticello caches'.
+	self timeStampedLog: 'Prepare gsdevkit - clear Monticello caches'.
 
 	"MCDefinition clearInstances"
 	(self _globalNamed: 'MCDefinition') _classVars at: #Instances put: nil.
@@ -534,7 +582,7 @@ GsuAbstractGsDevKitUpgrade >> prepareGsDevKitImage_existingConfigurationList [
 		since they will be used during loading of GLASS, GLASS1, GsDevKit, and tODE"
 
 	self bootstrapExistingConfigurationList isEmpty ifFalse: [ "already set" ^ self ].
-	self log: '	create existing configuration list (commit)'.
+	self timeStampedLog: '	create existing configuration list (commit)'.
 
    self _defaultExistingConfigurationOfNames
 		do: [:className |
@@ -554,7 +602,7 @@ GsuAbstractGsDevKitUpgrade >> prepareGsDevKitImage_loadApplicationCode [
 
 	"load application code"
 
-	self log: 'Prepare gsdevkit - load GsDevKit application code'.
+	self timeStampedLog: 'Prepare gsdevkit - load GsDevKit application code'.
 
 	"force configurations to be reloaded if needed"
 	self removeExistingConfigurations.
@@ -589,7 +637,7 @@ GsuAbstractGsDevKitUpgrade >> prepareGsDevKitImage_patch45952 [
 			"not exposed to bug"
 			^ self ].
 	self 
-		log: '	BootstrapSymbolDictionary ignored during initial bootstrap of GLASS into non-UserGlobals SymbolDictionary.';
+		timeStampedLog: '	BootstrapSymbolDictionary ignored during initial bootstrap of GLASS into non-UserGlobals SymbolDictionary.';
 		log: '	Transferring Behaviors from UserGlobals to ', self upgradeSymbolDictName printString;
 		log: '		BEFORE upgrading seaside image.'.
 	ug keys
@@ -616,7 +664,7 @@ GsuAbstractGsDevKitUpgrade >> prepareGsDevKitImage_removeAllMethods [
 
 	"remove all methods in GsDevKit user classes"
 
-	self log: 'Prepare gsdevkit - remove all methods'.
+	self timeStampedLog: 'Prepare gsdevkit - remove all methods'.
 
 	self upgradeSymbolDict valuesDo: [:global |
 		global isBehavior
@@ -642,7 +690,7 @@ GsuAbstractGsDevKitUpgrade >> prepareGsDevKitImage_validation [
 	"verify that all methods visible to this user have been recompiled."
 
 	| sessionMethodsNeedCompilation methodsNeedCompilation |
-	self log: 'Prepare gsdevkit - validation'.
+	self timeStampedLog: 'Prepare gsdevkit - validation'.
 
 	System commit.
 
@@ -706,7 +754,7 @@ GsuAbstractGsDevKitUpgrade >> prepareImage_bug46217_patch [
 	"patch needed: 3.2.0 thru 3.2.15, and 3.3.0 - should be run as SystemUser"
 
 	| package symbolDict class theSymbolList |
-	self log: '	patch MCGemStonePlatform >> removeClassFromSystem: (bug 46217)'.
+	self timeStampedLog: '	patch MCGemStonePlatform >> removeClassFromSystem: (bug 46217)'.
 	package := GsPackageLibrary packageNamed: #'Monticello_Globals'.
 	symbolDict := package symbolDict.
 	class := symbolDict at: #'MCGemStonePlatform'.
@@ -805,7 +853,7 @@ GsuAbstractGsDevKitUpgrade >> prepareImage_pragmas [
 	| pragmaClass |
 
 	"need to make sure that this method is used so that we can extract pragmas from old structures"
-	self log: '	Installing ...Pragma>>withPragmasIn:do:'.
+	self timeStampedLog: '	Installing ...Pragma>>withPragmasIn:do:'.
 	(pragmaClass := self upgradeSymbolDict at: #Pragma ifAbsent: [])
 		ifNil: [ ^ self log: '	No Pragma class found in ', self upgradeSymbolDict name asString, ' symbol dictionary' ].
 	self log: '	Old pragma class ', pragmaClass name printString, '[', pragmaClass asOop printString, '] -- will be made obsolete'.
@@ -899,7 +947,7 @@ GsuAbstractGsDevKitUpgrade >> prepareImage_user_bug46059 [
 
 	"until bug is fixed - should be run as SystemUser"
 
-	self log: '	patch MCGemStonePlatform >> removeClassFromSystem: (bug 46217)'.
+	self timeStampedLog: '	patch MCGemStonePlatform >> removeClassFromSystem: (bug 46217)'.
 	GsPackageLibrary 
 		installMonticelloPackagesHome: self upgradeSymbolDict
 		during: [:globals | 
@@ -951,7 +999,7 @@ GsuAbstractGsDevKitUpgrade >> prepareImage_user_removeSessionMethods [
 GsuAbstractGsDevKitUpgrade >> prepareImageBanner [
 
 	self bannerLogDash.
-	self log:  'Starting ', self buildString, ' GsDevKit upgrade: prepare image as ', System myUserProfile userId.
+	self timeStampedLog:  'Starting ', self buildString, ' GsDevKit upgrade: prepare image as ', System myUserProfile userId.
 	self log:  '	Upgrading ', self sourceGemStoneRelease printString, ' to ', self printString.
 	self bannerLogDash.
 	self logUpgradeParameters
@@ -961,7 +1009,7 @@ GsuAbstractGsDevKitUpgrade >> prepareImageBanner [
 GsuAbstractGsDevKitUpgrade >> prepareImageDoneBanner [
 
 	self bannerLogDash.
-	self log:  'Finished ', self buildString, ' GsDevKit upgrade: prepare image as ', System myUserProfile userId.
+	self timeStampedLog:  'Finished ', self buildString, ' GsDevKit upgrade: prepare image as ', System myUserProfile userId.
 	self bannerLogDash.
 ]
 

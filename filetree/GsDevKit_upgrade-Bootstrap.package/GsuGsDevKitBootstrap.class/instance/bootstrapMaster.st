@@ -3,7 +3,7 @@ bootstrapMaster
 	"formerly $upgradeDir/bootstrapMaster30.topaz"
 
 	| undef |
-	self log: '	bootstrap master'.
+	self timeStampedLog: '	bootstrap master'.
 
 	self logBootstrapParameters.
 

@@ -1,11 +1,16 @@
 {
 	"category" : "GsDevKit_upgrade-Common",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
 	"instvars" : [
 		"major",
 		"minor",
-		"patch"
-	],
+		"patch" ],
 	"name" : "GsuAbstractGemStoneRelease",
+	"pools" : [
+		 ],
 	"super" : "Object",
-	"type" : "normal"
-}
+	"type" : "normal" }

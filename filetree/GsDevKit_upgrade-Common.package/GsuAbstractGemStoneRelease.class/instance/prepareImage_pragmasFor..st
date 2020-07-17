@@ -6,7 +6,7 @@ prepareImage_pragmasFor: aGsDevKitUpgrade
 
 	"Part 1: set the stage for pragma upgrade"
 
-	aGsDevKitUpgrade log: 'Prepare image - pragmas'.
+	aGsDevKitUpgrade timeStampedLog: 'Prepare image - pragmas'.
 
 	"noop by default"
 	aGsDevKitUpgrade log: '	pragmas (noop)'.

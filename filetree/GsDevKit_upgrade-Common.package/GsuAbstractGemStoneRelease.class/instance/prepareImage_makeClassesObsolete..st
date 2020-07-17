@@ -4,4 +4,4 @@ prepareImage_makeClassesObsolete: aGsDevKitUpgrade
 
 	"noop by default"
 
-	aGsDevKitUpgrade log: 'Prepare image - obsolete classes'.
+	aGsDevKitUpgrade timeStampedLog: 'Prepare image - obsolete classes'.

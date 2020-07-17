@@ -1,0 +1,11 @@
+RwProjectSpecificationV2 {
+	#specName : 'project_filetree',
+	#projectSpecPath : 'rowanV2',
+	#componentsPath : 'rowanV2/components',
+	#packagesPath : 'filetree',
+	#projectsPath : 'rowanV2/projects_filetree.ston',
+	#specsPath : 'rowanV2/specs',
+	#packageFormat : 'tonel',
+	#packageConvention : 'RowanHybrid',
+	#comment : 'Rowan V2.0 project specification'
+}

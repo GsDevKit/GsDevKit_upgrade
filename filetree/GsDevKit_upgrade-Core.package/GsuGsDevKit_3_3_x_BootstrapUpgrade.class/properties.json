@@ -1,6 +1,14 @@
 {
 	"category" : "GsDevKit_upgrade-Core",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		 ],
 	"name" : "GsuGsDevKit_3_3_x_BootstrapUpgrade",
+	"pools" : [
+		 ],
 	"super" : "GsuAbstractGsDevKitUpgrade",
-	"type" : "normal"
-}
+	"type" : "normal" }

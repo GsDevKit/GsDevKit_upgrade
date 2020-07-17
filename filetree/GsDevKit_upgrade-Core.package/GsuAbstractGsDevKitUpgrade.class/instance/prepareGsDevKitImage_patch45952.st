@@ -14,7 +14,7 @@ prepareGsDevKitImage_patch45952
 			"not exposed to bug"
 			^ self ].
 	self 
-		log: '	BootstrapSymbolDictionary ignored during initial bootstrap of GLASS into non-UserGlobals SymbolDictionary.';
+		timeStampedLog: '	BootstrapSymbolDictionary ignored during initial bootstrap of GLASS into non-UserGlobals SymbolDictionary.';
 		log: '	Transferring Behaviors from UserGlobals to ', self upgradeSymbolDictName printString;
 		log: '		BEFORE upgrading seaside image.'.
 	ug keys

@@ -1,0 +1,22 @@
+RwSimpleProjectLoadComponentV2 {
+	#name : 'tools/Core',
+	#condition : 'tools',
+	#projectNames : [ ],
+	#componentNames : [ ],
+	#packageNames : [
+		'GsDevKit_upgrade-Tools',
+		'GsDevKit_upgrade-ToolExtensions'
+	],
+	#conditionalPackageMapSpecs : {
+		'gemstone' : {
+			'SystemUser' : {
+				#packageNameToPlatformPropertiesMap : {
+					'GsDevKit_upgrade-ToolExtensions' : {
+						'symbolDictName' : 'RowanTools'
+					}
+				}
+			}
+		}
+	},
+	#comment : ''
+}

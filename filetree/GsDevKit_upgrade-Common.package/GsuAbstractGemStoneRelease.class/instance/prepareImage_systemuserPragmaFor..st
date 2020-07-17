@@ -6,7 +6,7 @@ prepareImage_systemuserPragmaFor: aGsDevKitUpgrade
 
 	"Part 3: make pragma class obsolete"
 
-	aGsDevKitUpgrade log: 'Prepare image - system user pragmas'.
+	aGsDevKitUpgrade timeStampedLog: 'Prepare image - system user pragmas'.
 
 	"noop by default"
 	aGsDevKitUpgrade log: '	pragmas (noop)'.

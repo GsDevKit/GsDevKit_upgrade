@@ -18,8 +18,12 @@ GsuGsDevKit_3_5_x_Upgrade >> _defaultTargetRelease [
 
 { #category : 'private' }
 GsuGsDevKit_3_5_x_Upgrade >> _patchRelease [
-
-	^ 0
+	| baseVersion imageVersion |
+	baseVersion := self major asString , '.' , self minor asString , '.'.
+	imageVersion := ImageVersion at: #'gsVersion'.
+	^ Integer
+		fromString:
+			(imageVersion copyFrom: baseVersion size + 1 to: imageVersion size)
 ]
 
 { #category : 'private' }
@@ -82,7 +86,7 @@ GsuGsDevKit_3_5_x_Upgrade >> prepareImage_patches [
 	"Needed for installing GsdevKit/GLASS - should be run as System User"
 
 	super prepareImage_patches.
-	self log: '	patch Behavior >> _primitiveCompileMethod:symbolList:category:oldLitVars:intoMethodDict:intoCategories:intoPragmas:environmentId:'.
+	self timeStampedLog: '	patch Behavior >> _primitiveCompileMethod:symbolList:category:oldLitVars:intoMethodDict:intoCategories:intoPragmas:environmentId:'.
 	(Behavior
 		compileMethod: self _prepareImage_behavior_patchSource 
 		dictionaries: self upgradeUserProfile symbolList 

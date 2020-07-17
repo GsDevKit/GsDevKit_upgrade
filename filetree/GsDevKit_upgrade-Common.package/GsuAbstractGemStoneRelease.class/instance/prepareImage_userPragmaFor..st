@@ -7,7 +7,7 @@ prepareImage_userPragmaFor: aGsDevKitUpgrade
 	"Part 2: collect methods that refrence the obsolete pragma class or have pragmas that 
 		need to be recomputed and need to be recompiled"
 
-	aGsDevKitUpgrade log: 'Prepare image - user pragmas'.
+	aGsDevKitUpgrade timeStampedLog: 'Prepare image - user pragmas'.
 
 	"noop by default"
 	aGsDevKitUpgrade log: '	pragmas (noop)'.

@@ -95,6 +95,12 @@ GsuAbstractGemStoneRelease class >> major: major minor: minor patch: patch [
 		yourself
 ]
 
+{ #category : 'logging' }
+GsuAbstractGemStoneRelease class >> timeStampedLog: aString [
+
+	self log: aString, '   (', DateAndTime now printString, ')'
+]
+
 { #category : 'bootstrapping' }
 GsuAbstractGemStoneRelease >> bootstrapPackageFileNames [
 
@@ -168,14 +174,14 @@ GsuAbstractGemStoneRelease >> prepareGsDevKitImage_clearMonticelloCaches:  aGsDe
 { #category : 'prepare gsdevkit image' }
 GsuAbstractGemStoneRelease >> prepareGsDevKitImage_enableSessionMethods:  aGsDevKitUpgrade [
 
-	aGsDevKitUpgrade log: 'Prepare gsdevkit - enableSessionMethods'.
+	aGsDevKitUpgrade timeStampedLog: 'Prepare gsdevkit - enableSessionMethods'.
 	aGsDevKitUpgrade prepareGsDevKitImage_enableSessionMethods
 ]
 
 { #category : 'prepare gsdevkit image' }
 GsuAbstractGemStoneRelease >> prepareGsDevKitImage_existingConfigurationList:  aGsDevKitUpgrade [
 
-	aGsDevKitUpgrade log: 'Prepare gsdevkit - create existing configuration list'.
+	aGsDevKitUpgrade timeStampedLog: 'Prepare gsdevkit - create existing configuration list'.
 	aGsDevKitUpgrade prepareGsDevKitImage_existingConfigurationList
 ]
 
@@ -196,7 +202,7 @@ GsuAbstractGemStoneRelease >> prepareGsDevKitImage_patch45952:  aGsDevKitUpgrade
 
 	"bug 45952 ... image/bootstrapMaster.topaz for 3.1.0.6 ignored BootstrapSymbolDictionaryName"
 
-	aGsDevKitUpgrade log: 'Prepare gsdevkit - patch bug 45952'.
+	aGsDevKitUpgrade timeStampedLog: 'Prepare gsdevkit - patch bug 45952'.
 	aGsDevKitUpgrade prepareGsDevKitImage_patch45952
 ]
 
@@ -236,14 +242,14 @@ GsuAbstractGemStoneRelease >> prepareImage_makeClassesObsolete: aGsDevKitUpgrade
 
 	"noop by default"
 
-	aGsDevKitUpgrade log: 'Prepare image - obsolete classes'.
+	aGsDevKitUpgrade timeStampedLog: 'Prepare image - obsolete classes'.
 ]
 
 { #category : 'prepare image' }
 GsuAbstractGemStoneRelease >> prepareImage_patches: aGsDevKitUpgrade [
 	"Opportunity for target image to install any patches needed pre-upgrade"
 
-	aGsDevKitUpgrade log: 'Prepare image - patches'.
+	aGsDevKitUpgrade timeStampedLog: 'Prepare image - patches'.
 	aGsDevKitUpgrade prepareImage_patches
 ]
 
@@ -255,7 +261,7 @@ GsuAbstractGemStoneRelease >> prepareImage_pragmasFor: aGsDevKitUpgrade [
 
 	"Part 1: set the stage for pragma upgrade"
 
-	aGsDevKitUpgrade log: 'Prepare image - pragmas'.
+	aGsDevKitUpgrade timeStampedLog: 'Prepare image - pragmas'.
 
 	"noop by default"
 	aGsDevKitUpgrade log: '	pragmas (noop)'.
@@ -269,7 +275,7 @@ GsuAbstractGemStoneRelease >> prepareImage_systemuserPragmaFor: aGsDevKitUpgrade
 
 	"Part 3: make pragma class obsolete"
 
-	aGsDevKitUpgrade log: 'Prepare image - system user pragmas'.
+	aGsDevKitUpgrade timeStampedLog: 'Prepare image - system user pragmas'.
 
 	"noop by default"
 	aGsDevKitUpgrade log: '	pragmas (noop)'.
@@ -279,7 +285,7 @@ GsuAbstractGemStoneRelease >> prepareImage_systemuserPragmaFor: aGsDevKitUpgrade
 GsuAbstractGemStoneRelease >> prepareImage_user_clear_subscriptions: aGsDevKitUpgrade [
 	"Opportunity for target image to perform user-specific preparation"
 
-	aGsDevKitUpgrade log: 'Prepare image user - clear subscriptions'.
+	aGsDevKitUpgrade timeStampedLog: 'Prepare image user - clear subscriptions'.
 	aGsDevKitUpgrade prepareImage_user_clear_subscriptions
 ]
 
@@ -288,7 +294,7 @@ GsuAbstractGemStoneRelease >> prepareImage_userPatches: aGsDevKitUpgrade [
 	"Opportunity for target image to perform user-specific preparation"
 
 	aGsDevKitUpgrade 
-		log: 'Prepare image user - patches';
+		timeStampedLog: 'Prepare image user - patches';
 		prepareImage_user_removeSessionMethods;
 		prepareImage_user_bug46059
 ]
@@ -302,7 +308,7 @@ GsuAbstractGemStoneRelease >> prepareImage_userPragmaFor: aGsDevKitUpgrade [
 	"Part 2: collect methods that refrence the obsolete pragma class or have pragmas that 
 		need to be recomputed and need to be recompiled"
 
-	aGsDevKitUpgrade log: 'Prepare image - user pragmas'.
+	aGsDevKitUpgrade timeStampedLog: 'Prepare image - user pragmas'.
 
 	"noop by default"
 	aGsDevKitUpgrade log: '	pragmas (noop)'.
@@ -321,4 +327,10 @@ GsuAbstractGemStoneRelease >> printOn: aStream [
 GsuAbstractGemStoneRelease >> resolveForUpgradeToGemStone350: aGsuGsDevKit_3_5_0_Upgrade [
 
 	^ aGsuGsDevKit_3_5_0_Upgrade asStandardUpgrade
+]
+
+{ #category : 'debugging' }
+GsuAbstractGemStoneRelease >> timeStampedLog: aString [
+
+	self class timeStampedLog: aString
 ]

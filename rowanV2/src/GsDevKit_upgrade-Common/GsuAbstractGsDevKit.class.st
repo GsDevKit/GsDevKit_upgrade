@@ -33,7 +33,7 @@ GsuAbstractGsDevKit >> _defaultBootstrapApplicationLoadSpecs [
 
 	self _todeLoaded
 		ifTrue: [
-			self log: '	load BaselineOfMetacello and BaselineOfTode (default)'.
+			self timeStampedLog: '	load BaselineOfMetacello and BaselineOfTode (default)'.
 			"first update Metacello and then update Tode"
 			^	{
 				{
@@ -47,7 +47,7 @@ GsuAbstractGsDevKit >> _defaultBootstrapApplicationLoadSpecs [
 			} ].
 	self _glass1Loaded
 		ifTrue: [
-			self log: '	load BaselineOfMetacello and BaselineOfGLASS1 (default)'.
+			self timeStampedLog: '	load BaselineOfMetacello and BaselineOfGLASS1 (default)'.
 			"first update Metacello and then update GLASS1"
 			^	{
 				{
@@ -61,7 +61,7 @@ GsuAbstractGsDevKit >> _defaultBootstrapApplicationLoadSpecs [
 			} ].
 	self _gsDevKitLoaded
 		ifTrue: [
-			self log: '	load BaselineOfMetacello and BaselineOfGsDevKit (default)'.
+			self timeStampedLog: '	load BaselineOfMetacello and BaselineOfGsDevKit (default)'.
 			^	{	"assume that GsDevKit needs to be reloaded"
 				{
 					'Metacello'. 
@@ -72,7 +72,7 @@ GsuAbstractGsDevKit >> _defaultBootstrapApplicationLoadSpecs [
 					self _projectSpecForBaseline: 'BaselineOfGsDevKit'.
 				}.
 			} ].
-	self log: '	load ConfigurationOfGLASS'.
+	self timeStampedLog: '	load ConfigurationOfGLASS'.
 	^{}
 ]
 
@@ -189,7 +189,7 @@ GsuAbstractGsDevKit >> _loadApplicationLoadSpecs: applicationLoadSpecs [
 								versionString := loadSpec at: 2.
 								loadList := loadSpec at: 3.
 								repoPath := (loadSpec at: 4) ifNil: [ self bootstrapRepositoryDirectory ].
-								self log: '		', configurationClassName printString, ' version ', versionString printString , ' loads: ', loadList printString, ' from: ', repoPath printString.
+								self timeStampedLog: '		', configurationClassName printString, ' version ', versionString printString , ' loads: ', loadList printString, ' from: ', repoPath printString.
 								(self _globalNamed: 'GsDeployer') bulkMigrate: [ 
 									| projectName |
 									projectName := loadSpec at: 1.
@@ -341,7 +341,7 @@ GsuAbstractGsDevKit >> _todeLoaded [
 GsuAbstractGsDevKit >> bannerLog: aString [
 
 	self bannerLogDash.
-	self log: aString.
+	self timeStampedLog: aString.
 	self bannerLogDash.
 ]
 
@@ -463,7 +463,7 @@ GsuAbstractGsDevKit >> removeExistingConfigurations [
 
 	| count |
 
-	self log: '	removing configuration classes'.
+	self timeStampedLog: '	removing configuration classes'.
 
 	ClassOrganizer clearCachedOrganizer.
 
@@ -489,6 +489,12 @@ GsuAbstractGsDevKit >> skipLoadApplication [
 GsuAbstractGsDevKit >> skipLoadApplication: aBool [
 
 	skipLoadApplication := aBool
+]
+
+{ #category : 'logging' }
+GsuAbstractGsDevKit >> timeStampedLog: aString [
+
+	self log: aString, '   (', DateAndTime now printString, ')'
 ]
 
 { #category : 'accessing' }

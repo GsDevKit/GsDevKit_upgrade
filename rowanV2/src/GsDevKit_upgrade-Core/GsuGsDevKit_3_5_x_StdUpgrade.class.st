@@ -53,9 +53,9 @@ GsuGsDevKit_3_5_x_StdUpgrade >> _reloadBootstrapPackages [
 	| dir |
 	self skipLoadApplication
 		ifTrue: [ 
-			self log: '	skip reloading bootstrap packages'.
+			self timeStampedLog: '	skip reloading bootstrap packages'.
 			^ self ].
-	self log: '	reloading bootstrap packages from ', self bootstrapRepositoryDirectory.
+	self timeStampedLog: '	reloading bootstrap packages from ', self bootstrapRepositoryDirectory.
 	dir := (self _globalNamed: 'ServerFileDirectory') on: self bootstrapRepositoryDirectory.
 	self targetGemStoneRelease reloadBootstrapPackageFileNames do: [:bootstrapPackageFileName |
 		| packageVersion |
@@ -152,7 +152,7 @@ GsuGsDevKit_3_5_x_StdUpgrade >> prepareGsDevKitImage_loadApplicationCode [
 
 	"load application code"
 
-	self log: 'Prepare gsdevkit - load GsDevKit application code'.
+	self timeStampedLog: 'Prepare gsdevkit - load GsDevKit application code'.
 
 	"now load application"
 
@@ -169,7 +169,7 @@ GsuGsDevKit_3_5_x_StdUpgrade >> prepareGsDevKitImage_patch_compileMethodCategory
 
 	"will be overridden when Core package loaded"
 
-	self log: '		Patching ...Behavior>>compileMethod:category:'.
+	self timeStampedLog: '		Patching ...Behavior>>compileMethod:category:'.
 
 	(Behavior
 		compileMethod: self _prepareImage_behavior_compileMethod_Category_patchSource 
@@ -185,7 +185,7 @@ GsuGsDevKit_3_5_x_StdUpgrade >> prepareGsDevKitImage_recompilePragmaMethods [
 	"Methods with pragmas need to be recompiled so that they reference the new Pragma class"
 
 	| recompileBlock |
-	self log: 'Prepare gsdevkit - recompile pragma methods'.
+	self timeStampedLog: 'Prepare gsdevkit - recompile pragma methods'.
 	recompileBlock := [:meth |
 		| cls categ src |
 		cls := meth inClass.
@@ -228,7 +228,7 @@ GsuGsDevKit_3_5_x_StdUpgrade >> prepareGsDevKitImage_resetExistingGlobalState [
 
 	"Reset and/or initialize any classes that may have invalid state carried over"
 
-	self log: 'Prepare gsdevkit - reset existing global state'.
+	self timeStampedLog: 'Prepare gsdevkit - reset existing global state'.
 
 	(self _globalNamed: 'MCMockPackageInfo') initialize
 ]

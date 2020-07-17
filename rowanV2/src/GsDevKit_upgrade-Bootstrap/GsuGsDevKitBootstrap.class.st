@@ -72,7 +72,7 @@ GsuGsDevKitBootstrap >> bootstrapGlass [
 
 	"bootstrrap GLASS 1.0-beta.9.2.2' "
 
-	self log: '	bootstrap GLASS 1.0-beta.9.2.2'.
+	self timeStampedLog: '	bootstrap GLASS 1.0-beta.9.2.2'.
 
 	"force configurations to be reloaded if needed"
 	self removeExistingConfigurations.
@@ -95,7 +95,7 @@ GsuGsDevKitBootstrap >> bootstrapGsDevkit [
 
 	"used to create extent0.seaside.dbf"
 
-	self log: '	bootstrap GsDevKit'.
+	self timeStampedLog: '	bootstrap GsDevKit'.
 
 	"Bug 46217 - during bootstrap don't remove any classes.
 		during initial bootstrap no classes will be removed
@@ -133,7 +133,7 @@ GsuGsDevKitBootstrap >> bootstrapMaster [
 	"formerly $upgradeDir/bootstrapMaster30.topaz"
 
 	| undef |
-	self log: '	bootstrap master'.
+	self timeStampedLog: '	bootstrap master'.
 
 	self logBootstrapParameters.
 
@@ -184,7 +184,7 @@ GsuGsDevKitBootstrap >> bootstrapMaster [
 { #category : 'logging' }
 GsuGsDevKitBootstrap >> logBootstrapParameters [
 
-	self log: 'Bootstrap parameters'.
+	self timeStampedLog: 'Bootstrap parameters'.
 
 	self bannerLogDash.
 
@@ -197,7 +197,7 @@ GsuGsDevKitBootstrap >> logBootstrapParameters [
 GsuGsDevKitBootstrap >> patchMaster [
 	"formerly $upgradeDir/patchMaster30.topaz"
 
-	self log: '	patch master'.
+	self timeStampedLog: '	patch master'.
 	self log: '	... done patch master'.
 ]
 
@@ -206,7 +206,7 @@ GsuGsDevKitBootstrap >> upgradeGlass [
 
 	"use GsUpgrader to upgrade GLASS to usable version: GLASS 1.0-beta.9.3' "
 
-	self log: '	install GLASS  1.0-beta.9.3'.
+	self timeStampedLog: '	install GLASS  1.0-beta.9.3'.
 
 	self bootstrapGlass.
 
@@ -231,7 +231,7 @@ GsuGsDevKitBootstrap >> upgradeGlass1 [
 
 	"use GsUpgrader to install GLASS1 "
 
-	self log: '	install GLASS1'.
+	self timeStampedLog: '	install GLASS1'.
 
 	self bootstrapGlass.
 

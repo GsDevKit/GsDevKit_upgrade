@@ -404,7 +404,7 @@ GsuAbstractGsDevKitUpgrade >> logUpgradeParameters [
 	self
 		log:
 			'Upgrading from ' , self sourceGemStoneRelease printString , ' to '
-				, self targetGemStoneRelease printString.
+				, self printString.
 
 	self _logUpgradeParameters.
 

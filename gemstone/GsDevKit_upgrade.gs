@@ -374,7 +374,7 @@ _previousPatchVersionFor: primaryVersionPattern
           (ImageVersion at: #'gsVersion' otherwise: nil)
             ifNotNil: [ :iVer | 
               ofs := 1.
-              hist := '  v' , iVer , '  ' ] ].
+              hist := '  ' , iVer , '  ' ] ].
       ofs ~~ 0
         ifTrue: [ 
           | subStr |
@@ -1825,7 +1825,7 @@ logUpgradeParameters
 	self
 		log:
 			'Upgrading from ' , self sourceGemStoneRelease printString , ' to '
-				, self targetGemStoneRelease printString.
+				, self printString.
 
 	self _logUpgradeParameters.
 
@@ -2911,8 +2911,12 @@ _defaultTargetRelease
 category: 'private'
 method: GsuGsDevKit_3_5_x_Upgrade
 _patchRelease
-
-	^ 0
+	| baseVersion imageVersion |
+	baseVersion := self major asString , '.' , self minor asString , '.'.
+	imageVersion := ImageVersion at: #'gsVersion'.
+	^ Integer
+		fromString:
+			(imageVersion copyFrom: baseVersion size + 1 to: imageVersion size)
 %
 
 category: 'private'

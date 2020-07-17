@@ -18,8 +18,12 @@ GsuGsDevKit_3_5_x_Upgrade >> _defaultTargetRelease [
 
 { #category : 'private' }
 GsuGsDevKit_3_5_x_Upgrade >> _patchRelease [
-
-	^ 0
+	| baseVersion imageVersion |
+	baseVersion := self major asString , '.' , self minor asString , '.'.
+	imageVersion := ImageVersion at: #'gsVersion'.
+	^ Integer
+		fromString:
+			(imageVersion copyFrom: baseVersion size + 1 to: imageVersion size)
 ]
 
 { #category : 'private' }

@@ -43,7 +43,7 @@ GsuAbstractGemStoneRelease class >> _previousPatchVersionFor: primaryVersionPatt
           (ImageVersion at: #'gsVersion' otherwise: nil)
             ifNotNil: [ :iVer | 
               ofs := 1.
-              hist := '  v' , iVer , '  ' ] ].
+              hist := '  ' , iVer , '  ' ] ].
       ofs ~~ 0
         ifTrue: [ 
           | subStr |

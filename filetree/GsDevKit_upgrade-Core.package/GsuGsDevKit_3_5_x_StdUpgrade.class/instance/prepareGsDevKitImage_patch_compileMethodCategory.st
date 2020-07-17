@@ -4,7 +4,7 @@ prepareGsDevKitImage_patch_compileMethodCategory
 
 	"will be overridden when Core package loaded"
 
-	self log: '		Patching ...Behavior>>compileMethod:category:'.
+	self timeStampedLog: '		Patching ...Behavior>>compileMethod:category:'.
 
 	(Behavior
 		compileMethod: self _prepareImage_behavior_compileMethod_Category_patchSource 

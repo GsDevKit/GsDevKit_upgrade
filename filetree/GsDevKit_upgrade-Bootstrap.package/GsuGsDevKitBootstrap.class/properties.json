@@ -1,9 +1,14 @@
 {
 	"category" : "GsDevKit_upgrade-Bootstrap",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
 	"instvars" : [
-		"bootstrapGemStoneRelease"
-	],
+		"bootstrapGemStoneRelease" ],
 	"name" : "GsuGsDevKitBootstrap",
+	"pools" : [
+		 ],
 	"super" : "GsuAbstractGsDevKit",
-	"type" : "normal"
-}
+	"type" : "normal" }

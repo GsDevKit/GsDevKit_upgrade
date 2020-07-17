@@ -3,7 +3,7 @@ upgradeGlass
 
 	"use GsUpgrader to upgrade GLASS to usable version: GLASS 1.0-beta.9.3' "
 
-	self log: '	install GLASS  1.0-beta.9.3'.
+	self timeStampedLog: '	install GLASS  1.0-beta.9.3'.
 
 	self bootstrapGlass.
 

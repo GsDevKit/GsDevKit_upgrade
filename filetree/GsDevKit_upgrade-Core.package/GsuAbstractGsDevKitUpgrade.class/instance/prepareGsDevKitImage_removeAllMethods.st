@@ -3,7 +3,7 @@ prepareGsDevKitImage_removeAllMethods
 
 	"remove all methods in GsDevKit user classes"
 
-	self log: 'Prepare gsdevkit - remove all methods'.
+	self timeStampedLog: 'Prepare gsdevkit - remove all methods'.
 
 	self upgradeSymbolDict valuesDo: [:global |
 		global isBehavior

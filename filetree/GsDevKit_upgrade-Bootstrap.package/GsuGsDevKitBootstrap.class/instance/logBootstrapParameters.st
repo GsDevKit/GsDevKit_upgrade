@@ -1,7 +1,7 @@
 logging
 logBootstrapParameters
 
-	self log: 'Bootstrap parameters'.
+	self timeStampedLog: 'Bootstrap parameters'.
 
 	self bannerLogDash.
 

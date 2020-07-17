@@ -4,7 +4,7 @@ prepareGsDevKitImage_loadApplicationCode
 
 	"load application code"
 
-	self log: 'Prepare gsdevkit - load GsDevKit application code'.
+	self timeStampedLog: 'Prepare gsdevkit - load GsDevKit application code'.
 
 	"force configurations to be reloaded if needed"
 	self removeExistingConfigurations.

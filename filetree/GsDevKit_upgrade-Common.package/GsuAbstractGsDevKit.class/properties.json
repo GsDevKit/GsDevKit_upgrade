@@ -1,5 +1,10 @@
 {
 	"category" : "GsDevKit_upgrade-Common",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
 	"instvars" : [
 		"upgradeUserName",
 		"upgradeSymbolDict",
@@ -8,9 +13,9 @@
 		"bootstrapRepositoryDirectory",
 		"bootstrapApplicationLoadSpecs",
 		"bootstrapExistingConfigurationList",
-		"skipLoadApplication"
-	],
+		"skipLoadApplication" ],
 	"name" : "GsuAbstractGsDevKit",
+	"pools" : [
+		 ],
 	"super" : "Object",
-	"type" : "normal"
-}
+	"type" : "normal" }

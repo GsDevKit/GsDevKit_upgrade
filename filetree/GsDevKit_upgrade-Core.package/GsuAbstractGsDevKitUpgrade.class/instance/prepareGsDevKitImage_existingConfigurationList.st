@@ -5,7 +5,7 @@ prepareGsDevKitImage_existingConfigurationList
 		since they will be used during loading of GLASS, GLASS1, GsDevKit, and tODE"
 
 	self bootstrapExistingConfigurationList isEmpty ifFalse: [ "already set" ^ self ].
-	self log: '	create existing configuration list (commit)'.
+	self timeStampedLog: '	create existing configuration list (commit)'.
 
    self _defaultExistingConfigurationOfNames
 		do: [:className |

@@ -6,7 +6,7 @@ removeExistingConfigurations
 
 	| count |
 
-	self log: '	removing configuration classes'.
+	self timeStampedLog: '	removing configuration classes'.
 
 	ClassOrganizer clearCachedOrganizer.
 

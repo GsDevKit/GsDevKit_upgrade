@@ -6,7 +6,7 @@ prepareGsDevKitImage_clearMetacelloCaches
 	"Metacello caches used in calculating default values for application load specs, so cache
 		application load specs before clearing the Metacello cache"
 
-	self log: 'Prepare gsdevkit - clear Metacello caches'.
+	self timeStampedLog: 'Prepare gsdevkit - clear Metacello caches'.
 
 	self bootstrapApplicationLoadSpecs.
 	(self _globalNamed: #MetacelloProjectRegistration)

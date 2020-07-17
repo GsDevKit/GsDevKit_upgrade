@@ -3,7 +3,7 @@ upgradeGlass1
 
 	"use GsUpgrader to install GLASS1 "
 
-	self log: '	install GLASS1'.
+	self timeStampedLog: '	install GLASS1'.
 
 	self bootstrapGlass.
 

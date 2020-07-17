@@ -6,7 +6,7 @@ prepareGsDevKitImage_recompilePragmaMethods
 	"Methods with pragmas need to be recompiled so that they reference the new Pragma class"
 
 	| recompileBlock |
-	self log: 'Prepare gsdevkit - recompile pragma methods'.
+	self timeStampedLog: 'Prepare gsdevkit - recompile pragma methods'.
 	recompileBlock := [:meth |
 		| cls categ src |
 		cls := meth inClass.

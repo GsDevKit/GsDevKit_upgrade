@@ -6,7 +6,7 @@ prepareGsDevKitImage_bug46217_patch
 		during upgrade unexpected classes should not be removed during the
 		bootstrap operation"
 
-	self log: 'Prepare gsdevkit - patch 46217'.
+	self timeStampedLog: 'Prepare gsdevkit - patch 46217'.
 
 	GsPackageLibrary 
 	  installMonticelloPackagesHome: self upgradeSymbolDict

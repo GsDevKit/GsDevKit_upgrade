@@ -1,6 +1,14 @@
 {
 	"category" : "GsDevKit_upgrade-Core",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		 ],
 	"name" : "GsuGsDevKit_3_5_x_StdUpgrade",
+	"pools" : [
+		 ],
 	"super" : "GsuGsDevKit_3_5_x_Upgrade",
-	"type" : "normal"
-}
+	"type" : "normal" }

@@ -5,9 +5,8 @@ Class {
 }
 
 { #category : 'private' }
-GsuGsDevKitUpgradeDeploymentTools >> _defaultFiletreeSpecName [
-
-	^  'GsDevKit_upgrade_filetree.ston'
+GsuGsDevKitUpgradeDeploymentTools >> _defaultSpecName [
+	^ 'GsDevKit_upgrade_dev.ston'
 ]
 
 { #category : 'private' }
@@ -25,52 +24,6 @@ GsuGsDevKitUpgradeDeploymentTools >> _defaultTopazFileHeader: fileName [
 		nextPutAll: '!'; lf;
 		nextPutAll: '!======================================================================='; lf;
 		contents
-]
-
-{ #category : 'private' }
-GsuGsDevKitUpgradeDeploymentTools >> _defaultTopazSpecName [
-
-	^  'GsDevKit_upgrade_dev.ston'
-]
-
-{ #category : 'private' }
-GsuGsDevKitUpgradeDeploymentTools >> _projectDefinitionFor: specName [
-	| projectRoot specUrlString projectDefinition packageNameToPlatformPropertiesMap |
-
-	projectRoot := self _projectsHome / self _projectName.
-	specUrlString :=  'file:' , projectRoot fullName,  '/rowanV2/specs/', specName.
-	projectDefinition := Rowan projectFromUrl: specUrlString.
-	projectDefinition projectsHome: self _projectsHome.
-	Rowan projectTools read 
-		readProjectSetForComponentProjectDefinition: projectDefinition.
-	packageNameToPlatformPropertiesMap := projectDefinition projectRef packageNameToPlatformPropertiesMap.
-	projectDefinition packageNames do: [:packageName |
-		| dict |
-		dict := Dictionary new 
-			at: 'symbolDictName' 
-				put: 'GsDevKit_Upgrade_SymDict_private'; 
-			yourself.
-		packageNameToPlatformPropertiesMap at: packageName put:dict ].
-	^ projectDefinition
-		packageFormat: 'filetree';
-		projectHome: self _projectsHome;
-		yourself
-]
-
-{ #category : 'private' }
-GsuGsDevKitUpgradeDeploymentTools >> _projectFor: specName [ 
-	| projectRoot specUrlString project |
-	projectRoot := self _projectsHome / self _projectName.
-	specUrlString := 'file:' , projectRoot fullName , '/rowanV2/specs/' , specName.
-	project := (Rowan
-		projectFromUrl: specUrlString
-		projectsHome: self _projectsHome) defined.
-	project packageNames
-		do: [ :packageName | 
-			project
-				gemstoneSetSymbolDictName: 'GsDevKit_Upgrade_SymDict_private'
-				forPackageNamed: packageName ].
-	^ project
 ]
 
 { #category : 'private' }
@@ -92,7 +45,6 @@ GsuGsDevKitUpgradeDeploymentTools >> _projectFor: specName customConditionalAttr
 
 { #category : 'private' }
 GsuGsDevKitUpgradeDeploymentTools >> _projectName [
-
 	^ 'GsDevKit_upgrade'
 ]
 
@@ -108,40 +60,38 @@ GsuGsDevKitUpgradeDeploymentTools >> _projectSetFor: specName customConditionalA
 
 { #category : 'private' }
 GsuGsDevKitUpgradeDeploymentTools >> _projectsHome [
-
 	^ FileSystem disk / '$GS_HOME/shared/repos'
 ]
 
 { #category : 'filetree' }
 GsuGsDevKitUpgradeDeploymentTools >> deployFiletreeRepository [
-
-	^ self deployFiletreeRepository: 'filetree' specName: self _defaultFiletreeSpecName
+	^ self deployFiletreeRepository: 'filetree' specName: self _defaultSpecName
 ]
 
 { #category : 'filetree' }
 GsuGsDevKitUpgradeDeploymentTools >> deployFiletreeRepository: deploymentName specName: specName [
-
 	| project projectSetDefinition visitor projectSetModification |
-	project := self _projectFor: specName. 
-	projectSetDefinition :=  (RwProjectSetDefinition new)
-		addProject: project;
+	project := self _projectFor: specName customConditionalAttributes: {}.	"no tools"
+	projectSetDefinition := RwProjectSetDefinition new
+		addProject: project _resolvedProject;
 		yourself.
-	projectSetModification := projectSetDefinition compareAgainstBase: RwProjectSetDefinition new.
-	visitor := RwModificationFiletreeWriterVisitorV2 new.
-	visitor visit: projectSetModification.
+	projectSetModification := projectSetDefinition
+		compareAgainstBase: RwProjectSetDefinition new.
+	visitor := RwModificationFiletreeWriterVisitorV2 new
+		packagesRoot: self _projectsHome / self _projectName / deploymentName;
+		yourself.
+	visitor visit: projectSetModification
 ]
 
 { #category : 'topaz' }
 GsuGsDevKitUpgradeDeploymentTools >> deployTopazFilein [
-
-	^ self deployTopazFilein: self _projectName spec: self _defaultTopazSpecName
+	^ self deployTopazFilein: self _projectName spec: self _defaultSpecName
 ]
 
 { #category : 'topaz' }
 GsuGsDevKitUpgradeDeploymentTools >> deployTopazFilein: topazFileName spec: specName [
-
-	self 
-		deployTopazFilein: topazFileName 
+	self
+		deployTopazFilein: topazFileName
 		topazFileHeader: (self _defaultTopazFileHeader: topazFileName)
 		spec: specName
 ]

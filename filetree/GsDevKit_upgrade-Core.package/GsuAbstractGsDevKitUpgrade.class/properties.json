@@ -1,14 +1,16 @@
 {
 	"category" : "GsDevKit_upgrade-Core",
+	"classinstvars" : [
+		 ],
 	"classvars" : [
-		"TheSymbolDictionary"
-	],
+		"TheSymbolDictionary" ],
+	"commentStamp" : "",
 	"instvars" : [
 		"sourceGemStoneRelease",
 		"targetGemStoneRelease",
-		"methodsWithPragmas"
-	],
+		"methodsWithPragmas" ],
 	"name" : "GsuAbstractGsDevKitUpgrade",
+	"pools" : [
+		 ],
 	"super" : "GsuAbstractGsDevKit",
-	"type" : "normal"
-}
+	"type" : "normal" }

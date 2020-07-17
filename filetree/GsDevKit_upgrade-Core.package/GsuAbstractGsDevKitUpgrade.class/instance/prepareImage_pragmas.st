@@ -14,7 +14,7 @@ prepareImage_pragmas
 	| pragmaClass |
 
 	"need to make sure that this method is used so that we can extract pragmas from old structures"
-	self log: '	Installing ...Pragma>>withPragmasIn:do:'.
+	self timeStampedLog: '	Installing ...Pragma>>withPragmasIn:do:'.
 	(pragmaClass := self upgradeSymbolDict at: #Pragma ifAbsent: [])
 		ifNil: [ ^ self log: '	No Pragma class found in ', self upgradeSymbolDict name asString, ' symbol dictionary' ].
 	self log: '	Old pragma class ', pragmaClass name printString, '[', pragmaClass asOop printString, '] -- will be made obsolete'.

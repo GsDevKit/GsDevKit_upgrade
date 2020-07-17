@@ -5,7 +5,7 @@ bootstrapGsDevkit
 
 	"used to create extent0.seaside.dbf"
 
-	self log: '	bootstrap GsDevKit'.
+	self timeStampedLog: '	bootstrap GsDevKit'.
 
 	"Bug 46217 - during bootstrap don't remove any classes.
 		during initial bootstrap no classes will be removed

@@ -4,7 +4,7 @@ _defaultBootstrapApplicationLoadSpecs
 
 	self _todeLoaded
 		ifTrue: [
-			self log: '	load BaselineOfMetacello and BaselineOfTode (default)'.
+			self timeStampedLog: '	load BaselineOfMetacello and BaselineOfTode (default)'.
 			"first update Metacello and then update Tode"
 			^	{
 				{
@@ -18,7 +18,7 @@ _defaultBootstrapApplicationLoadSpecs
 			} ].
 	self _glass1Loaded
 		ifTrue: [
-			self log: '	load BaselineOfMetacello and BaselineOfGLASS1 (default)'.
+			self timeStampedLog: '	load BaselineOfMetacello and BaselineOfGLASS1 (default)'.
 			"first update Metacello and then update GLASS1"
 			^	{
 				{
@@ -32,7 +32,7 @@ _defaultBootstrapApplicationLoadSpecs
 			} ].
 	self _gsDevKitLoaded
 		ifTrue: [
-			self log: '	load BaselineOfMetacello and BaselineOfGsDevKit (default)'.
+			self timeStampedLog: '	load BaselineOfMetacello and BaselineOfGsDevKit (default)'.
 			^	{	"assume that GsDevKit needs to be reloaded"
 				{
 					'Metacello'. 
@@ -43,5 +43,5 @@ _defaultBootstrapApplicationLoadSpecs
 					self _projectSpecForBaseline: 'BaselineOfGsDevKit'.
 				}.
 			} ].
-	self log: '	load ConfigurationOfGLASS'.
+	self timeStampedLog: '	load ConfigurationOfGLASS'.
 	^{}

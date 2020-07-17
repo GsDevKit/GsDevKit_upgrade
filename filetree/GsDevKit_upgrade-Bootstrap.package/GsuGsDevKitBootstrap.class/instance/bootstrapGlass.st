@@ -3,7 +3,7 @@ bootstrapGlass
 
 	"bootstrrap GLASS 1.0-beta.9.2.2' "
 
-	self log: '	bootstrap GLASS 1.0-beta.9.2.2'.
+	self timeStampedLog: '	bootstrap GLASS 1.0-beta.9.2.2'.
 
 	"force configurations to be reloaded if needed"
 	self removeExistingConfigurations.

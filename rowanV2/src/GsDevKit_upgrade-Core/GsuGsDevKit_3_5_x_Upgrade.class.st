@@ -13,7 +13,7 @@ GsuGsDevKit_3_5_x_Upgrade >> _bootstrapRelease [
 { #category : 'private' }
 GsuGsDevKit_3_5_x_Upgrade >> _defaultTargetRelease [
 
-	^ GsuGemStone_3_5_x_Release major: 3 minor: 5
+	^ GsuGemStone_3_5_x_Release major: 3 minor: 5  patch: self _patchRelease
 ]
 
 { #category : 'private' }

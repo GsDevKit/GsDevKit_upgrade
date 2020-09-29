@@ -206,9 +206,9 @@ GsDevKit_upgrade/scripts/install.sh $stoneName $version
 1. create a new branch in the GsDevKit_upgrade clone
 1. fork the [GsDevKit_upgrade project][19] if you want to share your changes with the rest of the community
 1. load and save packages from/to the filetree repository using a development image of your choice
-2. use >>deployment script<< to upgdate `GsDevKit_upgrade.gs` file in checkout with your changes
+2. use `GsuGsDevKitUpgradeDeploymentTools new deployTopazFilein` to update `GsDevKit_upgrade.gs` file in checkout with your changes
 3. test upgrade using the new `GsDevKit_upgrade.gs` file
-4. use >>deployment script<< to update the tonel repository with your final edits.
+4. use `GsuGsDevKitUpgradeDeploymentTools new deployFiletreeRepository` to update the filetree repository with your final edits.
 5. update your fork and issue a pull request against [GsDevKit_upgrade project][19] to share your changes.
 -------------------------------
 -------------------------------
@@ -235,4 +235,4 @@ file:$ROWAN_PROJECTS_HOME/GsDevKit_upgrade/rowan/specs/GsDevKit_upgrade.ston
 [16]: https://www.youtube.com/watch?feature=player_embedded&v=FGkdXwGtfd8
 [17]: https://github.com/SeasideSt/Seaside
 [18]: https://gemtalksystems.com/small-business/gsdevkit/
-[19]: [1]: https://github.com/GsDevKit/GsDevKit_upgrade
+[19]: https://github.com/GsDevKit/GsDevKit_upgrade

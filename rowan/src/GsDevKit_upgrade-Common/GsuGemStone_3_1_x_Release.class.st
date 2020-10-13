@@ -19,3 +19,11 @@ GsuGemStone_3_1_x_Release >> prepareImage_makeClassesObsolete: aGsDevKitUpgrade 
 	super prepareImage_makeClassesObsolete: aGsDevKitUpgrade.
 	aGsDevKitUpgrade prepareImage_makeClassObsolete: 'Pragma' in: (aGsDevKitUpgrade upgradeUserProfile objectNamed: 'UserGlobals')
 ]
+
+{ #category : 'initialization' }
+GsuGemStone_3_1_x_Release >> resolveForUpgradeToGemStone360: aGsuGsDevKit_3_6_0_Upgrade [
+	self
+		error:
+			'Upgrades to 3.6.x from ' , major asString , '.' , minor asString , '.'
+				, self patch asString , ' is not supported'
+]

@@ -74,3 +74,11 @@ GsuGemStone_3_2_x_Release >> resolveForUpgradeToGemStone350: aGsuGsDevKit_3_5_0_
 
 	^ aGsuGsDevKit_3_5_0_Upgrade asBootstrapUpgrade
 ]
+
+{ #category : 'initialization' }
+GsuGemStone_3_2_x_Release >> resolveForUpgradeToGemStone360: aGsuGsDevKit_3_6_0_Upgrade [
+	self
+		error:
+			'Upgrades to 3.6.x from ' , major asString , '.' , minor asString , '.'
+				, self patch asString , ' is not supported'
+]

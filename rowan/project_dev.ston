@@ -1,10 +1,10 @@
 RwProjectSpecificationV2 {
 	#specName : 'project_dev',
-	#projectSpecPath : 'rowanV2',
-	#componentsPath : 'rowanV2/components',
-	#packagesPath : 'rowanV2/src',
-	#projectsPath : 'rowanV2/projects',
-	#specsPath : 'rowanV2/specs',
+	#projectSpecPath : 'rowan',
+	#componentsPath : 'rowan/components',
+	#packagesPath : 'rowan/src',
+	#projectsPath : 'rowan/projects',
+	#specsPath : 'rowan/specs',
 	#packageFormat : 'tonel',
 	#packageConvention : 'RowanHybrid',
 	#comment : 'Rowan V2.0 project specification'

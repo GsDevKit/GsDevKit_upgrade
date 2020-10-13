@@ -332,6 +332,12 @@ GsuAbstractGemStoneRelease >> resolveForUpgradeToGemStone350: aGsuGsDevKit_3_5_0
 	^ aGsuGsDevKit_3_5_0_Upgrade asStandardUpgrade
 ]
 
+{ #category : 'initialization' }
+GsuAbstractGemStoneRelease >> resolveForUpgradeToGemStone360: aGsuGsDevKit_3_6_0_Upgrade [
+
+	^ aGsuGsDevKit_3_6_0_Upgrade asStandardUpgrade
+]
+
 { #category : 'debugging' }
 GsuAbstractGemStoneRelease >> timeStampedLog: aString [
 

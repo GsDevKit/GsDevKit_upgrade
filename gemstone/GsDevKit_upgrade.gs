@@ -22,10 +22,12 @@ doit
 	options: #()
 )
 		category: 'GsDevKit_upgrade-Common';
-		comment: '';
 		immediateInvariant.
 true.
 %
+
+removeallmethods GsuAbstractGemStoneRelease
+removeallclassmethods GsuAbstractGemStoneRelease
 
 doit
 (GsuAbstractGemStoneRelease
@@ -38,10 +40,12 @@ doit
 	options: #()
 )
 		category: 'GsDevKit_upgrade-Common';
-		comment: '';
 		immediateInvariant.
 true.
 %
+
+removeallmethods GsuGemStone_2_4_x_Release
+removeallclassmethods GsuGemStone_2_4_x_Release
 
 doit
 (GsuAbstractGemStoneRelease
@@ -54,10 +58,12 @@ doit
 	options: #()
 )
 		category: 'GsDevKit_upgrade-Common';
-		comment: '';
 		immediateInvariant.
 true.
 %
+
+removeallmethods GsuGemStone_3_0_x_Release
+removeallclassmethods GsuGemStone_3_0_x_Release
 
 doit
 (GsuAbstractGemStoneRelease
@@ -70,10 +76,12 @@ doit
 	options: #()
 )
 		category: 'GsDevKit_upgrade-Common';
-		comment: '';
 		immediateInvariant.
 true.
 %
+
+removeallmethods GsuGemStone_3_1_x_Release
+removeallclassmethods GsuGemStone_3_1_x_Release
 
 doit
 (GsuAbstractGemStoneRelease
@@ -86,10 +94,12 @@ doit
 	options: #()
 )
 		category: 'GsDevKit_upgrade-Common';
-		comment: '';
 		immediateInvariant.
 true.
 %
+
+removeallmethods GsuGemStone_3_2_x_Release
+removeallclassmethods GsuGemStone_3_2_x_Release
 
 doit
 (GsuAbstractGemStoneRelease
@@ -102,10 +112,12 @@ doit
 	options: #()
 )
 		category: 'GsDevKit_upgrade-Common';
-		comment: '';
 		immediateInvariant.
 true.
 %
+
+removeallmethods GsuGemStone_3_3_x_Release
+removeallclassmethods GsuGemStone_3_3_x_Release
 
 doit
 (GsuAbstractGemStoneRelease
@@ -118,10 +130,12 @@ doit
 	options: #()
 )
 		category: 'GsDevKit_upgrade-Common';
-		comment: '';
 		immediateInvariant.
 true.
 %
+
+removeallmethods GsuGemStone_3_4_x_Release
+removeallclassmethods GsuGemStone_3_4_x_Release
 
 doit
 (GsuAbstractGemStoneRelease
@@ -134,10 +148,30 @@ doit
 	options: #()
 )
 		category: 'GsDevKit_upgrade-Common';
-		comment: '';
 		immediateInvariant.
 true.
 %
+
+removeallmethods GsuGemStone_3_5_x_Release
+removeallclassmethods GsuGemStone_3_5_x_Release
+
+doit
+(GsuGemStone_3_5_x_Release
+	subclass: 'GsuGemStone_3_6_x_Release'
+	instVarNames: #(  )
+	classVars: #(  )
+	classInstVars: #(  )
+	poolDictionaries: #()
+	inDictionary: GsDevKit_Upgrade_SymDict_private
+	options: #()
+)
+		category: 'GsDevKit_upgrade-Common';
+		immediateInvariant.
+true.
+%
+
+removeallmethods GsuGemStone_3_6_x_Release
+removeallclassmethods GsuGemStone_3_6_x_Release
 
 doit
 (Object
@@ -150,10 +184,12 @@ doit
 	options: #()
 )
 		category: 'GsDevKit_upgrade-Common';
-		comment: '';
 		immediateInvariant.
 true.
 %
+
+removeallmethods GsuAbstractGsDevKit
+removeallclassmethods GsuAbstractGsDevKit
 
 doit
 (GsuAbstractGsDevKit
@@ -187,6 +223,9 @@ There are three basic phases of thed GsDevKit/GLASS upgrade process:
 true.
 %
 
+removeallmethods GsuAbstractGsDevKitUpgrade
+removeallclassmethods GsuAbstractGsDevKitUpgrade
+
 doit
 (GsuAbstractGsDevKitUpgrade
 	subclass: 'GsuGsDevKit_3_2_x_BootstrapUpgrade'
@@ -198,10 +237,12 @@ doit
 	options: #()
 )
 		category: 'GsDevKit_upgrade-Core';
-		comment: '';
 		immediateInvariant.
 true.
 %
+
+removeallmethods GsuGsDevKit_3_2_x_BootstrapUpgrade
+removeallclassmethods GsuGsDevKit_3_2_x_BootstrapUpgrade
 
 doit
 (GsuAbstractGsDevKitUpgrade
@@ -214,10 +255,12 @@ doit
 	options: #()
 )
 		category: 'GsDevKit_upgrade-Core';
-		comment: '';
 		immediateInvariant.
 true.
 %
+
+removeallmethods GsuGsDevKit_3_3_x_BootstrapUpgrade
+removeallclassmethods GsuGsDevKit_3_3_x_BootstrapUpgrade
 
 doit
 (GsuAbstractGsDevKitUpgrade
@@ -230,10 +273,12 @@ doit
 	options: #()
 )
 		category: 'GsDevKit_upgrade-Core';
-		comment: '';
 		immediateInvariant.
 true.
 %
+
+removeallmethods GsuGsDevKit_3_4_x_BootstrapUpgrade
+removeallclassmethods GsuGsDevKit_3_4_x_BootstrapUpgrade
 
 doit
 (GsuAbstractGsDevKitUpgrade
@@ -246,10 +291,12 @@ doit
 	options: #()
 )
 		category: 'GsDevKit_upgrade-Core';
-		comment: '';
 		immediateInvariant.
 true.
 %
+
+removeallmethods GsuGsDevKit_3_5_x_Upgrade
+removeallclassmethods GsuGsDevKit_3_5_x_Upgrade
 
 doit
 (GsuGsDevKit_3_5_x_Upgrade
@@ -262,10 +309,12 @@ doit
 	options: #()
 )
 		category: 'GsDevKit_upgrade-Core';
-		comment: '';
 		immediateInvariant.
 true.
 %
+
+removeallmethods GsuGsDevKit_3_5_x_BootstrapUpgrade
+removeallclassmethods GsuGsDevKit_3_5_x_BootstrapUpgrade
 
 doit
 (GsuGsDevKit_3_5_x_Upgrade
@@ -278,10 +327,30 @@ doit
 	options: #()
 )
 		category: 'GsDevKit_upgrade-Core';
-		comment: '';
 		immediateInvariant.
 true.
 %
+
+removeallmethods GsuGsDevKit_3_5_x_StdUpgrade
+removeallclassmethods GsuGsDevKit_3_5_x_StdUpgrade
+
+doit
+(GsuGsDevKit_3_5_x_StdUpgrade
+	subclass: 'GsuGsDevKit_3_6_x_StdUpgrade'
+	instVarNames: #(  )
+	classVars: #(  )
+	classInstVars: #(  )
+	poolDictionaries: #()
+	inDictionary: GsDevKit_Upgrade_SymDict_private
+	options: #()
+)
+		category: 'GsDevKit_upgrade-Core';
+		immediateInvariant.
+true.
+%
+
+removeallmethods GsuGsDevKit_3_6_x_StdUpgrade
+removeallclassmethods GsuGsDevKit_3_6_x_StdUpgrade
 
 doit
 (GsuAbstractGsDevKit
@@ -294,10 +363,12 @@ doit
 	options: #()
 )
 		category: 'GsDevKit_upgrade-Bootstrap';
-		comment: '';
 		immediateInvariant.
 true.
 %
+
+removeallmethods GsuGsDevKitBootstrap
+removeallclassmethods GsuGsDevKitBootstrap
 
 ! Class implementation for 'GsuAbstractGemStoneRelease'
 
@@ -353,6 +424,7 @@ _classForMajorVersion: major minorVersion: minor
 		GsuGemStone_3_3_x_Release.
 		GsuGemStone_3_4_x_Release.
 		GsuGemStone_3_5_x_Release.
+		GsuGemStone_3_6_x_Release.
 	} at: minor + 1
 %
 
@@ -663,6 +735,13 @@ resolveForUpgradeToGemStone350: aGsuGsDevKit_3_5_0_Upgrade
 	^ aGsuGsDevKit_3_5_0_Upgrade asStandardUpgrade
 %
 
+category: 'initialization'
+method: GsuAbstractGemStoneRelease
+resolveForUpgradeToGemStone360: aGsuGsDevKit_3_6_0_Upgrade
+
+	^ aGsuGsDevKit_3_6_0_Upgrade asStandardUpgrade
+%
+
 category: 'debugging'
 method: GsuAbstractGemStoneRelease
 timeStampedLog: aString
@@ -709,6 +788,15 @@ prepareImage_makeClassesObsolete: aGsDevKitUpgrade
 			  do: [:className | aGsDevKitUpgrade prepareImage_makeClassObsolete: className in: symDict ] ].
 %
 
+category: 'initialization'
+method: GsuGemStone_2_4_x_Release
+resolveForUpgradeToGemStone360: aGsuGsDevKit_3_6_0_Upgrade
+	self
+		error:
+			'Upgrades to 3.6.x from ' , major asString , '.' , minor asString , '.'
+				, self patch asString , ' is not supported'
+%
+
 ! Class implementation for 'GsuGemStone_3_0_x_Release'
 
 !		Instance methods for 'GsuGemStone_3_0_x_Release'
@@ -718,6 +806,15 @@ method: GsuGemStone_3_0_x_Release
 minor
 
 	^ minor ifNil: [ 0 ]
+%
+
+category: 'initialization'
+method: GsuGemStone_3_0_x_Release
+resolveForUpgradeToGemStone360: aGsuGsDevKit_3_6_0_Upgrade
+	self
+		error:
+			'Upgrades to 3.6.x from ' , major asString , '.' , minor asString , '.'
+				, self patch asString , ' is not supported'
 %
 
 ! Class implementation for 'GsuGemStone_3_1_x_Release'
@@ -740,6 +837,15 @@ prepareImage_makeClassesObsolete: aGsDevKitUpgrade
 
 	super prepareImage_makeClassesObsolete: aGsDevKitUpgrade.
 	aGsDevKitUpgrade prepareImage_makeClassObsolete: 'Pragma' in: (aGsDevKitUpgrade upgradeUserProfile objectNamed: 'UserGlobals')
+%
+
+category: 'initialization'
+method: GsuGemStone_3_1_x_Release
+resolveForUpgradeToGemStone360: aGsuGsDevKit_3_6_0_Upgrade
+	self
+		error:
+			'Upgrades to 3.6.x from ' , major asString , '.' , minor asString , '.'
+				, self patch asString , ' is not supported'
 %
 
 ! Class implementation for 'GsuGemStone_3_2_x_Release'
@@ -822,6 +928,15 @@ method: GsuGemStone_3_2_x_Release
 resolveForUpgradeToGemStone350: aGsuGsDevKit_3_5_0_Upgrade
 
 	^ aGsuGsDevKit_3_5_0_Upgrade asBootstrapUpgrade
+%
+
+category: 'initialization'
+method: GsuGemStone_3_2_x_Release
+resolveForUpgradeToGemStone360: aGsuGsDevKit_3_6_0_Upgrade
+	self
+		error:
+			'Upgrades to 3.6.x from ' , major asString , '.' , minor asString , '.'
+				, self patch asString , ' is not supported'
 %
 
 ! Class implementation for 'GsuGemStone_3_3_x_Release'
@@ -932,49 +1047,7 @@ prepareImage_makeClassesObsolete: aGsDevKitUpgrade
 category: 'bootstrapping'
 method: GsuGemStone_3_5_x_Release
 bootstrapPackageFileNames
-
 	"answer an ordered list of the Monticello packages that are needed to bootstrap GsDevKit/GLASS into image"
-
-	^self _bootstrapPackageFileNames_0
-%
-
-category: 'accessing'
-method: GsuGemStone_3_5_x_Release
-minor
-
-	^ minor ifNil: [ 5 ]
-%
-
-category: 'prepare gsdevkit image'
-method: GsuGemStone_3_5_x_Release
-prepareGsDevKitImage_recompilePragmaMethods:  aGsDevKitUpgrade
-
-	"noop - Pragma class is in base"
-%
-
-category: 'prepare image'
-method: GsuGemStone_3_5_x_Release
-prepareImage_makeClassesObsolete: aGsDevKitUpgrade
-	"In 3.4.0, the Pragma class is already in the base"
-
-	"noop"
-	aGsDevKitUpgrade timeStampedLog: '	obsolete classes (noop)'.
-%
-
-category: 'bootstrapping'
-method: GsuGemStone_3_5_x_Release
-reloadBootstrapPackageFileNames
-
-	"answer an ordered list of the Monticello packages that are needed to reload GLASS into image"
-
-	^self _reloadBootstrapPackageFileNames_0
-%
-
-category: 'private'
-method: GsuGemStone_3_5_x_Release
-_bootstrapPackageFileNames_0
-	"answer an ordered list of the Monticello packages that are needed to bootstrap GsDevKit/GLASS into image"
-
 
 	self patch < 4
 		ifTrue: [ 
@@ -1031,9 +1104,32 @@ _bootstrapPackageFileNames_0
 			'Utf8Encoding.310-dkh.32.mcz'} ]
 %
 
-category: 'private'
+category: 'accessing'
 method: GsuGemStone_3_5_x_Release
-_reloadBootstrapPackageFileNames_0
+minor
+
+	^ minor ifNil: [ 5 ]
+%
+
+category: 'prepare gsdevkit image'
+method: GsuGemStone_3_5_x_Release
+prepareGsDevKitImage_recompilePragmaMethods:  aGsDevKitUpgrade
+
+	"noop - Pragma class is in base"
+%
+
+category: 'prepare image'
+method: GsuGemStone_3_5_x_Release
+prepareImage_makeClassesObsolete: aGsDevKitUpgrade
+	"In 3.4.0, the Pragma class is already in the base"
+
+	"noop"
+	aGsDevKitUpgrade timeStampedLog: '	obsolete classes (noop)'.
+%
+
+category: 'bootstrapping'
+method: GsuGemStone_3_5_x_Release
+reloadBootstrapPackageFileNames
 	"answer an ordered list of the Monticello packages that are needed to reload GLASS into image"
 
 	self patch < 4
@@ -1089,6 +1185,81 @@ _reloadBootstrapPackageFileNames_0
 			'Metacello-GitHub-dkh.22.mcz'.
 			'Network-Url-dkh.3.mcz'.
 			'Utf8Encoding.310-dkh.32.mcz'} ]
+%
+
+! Class implementation for 'GsuGemStone_3_6_x_Release'
+
+!		Instance methods for 'GsuGemStone_3_6_x_Release'
+
+category: 'bootstrapping'
+method: GsuGemStone_3_6_x_Release
+bootstrapPackageFileNames
+	"answer an ordered list of the Monticello packages that are needed to bootstrap GsDevKit/GLASS into image"
+
+self halt: 'modify for 3.6.0'.
+		^ {'Core.v3-dkh.82.mcz'.
+			'GemStone-Compression-dkh.1.mcz'.
+			'Base-Bootstrap.v3-dkh.29.mcz'.
+			'Bootstrap.v34-dkh.263.mcz'.
+			'GemStone-ANSI-Streams-dkh.9.mcz'.
+			'GemStone-Indexing-Extensions-dkh.3.mcz'.
+			'Sport3.010.v3-dkh.29.mcz'.
+			'Squeak.v34-dkh.339.mcz'.
+			'Regex-Core-DaleHenrichs.3.mcz'.
+			'Regex-Tests-Core-DaleHenrichs.5.mcz'.
+			'PackageInfo-Base.g-dkh.36.mcz'.
+			'Monticello.v3-dkh.457.mcz'.
+			'GemStone-Deployment.v310-dkh.26.mcz'.
+			'Change-Notification.v3-dkh.20.mcz'.
+			'Gofer-Core.gemstone-dkh.135.mcz'.
+			'Metacello-Base-dkh.103.mcz'.
+			'Metacello-Core-dkh.669.mcz'.
+			'Metacello-MC-dkh.669.mcz'.
+			'Metacello-Platform.gemstone-dkh.29.mcz'.
+			'Metacello-ToolBox-dkh.131.mcz'.
+			'Metacello-FileTree-dkh.29.mcz'.
+			'Metacello-GitHub-dkh.22.mcz'.
+			'Network-Url-dkh.3.mcz'.
+			'Utf8Encoding.310-dkh.32.mcz'}
+%
+
+category: 'accessing'
+method: GsuGemStone_3_6_x_Release
+minor
+
+	^ minor ifNil: [ 6]
+%
+
+category: 'bootstrapping'
+method: GsuGemStone_3_6_x_Release
+reloadBootstrapPackageFileNames
+	"answer an ordered list of the Monticello packages that are needed to reload GLASS into image"
+
+self halt: 'modify for 3.6.0'.
+			^ {'GemStone-Compression-dkh.1.mcz'.
+			'Core.v3-dkh.82.mcz'.
+			'Base-Bootstrap.v3-dkh.29.mcz'.
+			'Bootstrap.v34-dkh.263.mcz'.
+			'GemStone-ANSI-Streams-dkh.9.mcz'.
+			'GemStone-Indexing-Extensions-dkh.3.mcz'.
+			'Sport3.010.v3-dkh.29.mcz'.
+			'Squeak.v34-dkh.339.mcz'.
+			'Regex-Core-DaleHenrichs.3.mcz'.
+			'Regex-Tests-Core-DaleHenrichs.5.mcz'.
+			'PackageInfo-Base.g-dkh.36.mcz'.
+			'Monticello.v3-dkh.457.mcz'.
+			'GemStone-Deployment.v310-dkh.26.mcz'.
+			'Change-Notification.v3-dkh.20.mcz'.
+			'Gofer-Core.gemstone-dkh.135.mcz'.
+			'Metacello-Base-dkh.103.mcz'.
+			'Metacello-Core-dkh.669.mcz'.
+			'Metacello-MC-dkh.669.mcz'.
+			'Metacello-Platform.gemstone-dkh.29.mcz'.
+			'Metacello-ToolBox-dkh.131.mcz'.
+			'Metacello-FileTree-dkh.29.mcz'.
+			'Metacello-GitHub-dkh.22.mcz'.
+			'Network-Url-dkh.3.mcz'.
+			'Utf8Encoding.310-dkh.32.mcz'}
 %
 
 ! Class implementation for 'GsuAbstractGsDevKit'
@@ -1732,6 +1903,8 @@ _calculateUpgradedVersion
 
 	| upgradedVersionInt |
 	upgradedVersionInt := self _upgradedVersionInt.
+	upgradedVersionInt = 36
+		ifTrue: [ ^ GsuGemStone_3_6_x_Release new ].
 	upgradedVersionInt = 35
 		ifTrue: [ ^ GsuGemStone_3_5_x_Release new ].
 	upgradedVersionInt = 34
@@ -3273,6 +3446,50 @@ _standardBaselineLoaded: baselineClassName
 					(cls registrationForClassNamed: baselineClassName ifAbsent: [ ])
 						ifNotNil: [ :registration | ^ registration loadedInImage ] ] ].
 	^ false
+%
+
+! Class implementation for 'GsuGsDevKit_3_6_x_StdUpgrade'
+
+!		Instance methods for 'GsuGsDevKit_3_6_x_StdUpgrade'
+
+category: 'initialization'
+method: GsuGsDevKit_3_6_x_StdUpgrade
+asBootstrapUpgrade
+	self error: 'Bootstrap upgrades not supported for GemStone 3.6.x'
+%
+
+category: 'initialization'
+method: GsuGsDevKit_3_6_x_StdUpgrade
+asStandardUpgrade
+
+	"Application methods in upgraded repository do NOT need to recompiled"
+
+	"postLoadClassList is not used in standard upgrade case"
+
+	^ self
+%
+
+category: 'initialization'
+method: GsuGsDevKit_3_6_x_StdUpgrade
+resolveForUpgrade
+	"determine which concrete upgrade class to use, base on source GemStone version"
+
+	super resolveForUpgrade.
+	^ self sourceGemStoneRelease resolveForUpgradeToGemStone360: self
+%
+
+category: 'private'
+method: GsuGsDevKit_3_6_x_StdUpgrade
+_bootstrapRelease
+
+	^ GsuGemStone_3_6_x_Release major: 3 minor: 6 patch: self _patchRelease
+%
+
+category: 'private'
+method: GsuGsDevKit_3_6_x_StdUpgrade
+_defaultTargetRelease
+
+	^ GsuGemStone_3_6_x_Release major: 3 minor: 6  patch: self _patchRelease
 %
 
 ! Class implementation for 'GsuGsDevKitBootstrap'

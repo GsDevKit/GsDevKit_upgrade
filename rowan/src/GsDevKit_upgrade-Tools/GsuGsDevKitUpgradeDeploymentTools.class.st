@@ -30,7 +30,7 @@ GsuGsDevKitUpgradeDeploymentTools >> _defaultTopazFileHeader: fileName [
 GsuGsDevKitUpgradeDeploymentTools >> _projectFor: specName customConditionalAttributes: customConditionalAttributes [
 	| projectRoot specUrlString project |
 	projectRoot := self _projectsHome / self _projectName.
-	specUrlString := 'file:' , projectRoot fullName , '/rowanV2/specs/' , specName.
+	specUrlString := 'file:' , projectRoot fullName , '/rowan/specs/' , specName.
 	project := (Rowan
 		projectFromUrl: specUrlString
 		projectsHome: self _projectsHome

@@ -4,10 +4,9 @@ Class {
 	#category : 'GsDevKit_upgrade-Common'
 }
 
-{ #category : 'private' }
-GsuGemStone_3_5_x_Release >> _bootstrapPackageFileNames_0 [
+{ #category : 'bootstrapping' }
+GsuGemStone_3_5_x_Release >> bootstrapPackageFileNames [
 	"answer an ordered list of the Monticello packages that are needed to bootstrap GsDevKit/GLASS into image"
-
 
 	self patch < 4
 		ifTrue: [ 
@@ -64,8 +63,28 @@ GsuGemStone_3_5_x_Release >> _bootstrapPackageFileNames_0 [
 			'Utf8Encoding.310-dkh.32.mcz'} ]
 ]
 
-{ #category : 'private' }
-GsuGemStone_3_5_x_Release >> _reloadBootstrapPackageFileNames_0 [
+{ #category : 'accessing' }
+GsuGemStone_3_5_x_Release >> minor [
+
+	^ minor ifNil: [ 5 ]
+]
+
+{ #category : 'prepare gsdevkit image' }
+GsuGemStone_3_5_x_Release >> prepareGsDevKitImage_recompilePragmaMethods:  aGsDevKitUpgrade [
+
+	"noop - Pragma class is in base"
+]
+
+{ #category : 'prepare image' }
+GsuGemStone_3_5_x_Release >> prepareImage_makeClassesObsolete: aGsDevKitUpgrade [
+	"In 3.4.0, the Pragma class is already in the base"
+
+	"noop"
+	aGsDevKitUpgrade timeStampedLog: '	obsolete classes (noop)'.
+]
+
+{ #category : 'bootstrapping' }
+GsuGemStone_3_5_x_Release >> reloadBootstrapPackageFileNames [
 	"answer an ordered list of the Monticello packages that are needed to reload GLASS into image"
 
 	self patch < 4
@@ -121,40 +140,4 @@ GsuGemStone_3_5_x_Release >> _reloadBootstrapPackageFileNames_0 [
 			'Metacello-GitHub-dkh.22.mcz'.
 			'Network-Url-dkh.3.mcz'.
 			'Utf8Encoding.310-dkh.32.mcz'} ]
-]
-
-{ #category : 'bootstrapping' }
-GsuGemStone_3_5_x_Release >> bootstrapPackageFileNames [
-
-	"answer an ordered list of the Monticello packages that are needed to bootstrap GsDevKit/GLASS into image"
-
-	^self _bootstrapPackageFileNames_0
-]
-
-{ #category : 'accessing' }
-GsuGemStone_3_5_x_Release >> minor [
-
-	^ minor ifNil: [ 5 ]
-]
-
-{ #category : 'prepare gsdevkit image' }
-GsuGemStone_3_5_x_Release >> prepareGsDevKitImage_recompilePragmaMethods:  aGsDevKitUpgrade [
-
-	"noop - Pragma class is in base"
-]
-
-{ #category : 'prepare image' }
-GsuGemStone_3_5_x_Release >> prepareImage_makeClassesObsolete: aGsDevKitUpgrade [
-	"In 3.4.0, the Pragma class is already in the base"
-
-	"noop"
-	aGsDevKitUpgrade timeStampedLog: '	obsolete classes (noop)'.
-]
-
-{ #category : 'bootstrapping' }
-GsuGemStone_3_5_x_Release >> reloadBootstrapPackageFileNames [
-
-	"answer an ordered list of the Monticello packages that are needed to reload GLASS into image"
-
-	^self _reloadBootstrapPackageFileNames_0
 ]

@@ -336,7 +336,7 @@ removeallclassmethods GsuGsDevKit_3_5_x_StdUpgrade
 
 doit
 (GsuGsDevKit_3_5_x_StdUpgrade
-	subclass: 'GsuGsDevKit_3_6_x_StdUpgrade'
+	subclass: 'GsuGsDevKit_3_6_x_Upgrade'
 	instVarNames: #(  )
 	classVars: #(  )
 	classInstVars: #(  )
@@ -349,8 +349,8 @@ doit
 true.
 %
 
-removeallmethods GsuGsDevKit_3_6_x_StdUpgrade
-removeallclassmethods GsuGsDevKit_3_6_x_StdUpgrade
+removeallmethods GsuGsDevKit_3_6_x_Upgrade
+removeallclassmethods GsuGsDevKit_3_6_x_Upgrade
 
 doit
 (GsuAbstractGsDevKit
@@ -1235,31 +1235,29 @@ method: GsuGemStone_3_6_x_Release
 reloadBootstrapPackageFileNames
 	"answer an ordered list of the Monticello packages that are needed to reload GLASS into image"
 
-self halt: 'modify for 3.6.0'.
-			^ {'GemStone-Compression-dkh.1.mcz'.
-			'Core.v3-dkh.82.mcz'.
-			'Base-Bootstrap.v3-dkh.29.mcz'.
-			'Bootstrap.v34-dkh.263.mcz'.
-			'GemStone-ANSI-Streams-dkh.9.mcz'.
-			'GemStone-Indexing-Extensions-dkh.3.mcz'.
-			'Sport3.010.v3-dkh.29.mcz'.
-			'Squeak.v34-dkh.339.mcz'.
-			'Regex-Core-DaleHenrichs.3.mcz'.
-			'Regex-Tests-Core-DaleHenrichs.5.mcz'.
-			'PackageInfo-Base.g-dkh.36.mcz'.
-			'Monticello.v3-dkh.457.mcz'.
-			'GemStone-Deployment.v310-dkh.26.mcz'.
-			'Change-Notification.v3-dkh.20.mcz'.
-			'Gofer-Core.gemstone-dkh.135.mcz'.
-			'Metacello-Base-dkh.103.mcz'.
-			'Metacello-Core-dkh.669.mcz'.
-			'Metacello-MC-dkh.669.mcz'.
-			'Metacello-Platform.gemstone-dkh.29.mcz'.
-			'Metacello-ToolBox-dkh.131.mcz'.
-			'Metacello-FileTree-dkh.29.mcz'.
-			'Metacello-GitHub-dkh.22.mcz'.
-			'Network-Url-dkh.3.mcz'.
-			'Utf8Encoding.310-dkh.32.mcz'}
+	^ {'Core.v3-dkh.84.mcz'.
+	'GemStone-Compression-dkh.2.mcz'.
+	'Base-Bootstrap.v3-dkh.29.mcz'.
+	'Bootstrap.v34-dkh.263.mcz'.
+	'GemStone-ANSI-Streams-dkh.9.mcz'.
+	'GemStone-Indexing-Extensions-dkh.3.mcz'.
+	'Sport3.010.v3-dkh.29.mcz'.
+	'Squeak.v36-dkh.341.mcz'.
+	'Regex-Core-DaleHenrichs.3.mcz'.
+	'Regex-Tests-Core-DaleHenrichs.5.mcz'.
+	'PackageInfo-Base.g-dkh.36.mcz'.
+	'Monticello.v3-dkh.459.mcz'.
+	'GemStone-Deployment.v310-dkh.26.mcz'.
+	'Change-Notification.v3-dkh.20.mcz'.
+	'Gofer-Core.gemstone-dkh.135.mcz'.
+	'Metacello-Base-dkh.103.mcz'.
+	'Metacello-Core-dkh.669.mcz'.
+	'Metacello-MC-dkh.669.mcz'.
+	'Metacello-Platform.gemstone-dkh.29.mcz'.
+	'Metacello-ToolBox-dkh.131.mcz'.
+	'Metacello-FileTree-dkh.29.mcz'.
+	'Metacello-GitHub-dkh.22.mcz'.
+	'Network-Url-dkh.3.mcz'}
 %
 
 ! Class implementation for 'GsuAbstractGsDevKit'
@@ -1893,8 +1891,13 @@ upgradeUserName: aString upgradeSymbolDictName: aSymbol sourceGemStoneRelease: s
 category: 'private'
 classmethod: GsuAbstractGsDevKitUpgrade
 _calculateUpgradeClass
-
-	^ GsuGsDevKit_3_5_x_Upgrade
+	| imageVersion |
+	imageVersion := ImageVersion at: #'gsVersion'.
+	(imageVersion beginsWith: '3.5')
+		ifTrue: [ ^ GsuGsDevKit_3_5_x_Upgrade ].
+	(imageVersion beginsWith: '3.6')
+		ifTrue: [ ^ GsuGsDevKit_3_6_x_Upgrade ].
+	self error: 'Image version ' , imageVersion printString , ' not supported'
 %
 
 category: 'private'
@@ -3448,18 +3451,18 @@ _standardBaselineLoaded: baselineClassName
 	^ false
 %
 
-! Class implementation for 'GsuGsDevKit_3_6_x_StdUpgrade'
+! Class implementation for 'GsuGsDevKit_3_6_x_Upgrade'
 
-!		Instance methods for 'GsuGsDevKit_3_6_x_StdUpgrade'
+!		Instance methods for 'GsuGsDevKit_3_6_x_Upgrade'
 
 category: 'initialization'
-method: GsuGsDevKit_3_6_x_StdUpgrade
+method: GsuGsDevKit_3_6_x_Upgrade
 asBootstrapUpgrade
 	self error: 'Bootstrap upgrades not supported for GemStone 3.6.x'
 %
 
 category: 'initialization'
-method: GsuGsDevKit_3_6_x_StdUpgrade
+method: GsuGsDevKit_3_6_x_Upgrade
 asStandardUpgrade
 
 	"Application methods in upgraded repository do NOT need to recompiled"
@@ -3470,7 +3473,7 @@ asStandardUpgrade
 %
 
 category: 'initialization'
-method: GsuGsDevKit_3_6_x_StdUpgrade
+method: GsuGsDevKit_3_6_x_Upgrade
 resolveForUpgrade
 	"determine which concrete upgrade class to use, base on source GemStone version"
 
@@ -3479,14 +3482,14 @@ resolveForUpgrade
 %
 
 category: 'private'
-method: GsuGsDevKit_3_6_x_StdUpgrade
+method: GsuGsDevKit_3_6_x_Upgrade
 _bootstrapRelease
 
 	^ GsuGemStone_3_6_x_Release major: 3 minor: 6 patch: self _patchRelease
 %
 
 category: 'private'
-method: GsuGsDevKit_3_6_x_StdUpgrade
+method: GsuGsDevKit_3_6_x_Upgrade
 _defaultTargetRelease
 
 	^ GsuGemStone_3_6_x_Release major: 3 minor: 6  patch: self _patchRelease

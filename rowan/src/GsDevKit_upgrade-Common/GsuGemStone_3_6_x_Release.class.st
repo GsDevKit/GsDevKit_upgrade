@@ -45,7 +45,6 @@ GsuGemStone_3_6_x_Release >> minor [
 GsuGemStone_3_6_x_Release >> reloadBootstrapPackageFileNames [
 	"answer an ordered list of the Monticello packages that are needed to reload GLASS into image"
 
-self halt.
 	^ {'Core.v3-dkh.84.mcz'.
 	'GemStone-Compression-dkh.2.mcz'.
 	'Base-Bootstrap.v3-dkh.29.mcz'.

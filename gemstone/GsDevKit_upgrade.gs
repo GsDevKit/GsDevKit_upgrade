@@ -1235,7 +1235,6 @@ method: GsuGemStone_3_6_x_Release
 reloadBootstrapPackageFileNames
 	"answer an ordered list of the Monticello packages that are needed to reload GLASS into image"
 
-self halt.
 	^ {'Core.v3-dkh.84.mcz'.
 	'GemStone-Compression-dkh.2.mcz'.
 	'Base-Bootstrap.v3-dkh.29.mcz'.
@@ -3485,8 +3484,7 @@ resolveForUpgrade
 category: 'private'
 method: GsuGsDevKit_3_6_x_Upgrade
 _bootstrapRelease
-
-	^ GsuGemStone_3_6_x_Release major: 3 minor: 6 patch: self _patchRelease
+	self error: 'bootstrap upgrades to 3.6.x is not supported'
 %
 
 category: 'private'

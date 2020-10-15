@@ -6,8 +6,7 @@ Class {
 
 { #category : 'private' }
 GsuGsDevKit_3_6_x_Upgrade >> _bootstrapRelease [
-
-	^ GsuGemStone_3_6_x_Release major: 3 minor: 6 patch: self _patchRelease
+	self error: 'bootstrap upgrades to 3.6.x is not supported'
 ]
 
 { #category : 'private' }

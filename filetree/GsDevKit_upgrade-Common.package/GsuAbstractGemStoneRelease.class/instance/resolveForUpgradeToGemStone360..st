@@ -1,0 +1,4 @@
+initialization
+resolveForUpgradeToGemStone360: aGsuGsDevKit_3_6_0_Upgrade
+
+	^ aGsuGsDevKit_3_6_0_Upgrade asStandardUpgrade

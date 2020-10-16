@@ -6,7 +6,7 @@ reloadBootstrapPackageFileNames
 	'Core.v3-dkh.84.mcz'.
 	'GemStone-Compression-dkh.2.mcz'.
 	'Base-Bootstrap.v3-dkh.29.mcz'.
-	'Bootstrap.v34-dkh.263.mcz'.
+	'Bootstrap.v34-dkh.264.mcz'.
 	'GemStone-ANSI-Streams-dkh.9.mcz'.
 	'GemStone-Indexing-Extensions-dkh.3.mcz'.
 	'Sport3.010.v3-dkh.29.mcz'.
@@ -25,4 +25,5 @@ reloadBootstrapPackageFileNames
 	'Metacello-ToolBox-dkh.131.mcz'.
 	'Metacello-FileTree-dkh.29.mcz'.
 	'Metacello-GitHub-dkh.22.mcz'.
-	'Network-Url-dkh.3.mcz'}
+	'Network-Url-dkh.3.mcz'.
+	'Utf8Encoding.310-dkh.32.mcz'}

@@ -82,15 +82,17 @@ GsuGsDevKit_3_5_x_Upgrade >> patch [
 
 { #category : 'prepare image' }
 GsuGsDevKit_3_5_x_Upgrade >> prepareImage_patches [
-
 	"Needed for installing GsdevKit/GLASS - should be run as System User"
 
 	super prepareImage_patches.
-	self timeStampedLog: '	patch Behavior >> _primitiveCompileMethod:symbolList:category:oldLitVars:intoMethodDict:intoCategories:intoPragmas:environmentId:'.
+	self
+		timeStampedLog:
+			'	patch Behavior >> _primitiveCompileMethod:symbolList:category:oldLitVars:intoMethodDict:intoCategories:intoPragmas:environmentId:'.
 	(Behavior
-		compileMethod: self _prepareImage_behavior_patchSource 
-		dictionaries: self upgradeUserProfile symbolList 
-		category:  '*Core35x') ifNotNil: [:ar | self error: 'did not compile' ]
+		compileMethod: self _prepareImage_behavior_patchSource
+		dictionaries: self upgradeUserProfile symbolList
+		category: '*Core35')
+		ifNotNil: [ :ar | self error: 'did not compile' ]
 ]
 
 { #category : 'initialization' }

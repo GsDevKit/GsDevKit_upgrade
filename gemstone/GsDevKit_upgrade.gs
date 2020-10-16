@@ -2,7 +2,7 @@
 ! Copyright (C) GemTalk Systems 2019.  All Rights Reserved.
 ! MIT license: see https://github.com/GsDevKit/GsDevKit_upgrade/blob/master/LICENSE
 !
-! Name - GsDevKit_upgrade.gs
+! File - seaside/bin/GsDevKit_upgrade.gs
 !
 ! Purpose:
 ! Bootstrap GsDevKit_upgrade into a 3.x database to perform GsDevKit upgade operations.
@@ -22,6 +22,20 @@ doit
 	options: #()
 )
 		category: 'GsDevKit_upgrade-Common';
+		comment: 'My subclasses and I represent the image being upgraded. The classes in the GsuAbstractGsDevKitUpgrade 
+hierarchy represents the GemStone version being upgraded to. 
+
+The specific GsuAbstractGsDevKitUpgrade sends messages to the image being upgraded and depending 
+upon the version I represent, I send messages back to the GsuAbstractGsDevKitUpgrade which basically
+describe the set of operations that need to be performed on the image to correctly upgrade to the 
+target version.
+
+There are 5 phases of the upgrade:
+	1. prepareImage
+	2. prepareImage_pragma_user
+	3. prepareImage_pragma_systemuser
+	4. prepareImage_user
+	5. prepareGsDevKitImage.';
 		immediateInvariant.
 true.
 %
@@ -682,15 +696,16 @@ prepareImage_systemuserPragmaFor: aGsDevKitUpgrade
 	aGsDevKitUpgrade log: '	pragmas (noop)'.
 %
 
-category: 'perpare image user'
+category: 'prepare image user'
 method: GsuAbstractGemStoneRelease
 prepareImage_userPatches: aGsDevKitUpgrade
 	"Opportunity for target image to perform user-specific preparation"
 
-	aGsDevKitUpgrade 
+	aGsDevKitUpgrade
 		timeStampedLog: 'Prepare image user - patches';
 		prepareImage_user_removeSessionMethods;
-		prepareImage_user_bug46059
+		prepareImage_user_bug46059;
+		prepareImage_user_36x_fundamentals
 %
 
 category: 'prepare image user pragma'
@@ -709,7 +724,7 @@ prepareImage_userPragmaFor: aGsDevKitUpgrade
 	aGsDevKitUpgrade log: '	pragmas (noop)'.
 %
 
-category: 'perpare image user'
+category: 'prepare image user'
 method: GsuAbstractGemStoneRelease
 prepareImage_user_clear_subscriptions: aGsDevKitUpgrade
 	"Opportunity for target image to perform user-specific preparation"
@@ -2688,6 +2703,14 @@ prepareImage_user
 
 category: 'prepare image user'
 method: GsuAbstractGsDevKitUpgrade
+prepareImage_user_36x_fundamentals
+	"patches needed to load GLASS for 3.6.x and later"
+
+	"noop for versions earlier than 3.6.x"
+%
+
+category: 'prepare image user'
+method: GsuAbstractGsDevKitUpgrade
 prepareImage_user_bug46059
 
 	"until bug is fixed - should be run as SystemUser"
@@ -3103,15 +3126,17 @@ patch
 category: 'prepare image'
 method: GsuGsDevKit_3_5_x_Upgrade
 prepareImage_patches
-
 	"Needed for installing GsdevKit/GLASS - should be run as System User"
 
 	super prepareImage_patches.
-	self timeStampedLog: '	patch Behavior >> _primitiveCompileMethod:symbolList:category:oldLitVars:intoMethodDict:intoCategories:intoPragmas:environmentId:'.
+	self
+		timeStampedLog:
+			'	patch Behavior >> _primitiveCompileMethod:symbolList:category:oldLitVars:intoMethodDict:intoCategories:intoPragmas:environmentId:'.
 	(Behavior
-		compileMethod: self _prepareImage_behavior_patchSource 
-		dictionaries: self upgradeUserProfile symbolList 
-		category:  '*Core35x') ifNotNil: [:ar | self error: 'did not compile' ]
+		compileMethod: self _prepareImage_behavior_patchSource
+		dictionaries: self upgradeUserProfile symbolList
+		category: '*Core35')
+		ifNotNil: [ :ar | self error: 'did not compile' ]
 %
 
 category: 'initialization'
@@ -3472,6 +3497,66 @@ asStandardUpgrade
 	^ self
 %
 
+category: 'prepare image user'
+method: GsuGsDevKit_3_6_x_Upgrade
+prepareImage_user_36x_fundamentals
+	"patches needed to load GLASS for 3.6.x and later"
+
+	self
+		prepareImage_user_recompileSelfCanBeSpecialSessionMethods;
+		prepareImage_user_patch_Class__mcDefinitionType
+%
+
+category: 'prepare image user'
+method: GsuGsDevKit_3_6_x_Upgrade
+prepareImage_user_patch_Class__mcDefinitionType
+	"'_nonInheritedOptions replaced by _optionsArrayForDefinition"
+
+	self timeStampedLog: '	patch Class>>_mcDefinitionType'.
+	[ 
+	Class
+		compileMethod: self _prepareImage_class__mcDefinitionType_source
+		category: '*monticello'
+		using: self upgradeUserProfile symbolList ]
+		onException: CompileError
+		do: [ :ex | 
+			self
+				error:
+					'Did not compile:
+' , (GsNMethod _sourceWithErrors: ex errorDetails fromString: ex sourceString) ]
+%
+
+category: 'prepare image user'
+method: GsuGsDevKit_3_6_x_Upgrade
+prepareImage_user_recompileSelfCanBeSpecialSessionMethods
+	"Needed for installing GsdevKit/GLASS, 3.6.x and later"
+
+	self
+		timeStampedLog:
+			'	recompile extension methods in Date DateAndTimeANSI DateAndTime ScaledDecimal Time (classes with selfCanBeSpecial option)'.
+	GsPackagePolicy currentOrNil
+		ifNotNil: [ :pp | 
+			{Date.
+			DateAndTimeANSI.
+			DateAndTime.
+			ScaledDecimal.
+			Time}
+				do: [ :class | 
+					{class.
+					(class class)}
+						do: [ :beh | 
+							| categ dictsArray mDict cDict |
+							dictsArray := pp
+								methodAndCategoryDictionaryFor: beh
+								source: 'youself'
+								dictionaries: GsCurrentSession currentSession symbolList
+								category: categ.
+							mDict := dictsArray at: 1.
+							cDict := dictsArray at: 2.
+							mDict
+								valuesDo: [ :meth | meth recompileIntoMethodDict: mDict intoCategories: cDict symbolList: nil ] ] ] ]
+%
+
 category: 'initialization'
 method: GsuGsDevKit_3_6_x_Upgrade
 resolveForUpgrade
@@ -3492,6 +3577,26 @@ method: GsuGsDevKit_3_6_x_Upgrade
 _defaultTargetRelease
 
 	^ GsuGemStone_3_6_x_Release major: 3 minor: 6  patch: self _patchRelease
+%
+
+category: 'private'
+method: GsuGsDevKit_3_6_x_Upgrade
+_prepareImage_class__mcDefinitionType_source
+^' _mcDefinitionType
+ | type opts superC |
+  superC := self superClass.
+  self isBytes
+    ifTrue: [ type := #''bytes'' ]
+    ifFalse: [ 
+      self _portableIsIndexable
+        ifTrue: [ type := #''variable'' ]
+        ifFalse: [ type := #''normal'' ] ].
+  opts := self _optionsArrayForDefinition.
+  ^ opts size > 0
+    ifTrue: [ 
+      {type.
+      opts} ]
+    ifFalse: [ type ]'
 %
 
 ! Class implementation for 'GsuGsDevKitBootstrap'
@@ -3796,3 +3901,4 @@ _removeClassNamed: className
 				ifFalse: [ self log: '		DID NOT remove class named: ', className printString ] ]
 %
 
+! End File - seaside/bin/GsDevKit_upgrade.gs

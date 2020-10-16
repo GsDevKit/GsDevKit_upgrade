@@ -1,3 +1,19 @@
+"
+My subclasses and I represent the image being upgraded. The classes in the GsuAbstractGsDevKitUpgrade 
+hierarchy represents the GemStone version being upgraded to. 
+
+The specific GsuAbstractGsDevKitUpgrade sends messages to the image being upgraded and depending 
+upon the version I represent, I send messages back to the GsuAbstractGsDevKitUpgrade which basically
+describe the set of operations that need to be performed on the image to correctly upgrade to the 
+target version.
+
+There are 5 phases of the upgrade:
+	1. prepareImage
+	2. prepareImage_pragma_user
+	3. prepareImage_pragma_systemuser
+	4. prepareImage_user
+	5. prepareGsDevKitImage.
+"
 Class {
 	#name : 'GsuAbstractGemStoneRelease',
 	#superclass : 'Object',
@@ -284,7 +300,7 @@ GsuAbstractGemStoneRelease >> prepareImage_systemuserPragmaFor: aGsDevKitUpgrade
 	aGsDevKitUpgrade log: '	pragmas (noop)'.
 ]
 
-{ #category : 'perpare image user' }
+{ #category : 'prepare image user' }
 GsuAbstractGemStoneRelease >> prepareImage_user_clear_subscriptions: aGsDevKitUpgrade [
 	"Opportunity for target image to perform user-specific preparation"
 
@@ -292,14 +308,15 @@ GsuAbstractGemStoneRelease >> prepareImage_user_clear_subscriptions: aGsDevKitUp
 	aGsDevKitUpgrade prepareImage_user_clear_subscriptions
 ]
 
-{ #category : 'perpare image user' }
+{ #category : 'prepare image user' }
 GsuAbstractGemStoneRelease >> prepareImage_userPatches: aGsDevKitUpgrade [
 	"Opportunity for target image to perform user-specific preparation"
 
-	aGsDevKitUpgrade 
+	aGsDevKitUpgrade
 		timeStampedLog: 'Prepare image user - patches';
 		prepareImage_user_removeSessionMethods;
-		prepareImage_user_bug46059
+		prepareImage_user_bug46059;
+		prepareImage_user_36x_fundamentals
 ]
 
 { #category : 'prepare image user pragma' }

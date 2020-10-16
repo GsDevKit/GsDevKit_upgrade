@@ -950,6 +950,13 @@ GsuAbstractGsDevKitUpgrade >> prepareImage_user [
 ]
 
 { #category : 'prepare image user' }
+GsuAbstractGsDevKitUpgrade >> prepareImage_user_36x_fundamentals [
+	"patches needed to load GLASS for 3.6.x and later"
+
+	"noop for versions earlier than 3.6.x"
+]
+
+{ #category : 'prepare image user' }
 GsuAbstractGsDevKitUpgrade >> prepareImage_user_bug46059 [
 
 	"until bug is fixed - should be run as SystemUser"

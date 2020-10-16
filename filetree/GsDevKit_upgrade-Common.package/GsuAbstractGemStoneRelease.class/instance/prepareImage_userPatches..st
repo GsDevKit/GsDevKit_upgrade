@@ -1,8 +1,9 @@
-perpare image user
+prepare image user
 prepareImage_userPatches: aGsDevKitUpgrade
 	"Opportunity for target image to perform user-specific preparation"
 
-	aGsDevKitUpgrade 
+	aGsDevKitUpgrade
 		timeStampedLog: 'Prepare image user - patches';
 		prepareImage_user_removeSessionMethods;
-		prepareImage_user_bug46059
+		prepareImage_user_bug46059;
+		prepareImage_user_36x_fundamentals

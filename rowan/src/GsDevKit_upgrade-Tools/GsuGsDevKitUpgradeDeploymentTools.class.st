@@ -10,6 +10,15 @@ GsuGsDevKitUpgradeDeploymentTools >> _defaultSpecName [
 ]
 
 { #category : 'private' }
+GsuGsDevKitUpgradeDeploymentTools >> _defaultTopazFileFooter: fileName [
+
+
+	^ (WriteStream on: String new)
+		nextPutAll: '! End File - seaside/bin/', fileName, '.gs'; lf;
+		contents
+]
+
+{ #category : 'private' }
 GsuGsDevKitUpgradeDeploymentTools >> _defaultTopazFileHeader: fileName [
 
 	^ (WriteStream on: String new)
@@ -17,7 +26,7 @@ GsuGsDevKitUpgradeDeploymentTools >> _defaultTopazFileHeader: fileName [
 		nextPutAll: '! Copyright (C) GemTalk Systems 2019.  All Rights Reserved.'; lf;
 		nextPutAll: '! MIT license: see https://github.com/GsDevKit/GsDevKit_upgrade/blob/master/LICENSE'; lf;
 		nextPutAll: '!'; lf;
-		nextPutAll: '! Name - ', fileName, '.gs'; lf;
+		nextPutAll: '! File - seaside/bin/', fileName, '.gs'; lf;
 		nextPutAll: '!'; lf;
 		nextPutAll: '! Purpose:'; lf;
 		nextPutAll: '! Bootstrap GsDevKit_upgrade into a 3.x database to perform GsDevKit upgade operations.'; lf;
@@ -93,11 +102,12 @@ GsuGsDevKitUpgradeDeploymentTools >> deployTopazFilein: topazFileName spec: spec
 	self
 		deployTopazFilein: topazFileName
 		topazFileHeader: (self _defaultTopazFileHeader: topazFileName)
+		topazFileFooter: (self _defaultTopazFileFooter: topazFileName)
 		spec: specName
 ]
 
 { #category : 'topaz' }
-GsuGsDevKitUpgradeDeploymentTools >> deployTopazFilein: topazFileName topazFileHeader: topazFileHeader spec: specName [
+GsuGsDevKitUpgradeDeploymentTools >> deployTopazFilein: topazFileName topazFileHeader: topazFileHeader topazFileFooter: topazFileFooter spec: specName [
 	| projectSetDefinition visitor deploymentDir projectSetModification topazFileNameMap |
 	projectSetDefinition := self
 		_projectSetFor: specName
@@ -119,6 +129,7 @@ GsuGsDevKitUpgradeDeploymentTools >> deployTopazFilein: topazFileName topazFileH
 		topazFilename: topazFileName;
 		topazFileHeader: topazFileHeader;
 		topazFilenamePackageNamesMap: topazFileNameMap;
+		topazFileFooter: topazFileFooter;
 		yourself.
 	visitor visit: projectSetModification
 ]

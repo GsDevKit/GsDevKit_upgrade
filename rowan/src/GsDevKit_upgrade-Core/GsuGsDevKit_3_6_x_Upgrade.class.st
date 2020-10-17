@@ -49,6 +49,12 @@ GsuGsDevKit_3_6_x_Upgrade >> asStandardUpgrade [
 	^ self
 ]
 
+{ #category : 'accessing' }
+GsuGsDevKit_3_6_x_Upgrade >> minor [
+
+	^ 6
+]
+
 { #category : 'prepare image user' }
 GsuGsDevKit_3_6_x_Upgrade >> prepareImage_user_36x_fundamentals [
 	"patches needed to load GLASS for 3.6.x and later"

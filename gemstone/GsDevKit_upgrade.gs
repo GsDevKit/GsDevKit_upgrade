@@ -1896,7 +1896,6 @@ _calculateUpgradeClass
 category: 'private'
 classmethod: GsuAbstractGsDevKitUpgrade
 _calculateUpgradedVersion
-
 	| upgradedVersionInt |
 	upgradedVersionInt := self _upgradedVersionInt.
 	upgradedVersionInt = 36
@@ -1909,7 +1908,11 @@ _calculateUpgradedVersion
 		ifTrue: [ ^ GsuGemStone_3_3_x_Release new ].
 	upgradedVersionInt = 32
 		ifTrue: [ ^ GsuGemStone_3_2_x_Release new ].
-	self error: 'Upgrades from GemStone versions earlier than 3.2.0', ' are not currently supported.'
+	self
+		error:
+			'Upgrades from GemStone versions earlier than 3.2.0'
+				, ' are not currently supported (upgradedVersionInt: '
+				, upgradedVersionInt printString , ').'
 %
 
 category: 'private'
@@ -1982,7 +1985,7 @@ _upgradedVersionInt
 					hist := '  v' , iVer , '  ' ] ].
 	ofs ~~ 0
 		ifTrue: [ 
-			#(35 34 33 32)
+			#(36 35 34 33 32)
 				do: [ :ver | 
 					| num vStr |
 					num := ScaledDecimal numerator: ver denominator: 10 scale: 1.
@@ -3473,6 +3476,13 @@ asStandardUpgrade
 	"postLoadClassList is not used in standard upgrade case"
 
 	^ self
+%
+
+category: 'accessing'
+method: GsuGsDevKit_3_6_x_Upgrade
+minor
+
+	^ 6
 %
 
 category: 'prepare image user'

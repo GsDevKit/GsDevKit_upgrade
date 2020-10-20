@@ -91,7 +91,7 @@ GsuGsDevKit_3_5_x_Upgrade >> prepareImage_patches [
 	(Behavior
 		compileMethod: self _prepareImage_behavior_patchSource
 		dictionaries: self upgradeUserProfile symbolList
-		category: '*Core35')
+		category: '*core')
 		ifNotNil: [ :ar | self error: 'did not compile' ]
 ]
 

@@ -65,6 +65,11 @@ GsuGsDevKit_3_6_x_Upgrade >> prepareImage_user_36x_fundamentals [
 ]
 
 { #category : 'prepare image user' }
+GsuGsDevKit_3_6_x_Upgrade >> prepareImage_user_patch_35x_Metacello [
+	"noop"
+]
+
+{ #category : 'prepare image user' }
 GsuGsDevKit_3_6_x_Upgrade >> prepareImage_user_patch_Class__mcDefinitionType [
 	"'_nonInheritedOptions replaced by _optionsArrayForDefinition"
 

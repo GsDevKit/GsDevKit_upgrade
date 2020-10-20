@@ -1221,6 +1221,17 @@ minor
 	^ minor ifNil: [ 6]
 %
 
+category: 'perpare image user'
+method: GsuGemStone_3_6_x_Release
+prepareImage_userPatches: aGsDevKitUpgrade
+	"In 3.5, some Metacello methods were added to base image during 3.6.x upgrade, the methods are being removed.
+		For those methods that hadn't been changed, session method overrides were not created, and some of the methods
+		are used during upgradeSeasideImage, so they need to be replaced"
+
+	super prepareImage_userPatches: aGsDevKitUpgrade.
+	aGsDevKitUpgrade prepareImage_user_patch_35x_Metacello
+%
+
 category: 'bootstrapping'
 method: GsuGemStone_3_6_x_Release
 reloadBootstrapPackageFileNames
@@ -2731,6 +2742,12 @@ prepareImage_user_clear_subscriptions
 
 category: 'prepare image user'
 method: GsuAbstractGsDevKitUpgrade
+prepareImage_user_patch_35x_Metacello
+	"noop"
+%
+
+category: 'prepare image user'
+method: GsuAbstractGsDevKitUpgrade
 prepareImage_user_removeSessionMethods
 	"Remove all session methods as they must be recompiled during loading ... must be done before GsPackagePolicy is enabled"
 
@@ -3116,7 +3133,7 @@ prepareImage_patches
 	(Behavior
 		compileMethod: self _prepareImage_behavior_patchSource
 		dictionaries: self upgradeUserProfile symbolList
-		category: '*Core35')
+		category: '*core')
 		ifNotNil: [ :ar | self error: 'did not compile' ]
 %
 
@@ -3334,6 +3351,27 @@ prepareImage_user_clear_subscriptions
 
 category: 'prepare image user'
 method: GsuGsDevKit_3_5_x_StdUpgrade
+prepareImage_user_patch_35x_Metacello
+	"In 3.5, some Metacello methods were added to base image during 3.6.x upgrade, the methods are being removed.
+		For those methods that hadn't been changed, session method overrides were not created, and some of the methods
+		are used during upgradeSeasideImage, so they need to be replaced"
+
+	(Collection
+		compileMethod:
+			'setLoadsInMetacelloProject: aMetacelloPackageSpec
+	aMetacelloPackageSpec setLoads: self asArray'
+		dictionaries: self upgradeUserProfile symbolList
+		category: '*metacello-mc') ifNotNil: [ :ar | self error: 'Collection>>setLoadsInMetacelloProject: did not compile' ].
+	(String
+		compileMethod:
+			'setLoadsInMetacelloProject: aMetacelloPackageSpec
+	aMetacelloPackageSpec setLoads: {self}'
+		dictionaries: self upgradeUserProfile symbolList
+		category: '*metacello-mc') ifNotNil: [ :ar | self error: 'String>>setLoadsInMetacelloProject: did not compile' ].
+%
+
+category: 'prepare image user'
+method: GsuGsDevKit_3_5_x_StdUpgrade
 prepareImage_user_removeSessionMethods
 	"Remove all session methods as they must be recompiled during loading ... must be done before GsPackagePolicy is enabled"
 
@@ -3493,6 +3531,12 @@ prepareImage_user_36x_fundamentals
 	self
 		prepareImage_user_recompileSelfCanBeSpecialSessionMethods;
 		prepareImage_user_patch_Class__mcDefinitionType
+%
+
+category: 'prepare image user'
+method: GsuGsDevKit_3_6_x_Upgrade
+prepareImage_user_patch_35x_Metacello
+	"noop"
 %
 
 category: 'prepare image user'

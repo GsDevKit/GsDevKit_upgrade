@@ -996,6 +996,11 @@ GsuAbstractGsDevKitUpgrade >> prepareImage_user_clear_subscriptions [
 ]
 
 { #category : 'prepare image user' }
+GsuAbstractGsDevKitUpgrade >> prepareImage_user_patch_35x_Metacello [
+	"noop"
+]
+
+{ #category : 'prepare image user' }
 GsuAbstractGsDevKitUpgrade >> prepareImage_user_removeSessionMethods [
 	"Remove all session methods as they must be recompiled during loading ... must be done before GsPackagePolicy is enabled"
 

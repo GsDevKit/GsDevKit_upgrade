@@ -80,8 +80,8 @@ GsuGsDevKit_3_5_x_Upgrade >> patch [
 	^ self _patchRelease
 ]
 
-{ #category : 'prepare image' }
-GsuGsDevKit_3_5_x_Upgrade >> prepareImage_patches [
+{ #category : 'prepare image user' }
+GsuGsDevKit_3_5_x_Upgrade >> prepareImageUser_patches [
 	"Needed for installing GsdevKit/GLASS - should be run as System User"
 
 	super prepareImage_patches.

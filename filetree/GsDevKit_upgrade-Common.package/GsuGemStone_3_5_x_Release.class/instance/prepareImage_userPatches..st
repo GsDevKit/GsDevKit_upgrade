@@ -5,4 +5,6 @@ prepareImage_userPatches: aGsDevKitUpgrade
 		are used during upgradeSeasideImage, so they need to be replaced"
 
 	super prepareImage_userPatches: aGsDevKitUpgrade.
-	aGsDevKitUpgrade prepareImage_user_patch_35x_Metacello
+	aGsDevKitUpgrade
+		prepareImage_user_patch_35x_Metacello;
+		prepareImageUser_patches

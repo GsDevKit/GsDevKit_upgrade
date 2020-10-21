@@ -1062,16 +1062,23 @@ GsuAbstractGsDevKitUpgrade >> prepareImagePragmaUserDoneBanner [
 ]
 
 { #category : 'prepare image user' }
-GsuAbstractGsDevKitUpgrade >> prepareImageUserBanner [
+GsuAbstractGsDevKitUpgrade >> prepareImageUser_patches [
+	"noop"
+]
 
-	self bannerLog: 'Starting ', self buildString, ' GsDevKit upgrade: prepare image for user ', System myUserProfile userId.
+{ #category : 'prepare image user' }
+GsuAbstractGsDevKitUpgrade >> prepareImageUserBanner [
+	self
+		bannerLog:
+			'Starting ' , self buildString , ' GsDevKit upgrade: prepare image as user '
+				, System myUserProfile userId.
 	self logUpgradeParameters
 ]
 
 { #category : 'prepare image user' }
 GsuAbstractGsDevKitUpgrade >> prepareImageUserDoneBanner [
 
-	self bannerLog: 'Finished ', self buildString, ' GsDevKit upgrade: prepare image for user ', System myUserProfile userId.
+	self bannerLog: 'Finished ', self buildString, ' GsDevKit upgrade: prepare image as user ', System myUserProfile userId.
 ]
 
 { #category : 'printing' }

@@ -1150,7 +1150,9 @@ prepareImage_userPatches: aGsDevKitUpgrade
 		are used during upgradeSeasideImage, so they need to be replaced"
 
 	super prepareImage_userPatches: aGsDevKitUpgrade.
-	aGsDevKitUpgrade prepareImage_user_patch_35x_Metacello
+	aGsDevKitUpgrade
+		prepareImage_user_patch_35x_Metacello;
+		prepareImageUser_patches
 %
 
 category: 'bootstrapping'
@@ -2490,8 +2492,10 @@ prepareImagePragmaUserDoneBanner
 category: 'prepare image user'
 method: GsuAbstractGsDevKitUpgrade
 prepareImageUserBanner
-
-	self bannerLog: 'Starting ', self buildString, ' GsDevKit upgrade: prepare image for user ', System myUserProfile userId.
+	self
+		bannerLog:
+			'Starting ' , self buildString , ' GsDevKit upgrade: prepare image as user '
+				, System myUserProfile userId.
 	self logUpgradeParameters
 %
 
@@ -2499,7 +2503,13 @@ category: 'prepare image user'
 method: GsuAbstractGsDevKitUpgrade
 prepareImageUserDoneBanner
 
-	self bannerLog: 'Finished ', self buildString, ' GsDevKit upgrade: prepare image for user ', System myUserProfile userId.
+	self bannerLog: 'Finished ', self buildString, ' GsDevKit upgrade: prepare image as user ', System myUserProfile userId.
+%
+
+category: 'prepare image user'
+method: GsuAbstractGsDevKitUpgrade
+prepareImageUser_patches
+	"noop"
 %
 
 category: 'prepare image'
@@ -3132,9 +3142,9 @@ patch
 	^ self _patchRelease
 %
 
-category: 'prepare image'
+category: 'prepare image user'
 method: GsuGsDevKit_3_5_x_Upgrade
-prepareImage_patches
+prepareImageUser_patches
 	"Needed for installing GsdevKit/GLASS - should be run as System User"
 
 	super prepareImage_patches.

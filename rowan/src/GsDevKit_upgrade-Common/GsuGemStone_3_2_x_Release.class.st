@@ -14,7 +14,7 @@ GsuGemStone_3_2_x_Release >> minor [
 GsuGemStone_3_2_x_Release >> prepareImage_patches: aGsDevKitUpgrade [
 	"Opportunity for target image to install any patches needed pre-upgrade"
 
-	super prepareImage_patches: aGsDevKitUpgrade.
+	aGsDevKitUpgrade timeStampedLog: 'Prepare image - patches'.
 	(self patch >= 0 and: [ self patch <= 15 ])
 		ifTrue: [
 			"bug46217 patch needed: 3.2.0 thru 3.2.15, and 3.3.0"

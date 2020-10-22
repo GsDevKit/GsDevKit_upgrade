@@ -81,18 +81,30 @@ GsuGsDevKit_3_5_x_Upgrade >> patch [
 ]
 
 { #category : 'prepare image user' }
-GsuGsDevKit_3_5_x_Upgrade >> prepareImageUser_patches [
+GsuGsDevKit_3_5_x_Upgrade >> patch_Behavior_primitiveCompileMethod: category [
 	"Needed for installing GsdevKit/GLASS - should be run as System User"
 
-	super prepareImage_patches.
 	self
 		timeStampedLog:
-			'	patch Behavior >> _primitiveCompileMethod:symbolList:category:oldLitVars:intoMethodDict:intoCategories:intoPragmas:environmentId:'.
+			'	patch Behavior >> _primitiveCompileMethod:symbolList:category:oldLitVars:intoMethodDict:intoCategories:intoPragmas:environmentId: in category '
+				, category asString printString , ' as ' , System myUserProfile userId.
 	(Behavior
 		compileMethod: self _prepareImage_behavior_patchSource
 		dictionaries: self upgradeUserProfile symbolList
-		category: '*core')
-		ifNotNil: [ :ar | self error: 'did not compile' ]
+		category: category) ifNotNil: [ :ar | self error: 'did not compile' ]
+]
+
+{ #category : 'prepare image' }
+GsuGsDevKit_3_5_x_Upgrade >> prepareImage_patches [
+	"noop by default"
+	self patch_Behavior_primitiveCompileMethod: #'upgrade 3.3 and 3.4 patch'
+]
+
+{ #category : 'prepare image user' }
+GsuGsDevKit_3_5_x_Upgrade >> prepareImageUser_patches [
+	"Needed for installing GsdevKit/GLASS - should be run as Seaside User"
+
+	self patch_Behavior_primitiveCompileMethod: #'*core'
 ]
 
 { #category : 'initialization' }

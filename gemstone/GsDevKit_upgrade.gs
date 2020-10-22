@@ -660,10 +660,7 @@ prepareImage_makeClassesObsolete: aGsDevKitUpgrade
 category: 'prepare image'
 method: GsuAbstractGemStoneRelease
 prepareImage_patches: aGsDevKitUpgrade
-	"Opportunity for target image to install any patches needed pre-upgrade"
-
-	aGsDevKitUpgrade timeStampedLog: 'Prepare image - patches'.
-	aGsDevKitUpgrade prepareImage_patches
+	"noop"
 %
 
 category: 'prepare image'
@@ -879,7 +876,7 @@ method: GsuGemStone_3_2_x_Release
 prepareImage_patches: aGsDevKitUpgrade
 	"Opportunity for target image to install any patches needed pre-upgrade"
 
-	super prepareImage_patches: aGsDevKitUpgrade.
+	aGsDevKitUpgrade timeStampedLog: 'Prepare image - patches'.
 	(self patch >= 0 and: [ self patch <= 15 ])
 		ifTrue: [
 			"bug46217 patch needed: 3.2.0 thru 3.2.15, and 3.3.0"
@@ -970,7 +967,8 @@ method: GsuGemStone_3_3_x_Release
 prepareImage_patches: aGsDevKitUpgrade
 	"Opportunity for target image to install any patches needed pre-upgrade"
 
-	super prepareImage_patches: aGsDevKitUpgrade.
+	aGsDevKitUpgrade timeStampedLog: 'Prepare image - patches'.
+	aGsDevKitUpgrade prepareImage_patches.
 	self patch = 0
 		ifTrue: [
 			"bug46217 patch needed: 3.2.0 thru 3.2.15, and 3.3.0"
@@ -1053,6 +1051,15 @@ prepareImage_makeClassesObsolete: aGsDevKitUpgrade
 
 	"noop"
 	aGsDevKitUpgrade timeStampedLog: '	obsolete classes (noop)'.
+%
+
+category: 'prepare image'
+method: GsuGemStone_3_4_x_Release
+prepareImage_patches: aGsDevKitUpgrade
+	"Opportunity for target image to install any patches needed pre-upgrade"
+
+	aGsDevKitUpgrade timeStampedLog: 'Prepare image - patches'.
+	aGsDevKitUpgrade prepareImage_patches.
 %
 
 ! Class implementation for 'GsuGemStone_3_5_x_Release'
@@ -1151,8 +1158,8 @@ prepareImage_userPatches: aGsDevKitUpgrade
 
 	super prepareImage_userPatches: aGsDevKitUpgrade.
 	aGsDevKitUpgrade
-		prepareImage_user_patch_35x_Metacello;
-		prepareImageUser_patches
+		prepareImageUser_patches;
+		prepareImage_user_patch_35x_Metacello
 %
 
 category: 'bootstrapping'
@@ -1232,17 +1239,6 @@ method: GsuGemStone_3_6_x_Release
 minor
 
 	^ minor ifNil: [ 6]
-%
-
-category: 'perpare image user'
-method: GsuGemStone_3_6_x_Release
-prepareImage_userPatches: aGsDevKitUpgrade
-	"In 3.5, some Metacello methods were added to base image during 3.6.x upgrade, the methods are being removed.
-		For those methods that hadn't been changed, session method overrides were not created, and some of the methods
-		are used during upgradeSeasideImage, so they need to be replaced"
-
-	super prepareImage_userPatches: aGsDevKitUpgrade.
-	aGsDevKitUpgrade prepareImage_user_patch_35x_Metacello
 %
 
 category: 'bootstrapping'
@@ -3144,18 +3140,32 @@ patch
 
 category: 'prepare image user'
 method: GsuGsDevKit_3_5_x_Upgrade
-prepareImageUser_patches
+patch_Behavior_primitiveCompileMethod: category
 	"Needed for installing GsdevKit/GLASS - should be run as System User"
 
-	super prepareImage_patches.
 	self
 		timeStampedLog:
-			'	patch Behavior >> _primitiveCompileMethod:symbolList:category:oldLitVars:intoMethodDict:intoCategories:intoPragmas:environmentId:'.
+			'	patch Behavior >> _primitiveCompileMethod:symbolList:category:oldLitVars:intoMethodDict:intoCategories:intoPragmas:environmentId: in category '
+				, category asString printString , ' as ' , System myUserProfile userId.
 	(Behavior
 		compileMethod: self _prepareImage_behavior_patchSource
 		dictionaries: self upgradeUserProfile symbolList
-		category: '*core')
-		ifNotNil: [ :ar | self error: 'did not compile' ]
+		category: category) ifNotNil: [ :ar | self error: 'did not compile' ]
+%
+
+category: 'prepare image user'
+method: GsuGsDevKit_3_5_x_Upgrade
+prepareImageUser_patches
+	"Needed for installing GsdevKit/GLASS - should be run as Seaside User"
+
+	self patch_Behavior_primitiveCompileMethod: #'*core'
+%
+
+category: 'prepare image'
+method: GsuGsDevKit_3_5_x_Upgrade
+prepareImage_patches
+	"noop by default"
+	self patch_Behavior_primitiveCompileMethod: #'upgrade 3.3 and 3.4 patch'
 %
 
 category: 'initialization'

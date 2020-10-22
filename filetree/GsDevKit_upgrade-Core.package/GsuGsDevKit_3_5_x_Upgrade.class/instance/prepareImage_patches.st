@@ -1,13 +1,4 @@
 prepare image
 prepareImage_patches
-	"Needed for installing GsdevKit/GLASS - should be run as System User"
-
-	super prepareImage_patches.
-	self
-		timeStampedLog:
-			'	patch Behavior >> _primitiveCompileMethod:symbolList:category:oldLitVars:intoMethodDict:intoCategories:intoPragmas:environmentId:'.
-	(Behavior
-		compileMethod: self _prepareImage_behavior_patchSource
-		dictionaries: self upgradeUserProfile symbolList
-		category: '*core')
-		ifNotNil: [ :ar | self error: 'did not compile' ]
+	"noop by default"
+	self patch_Behavior_primitiveCompileMethod: #'upgrade 3.3 and 3.4 patch'

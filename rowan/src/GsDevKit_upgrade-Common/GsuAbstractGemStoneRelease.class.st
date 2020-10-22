@@ -266,10 +266,7 @@ GsuAbstractGemStoneRelease >> prepareImage_makeClassesObsolete: aGsDevKitUpgrade
 
 { #category : 'prepare image' }
 GsuAbstractGemStoneRelease >> prepareImage_patches: aGsDevKitUpgrade [
-	"Opportunity for target image to install any patches needed pre-upgrade"
-
-	aGsDevKitUpgrade timeStampedLog: 'Prepare image - patches'.
-	aGsDevKitUpgrade prepareImage_patches
+	"noop"
 ]
 
 { #category : 'prepare image' }

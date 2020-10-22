@@ -91,8 +91,8 @@ GsuGemStone_3_5_x_Release >> prepareImage_userPatches: aGsDevKitUpgrade [
 
 	super prepareImage_userPatches: aGsDevKitUpgrade.
 	aGsDevKitUpgrade
-		prepareImage_user_patch_35x_Metacello;
-		prepareImageUser_patches
+		prepareImageUser_patches;
+		prepareImage_user_patch_35x_Metacello
 ]
 
 { #category : 'bootstrapping' }

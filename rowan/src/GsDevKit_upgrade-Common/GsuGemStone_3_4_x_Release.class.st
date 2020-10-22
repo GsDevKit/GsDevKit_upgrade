@@ -23,3 +23,11 @@ GsuGemStone_3_4_x_Release >> prepareImage_makeClassesObsolete: aGsDevKitUpgrade 
 	"noop"
 	aGsDevKitUpgrade timeStampedLog: '	obsolete classes (noop)'.
 ]
+
+{ #category : 'prepare image' }
+GsuGemStone_3_4_x_Release >> prepareImage_patches: aGsDevKitUpgrade [
+	"Opportunity for target image to install any patches needed pre-upgrade"
+
+	aGsDevKitUpgrade timeStampedLog: 'Prepare image - patches'.
+	aGsDevKitUpgrade prepareImage_patches.
+]

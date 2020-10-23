@@ -3,10 +3,10 @@ reloadBootstrapPackageFileNames
 	"answer an ordered list of the Monticello packages that are needed to reload GLASS into image"
 
 	^ {'GemStone-Compression-dkh.1.mcz'.
-	'Core.v3-dkh.84.mcz'.
-	'GemStone-Compression-dkh.2.mcz'.
+	'Core.v3-dkh.85.mcz'.
+	'GemStone-Compression-dkh.3.mcz'.
 	'Base-Bootstrap.v3-dkh.29.mcz'.
-	'Bootstrap.v34-dkh.264.mcz'.
+	'Bootstrap.v34-dkh.265.mcz'.
 	'GemStone-ANSI-Streams-dkh.9.mcz'.
 	'GemStone-Indexing-Extensions-dkh.3.mcz'.
 	'Sport3.010.v3-dkh.29.mcz'.

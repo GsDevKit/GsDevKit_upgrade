@@ -1073,8 +1073,8 @@ bootstrapPackageFileNames
 
 	self patch < 4
 		ifTrue: [ 
-		"for 3.5.0 through 3.5.3"
-		^ {'Core.v3-dkh.82.mcz'.
+			"for 3.5.0 through 3.5.3"
+			^ {'Core.v3-dkh.82.mcz'.
 			'GemStone-Compression-dkh.1.mcz'.
 			'Base-Bootstrap.v3-dkh.29.mcz'.
 			'Bootstrap.v34-dkh.263.mcz'.
@@ -1099,31 +1099,59 @@ bootstrapPackageFileNames
 			'Network-Url-dkh.3.mcz'.
 			'Utf8Encoding.310-dkh.32.mcz'} ]
 		ifFalse: [ 
-		"for 3.5.4"
-			^ {'Core.v3-dkh.83.mcz'.
-			'GemStone-Compression-dkh.1.mcz'.
-			'Base-Bootstrap.v3-dkh.29.mcz'.
-			'Bootstrap.v34-dkh.264.mcz'.
-			'GemStone-ANSI-Streams-dkh.9.mcz'.
-			'GemStone-Indexing-Extensions-dkh.3.mcz'.
-			'Sport3.010.v3-dkh.29.mcz'.
-			'Squeak.v34-dkh.339.mcz'.
-			'Regex-Core-DaleHenrichs.3.mcz'.
-			'Regex-Tests-Core-DaleHenrichs.5.mcz'.
-			'PackageInfo-Base.g-dkh.36.mcz'.
-			'Monticello.v3-dkh.458.mcz'.
-			'GemStone-Deployment.v310-dkh.26.mcz'.
-			'Change-Notification.v3-dkh.20.mcz'.
-			'Gofer-Core.gemstone-dkh.135.mcz'.
-			'Metacello-Base-dkh.103.mcz'.
-			'Metacello-Core-dkh.669.mcz'.
-			'Metacello-MC-dkh.669.mcz'.
-			'Metacello-Platform.gemstone-dkh.29.mcz'.
-			'Metacello-ToolBox-dkh.131.mcz'.
-			'Metacello-FileTree-dkh.29.mcz'.
-			'Metacello-GitHub-dkh.22.mcz'.
-			'Network-Url-dkh.3.mcz'.
-			'Utf8Encoding.310-dkh.32.mcz'} ]
+			self patch = 4
+				ifTrue: [ 
+					"for 3.5.4"
+					^ {'Core.v3-dkh.83.mcz'.
+					'GemStone-Compression-dkh.1.mcz'.
+					'Base-Bootstrap.v3-dkh.29.mcz'.
+					'Bootstrap.v34-dkh.264.mcz'.
+					'GemStone-ANSI-Streams-dkh.9.mcz'.
+					'GemStone-Indexing-Extensions-dkh.3.mcz'.
+					'Sport3.010.v3-dkh.29.mcz'.
+					'Squeak.v34-dkh.339.mcz'.
+					'Regex-Core-DaleHenrichs.3.mcz'.
+					'Regex-Tests-Core-DaleHenrichs.5.mcz'.
+					'PackageInfo-Base.g-dkh.36.mcz'.
+					'Monticello.v3-dkh.458.mcz'.
+					'GemStone-Deployment.v310-dkh.26.mcz'.
+					'Change-Notification.v3-dkh.20.mcz'.
+					'Gofer-Core.gemstone-dkh.135.mcz'.
+					'Metacello-Base-dkh.103.mcz'.
+					'Metacello-Core-dkh.669.mcz'.
+					'Metacello-MC-dkh.669.mcz'.
+					'Metacello-Platform.gemstone-dkh.29.mcz'.
+					'Metacello-ToolBox-dkh.131.mcz'.
+					'Metacello-FileTree-dkh.29.mcz'.
+					'Metacello-GitHub-dkh.22.mcz'.
+					'Network-Url-dkh.3.mcz'.
+					'Utf8Encoding.310-dkh.32.mcz'} ]
+				ifFalse: [ 
+					"for 3.5.5"
+					^ {'Core.v3-dkh.85.mcz'.
+					'GemStone-Compression-dkh.1.mcz'.
+					'Base-Bootstrap.v3-dkh.29.mcz'.
+					'Bootstrap.v34-dkh.265.mcz'.
+					'GemStone-ANSI-Streams-dkh.9.mcz'.
+					'GemStone-Indexing-Extensions-dkh.3.mcz'.
+					'Sport3.010.v3-dkh.29.mcz'.
+					'Squeak.v34-dkh.339.mcz'.
+					'Regex-Core-DaleHenrichs.3.mcz'.
+					'Regex-Tests-Core-DaleHenrichs.5.mcz'.
+					'PackageInfo-Base.g-dkh.36.mcz'.
+					'Monticello.v3-dkh.458.mcz'.
+					'GemStone-Deployment.v310-dkh.26.mcz'.
+					'Change-Notification.v3-dkh.20.mcz'.
+					'Gofer-Core.gemstone-dkh.135.mcz'.
+					'Metacello-Base-dkh.103.mcz'.
+					'Metacello-Core-dkh.669.mcz'.
+					'Metacello-MC-dkh.669.mcz'.
+					'Metacello-Platform.gemstone-dkh.29.mcz'.
+					'Metacello-ToolBox-dkh.131.mcz'.
+					'Metacello-FileTree-dkh.29.mcz'.
+					'Metacello-GitHub-dkh.22.mcz'.
+					'Network-Url-dkh.3.mcz'.
+					'Utf8Encoding.310-dkh.32.mcz'} ] ]
 %
 
 category: 'accessing'
@@ -1195,31 +1223,59 @@ reloadBootstrapPackageFileNames
 			'Network-Url-dkh.3.mcz'.
 			'Utf8Encoding.310-dkh.32.mcz'} ]
 		ifFalse: [ 
-			"for 3.5.4"
-			^ {'GemStone-Compression-dkh.1.mcz'.
-			'Core.v3-dkh.83.mcz'.
-			'Base-Bootstrap.v3-dkh.29.mcz'.
-			'Bootstrap.v34-dkh.264.mcz'.
-			'GemStone-ANSI-Streams-dkh.9.mcz'.
-			'GemStone-Indexing-Extensions-dkh.3.mcz'.
-			'Sport3.010.v3-dkh.29.mcz'.
-			'Squeak.v34-dkh.339.mcz'.
-			'Regex-Core-DaleHenrichs.3.mcz'.
-			'Regex-Tests-Core-DaleHenrichs.5.mcz'.
-			'PackageInfo-Base.g-dkh.36.mcz'.
-			'Monticello.v3-dkh.458.mcz'.
-			'GemStone-Deployment.v310-dkh.26.mcz'.
-			'Change-Notification.v3-dkh.20.mcz'.
-			'Gofer-Core.gemstone-dkh.135.mcz'.
-			'Metacello-Base-dkh.103.mcz'.
-			'Metacello-Core-dkh.669.mcz'.
-			'Metacello-MC-dkh.669.mcz'.
-			'Metacello-Platform.gemstone-dkh.29.mcz'.
-			'Metacello-ToolBox-dkh.131.mcz'.
-			'Metacello-FileTree-dkh.29.mcz'.
-			'Metacello-GitHub-dkh.22.mcz'.
-			'Network-Url-dkh.3.mcz'.
-			'Utf8Encoding.310-dkh.32.mcz'} ]
+			self patch = 4
+				ifTrue: [ 
+					"for 3.5.4"
+					^ {'GemStone-Compression-dkh.1.mcz'.
+					'Core.v3-dkh.83.mcz'.
+					'Base-Bootstrap.v3-dkh.29.mcz'.
+					'Bootstrap.v34-dkh.264.mcz'.
+					'GemStone-ANSI-Streams-dkh.9.mcz'.
+					'GemStone-Indexing-Extensions-dkh.3.mcz'.
+					'Sport3.010.v3-dkh.29.mcz'.
+					'Squeak.v34-dkh.339.mcz'.
+					'Regex-Core-DaleHenrichs.3.mcz'.
+					'Regex-Tests-Core-DaleHenrichs.5.mcz'.
+					'PackageInfo-Base.g-dkh.36.mcz'.
+					'Monticello.v3-dkh.458.mcz'.
+					'GemStone-Deployment.v310-dkh.26.mcz'.
+					'Change-Notification.v3-dkh.20.mcz'.
+					'Gofer-Core.gemstone-dkh.135.mcz'.
+					'Metacello-Base-dkh.103.mcz'.
+					'Metacello-Core-dkh.669.mcz'.
+					'Metacello-MC-dkh.669.mcz'.
+					'Metacello-Platform.gemstone-dkh.29.mcz'.
+					'Metacello-ToolBox-dkh.131.mcz'.
+					'Metacello-FileTree-dkh.29.mcz'.
+					'Metacello-GitHub-dkh.22.mcz'.
+					'Network-Url-dkh.3.mcz'.
+					'Utf8Encoding.310-dkh.32.mcz'} ]
+				ifFalse: [ 
+					"for 3.5.5"
+					^ {'GemStone-Compression-dkh.1.mcz'.
+					'Core.v3-dkh.85.mcz'.
+					'Base-Bootstrap.v3-dkh.29.mcz'.
+					'Bootstrap.v34-dkh.265.mcz'.
+					'GemStone-ANSI-Streams-dkh.9.mcz'.
+					'GemStone-Indexing-Extensions-dkh.3.mcz'.
+					'Sport3.010.v3-dkh.29.mcz'.
+					'Squeak.v34-dkh.339.mcz'.
+					'Regex-Core-DaleHenrichs.3.mcz'.
+					'Regex-Tests-Core-DaleHenrichs.5.mcz'.
+					'PackageInfo-Base.g-dkh.36.mcz'.
+					'Monticello.v3-dkh.458.mcz'.
+					'GemStone-Deployment.v310-dkh.26.mcz'.
+					'Change-Notification.v3-dkh.20.mcz'.
+					'Gofer-Core.gemstone-dkh.135.mcz'.
+					'Metacello-Base-dkh.103.mcz'.
+					'Metacello-Core-dkh.669.mcz'.
+					'Metacello-MC-dkh.669.mcz'.
+					'Metacello-Platform.gemstone-dkh.29.mcz'.
+					'Metacello-ToolBox-dkh.131.mcz'.
+					'Metacello-FileTree-dkh.29.mcz'.
+					'Metacello-GitHub-dkh.22.mcz'.
+					'Network-Url-dkh.3.mcz'.
+					'Utf8Encoding.310-dkh.32.mcz'} ] ]
 %
 
 ! Class implementation for 'GsuGemStone_3_6_x_Release'
@@ -3221,6 +3277,22 @@ _prepareImage_behavior_patchSource
 
 !		Instance methods for 'GsuGsDevKit_3_5_x_BootstrapUpgrade'
 
+category: 'prepare gsdevkit  image'
+method: GsuGsDevKit_3_5_x_BootstrapUpgrade
+prepareGsDevKitImage_loadApplicationCode
+	super prepareGsDevKitImage_loadApplicationCode.
+	(self _globalNamed: 'TransactionBoundaryDefaultPolicy') isActive
+		ifFalse: [ 
+			"after application loaded, need to reenable SessionMethodTransactionBoundaryPolicy, since 
+				TransactionBoundaryDefaultPolicy Current cvar cleared during upgrade"
+			"https://github.com/GsDevKit/GsDevKit/issues/129"
+			"internal bug 49225"
+			(self _globalNamed: 'SessionMethodTransactionBoundaryPolicy') install.
+			self
+				timeStampedLog:
+					'Prepare gsdevkit -  reenabled SessionMethodTransactionBoundaryPolicy' ]
+%
+
 category: 'initialization'
 method: GsuGsDevKit_3_5_x_BootstrapUpgrade
 resolveForUpgrade
@@ -3286,15 +3358,24 @@ prepareGsDevKitImage_loadApplicationCode
 
 	"load application code"
 
-	self timeStampedLog: 'Prepare gsdevkit - load GsDevKit application code'.
-
-	"now load application"
+	self timeStampedLog: 'Prepare gsdevkit - load GsDevKit application code'.	"now load application"
 
 	self loadApplicationLoadSpecs.
 
 	self _reloadExistingConfigurations.
 
-	self log: '		load GsDevKit application code DONE (commit)'.
+	(self _globalNamed: 'TransactionBoundaryDefaultPolicy') isActive
+		ifFalse: [ 
+			"after application loaded, need to reenable SessionMethodTransactionBoundaryPolicy, since 
+				TransactionBoundaryDefaultPolicy Current cvar cleared during upgrade"
+			"https://github.com/GsDevKit/GsDevKit/issues/129"
+			"internal bug 49225"
+			(self _globalNamed: 'SessionMethodTransactionBoundaryPolicy') install.
+			self
+				timeStampedLog:
+					'Prepare gsdevkit -  reenabled SessionMethodTransactionBoundaryPolicy' ].
+
+	self log: '		load GsDevKit application code DONE (commit)'
 %
 
 category: 'prepare gsdevkit  image'

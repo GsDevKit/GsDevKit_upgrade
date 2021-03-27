@@ -39,6 +39,8 @@ GsuAbstractGsDevKitUpgrade class >> _calculateUpgradeClass [
 		ifTrue: [ ^ GsuGsDevKit_3_5_x_Upgrade ].
 	(imageVersion beginsWith: '3.6')
 		ifTrue: [ ^ GsuGsDevKit_3_6_x_Upgrade ].
+	(imageVersion beginsWith: '3.7')
+		ifTrue: [ ^ GsuGsDevKit_3_7_x_Upgrade ].
 	self error: 'Image version ' , imageVersion printString , ' not supported'
 ]
 
@@ -46,6 +48,8 @@ GsuAbstractGsDevKitUpgrade class >> _calculateUpgradeClass [
 GsuAbstractGsDevKitUpgrade class >> _calculateUpgradedVersion [
 	| upgradedVersionInt |
 	upgradedVersionInt := self _upgradedVersionInt.
+	upgradedVersionInt = 37
+		ifTrue: [ ^ GsuGemStone_3_7_x_Release new ].
 	upgradedVersionInt = 36
 		ifTrue: [ ^ GsuGemStone_3_6_x_Release new ].
 	upgradedVersionInt = 35

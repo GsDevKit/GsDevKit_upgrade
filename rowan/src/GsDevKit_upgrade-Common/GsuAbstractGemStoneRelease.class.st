@@ -38,6 +38,7 @@ GsuAbstractGemStoneRelease class >> _classForMajorVersion: major minorVersion: m
 		GsuGemStone_3_4_x_Release.
 		GsuGemStone_3_5_x_Release.
 		GsuGemStone_3_6_x_Release.
+		GsuGemStone_3_7_x_Release.
 	} at: minor + 1
 ]
 

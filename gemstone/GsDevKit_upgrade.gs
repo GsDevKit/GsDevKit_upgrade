@@ -188,6 +188,24 @@ removeallmethods GsuGemStone_3_6_x_Release
 removeallclassmethods GsuGemStone_3_6_x_Release
 
 doit
+(GsuGemStone_3_6_x_Release
+	subclass: 'GsuGemStone_3_7_x_Release'
+	instVarNames: #(  )
+	classVars: #(  )
+	classInstVars: #(  )
+	poolDictionaries: #()
+	inDictionary: GsDevKit_Upgrade_SymDict_private
+	options: #()
+)
+		category: 'GsDevKit_upgrade-Common';
+		immediateInvariant.
+true.
+%
+
+removeallmethods GsuGemStone_3_7_x_Release
+removeallclassmethods GsuGemStone_3_7_x_Release
+
+doit
 (Object
 	subclass: 'GsuAbstractGsDevKit'
 	instVarNames: #( upgradeUserName upgradeSymbolDict upgradeSymbolDictName bootstrapPostLoadClassList bootstrapRepositoryDirectory bootstrapApplicationLoadSpecs bootstrapExistingConfigurationList skipLoadApplication )
@@ -367,6 +385,24 @@ removeallmethods GsuGsDevKit_3_6_x_Upgrade
 removeallclassmethods GsuGsDevKit_3_6_x_Upgrade
 
 doit
+(GsuGsDevKit_3_6_x_Upgrade
+	subclass: 'GsuGsDevKit_3_7_x_Upgrade'
+	instVarNames: #(  )
+	classVars: #(  )
+	classInstVars: #(  )
+	poolDictionaries: #()
+	inDictionary: GsDevKit_Upgrade_SymDict_private
+	options: #()
+)
+		category: 'GsDevKit_upgrade-Core';
+		immediateInvariant.
+true.
+%
+
+removeallmethods GsuGsDevKit_3_7_x_Upgrade
+removeallclassmethods GsuGsDevKit_3_7_x_Upgrade
+
+doit
 (GsuAbstractGsDevKit
 	subclass: 'GsuGsDevKitBootstrap'
 	instVarNames: #( bootstrapGemStoneRelease )
@@ -439,6 +475,7 @@ _classForMajorVersion: major minorVersion: minor
 		GsuGemStone_3_4_x_Release.
 		GsuGemStone_3_5_x_Release.
 		GsuGemStone_3_6_x_Release.
+		GsuGemStone_3_7_x_Release.
 	} at: minor + 1
 %
 
@@ -1287,7 +1324,7 @@ method: GsuGemStone_3_6_x_Release
 bootstrapPackageFileNames
 	"answer an ordered list of the Monticello packages that are needed to bootstrap GsDevKit/GLASS into image"
 
-	self error: 'Bootstrap upgrades not supported for GemStone 3.6.x'
+	self error: 'Bootstrap upgrades not supported for GemStone 3.6.x and beyond'
 %
 
 category: 'accessing'
@@ -1307,6 +1344,49 @@ reloadBootstrapPackageFileNames
 	'GemStone-Compression-dkh.3.mcz'.
 	'Base-Bootstrap.v3-dkh.29.mcz'.
 	'Bootstrap.v34-dkh.265.mcz'.
+	'GemStone-ANSI-Streams-dkh.9.mcz'.
+	'GemStone-Indexing-Extensions-dkh.3.mcz'.
+	'Sport3.010.v3-dkh.29.mcz'.
+	'Squeak.v36-dkh.341.mcz'.
+	'Regex-Core-DaleHenrichs.3.mcz'.
+	'Regex-Tests-Core-DaleHenrichs.5.mcz'.
+	'PackageInfo-Base.g-dkh.36.mcz'.
+	'Monticello.v3-dkh.459.mcz'.
+	'GemStone-Deployment.v310-dkh.26.mcz'.
+	'Change-Notification.v3-dkh.20.mcz'.
+	'Gofer-Core.gemstone-dkh.135.mcz'.
+	'Metacello-Base-dkh.103.mcz'.
+	'Metacello-Core-dkh.669.mcz'.
+	'Metacello-MC-dkh.669.mcz'.
+	'Metacello-Platform.gemstone-dkh.29.mcz'.
+	'Metacello-ToolBox-dkh.131.mcz'.
+	'Metacello-FileTree-dkh.29.mcz'.
+	'Metacello-GitHub-dkh.22.mcz'.
+	'Network-Url-dkh.3.mcz'.
+	'Utf8Encoding.310-dkh.32.mcz'}
+%
+
+! Class implementation for 'GsuGemStone_3_7_x_Release'
+
+!		Instance methods for 'GsuGemStone_3_7_x_Release'
+
+category: 'accessing'
+method: GsuGemStone_3_7_x_Release
+minor
+
+	^ minor ifNil: [ 7]
+%
+
+category: 'bootstrapping'
+method: GsuGemStone_3_7_x_Release
+reloadBootstrapPackageFileNames
+	"answer an ordered list of the Monticello packages that are needed to reload GLASS into image"
+
+	^ {'GemStone-Compression-dkh.1.mcz'.
+	'Core.v3-dkh.85.mcz'.
+	'GemStone-Compression-dkh.3.mcz'.
+	'Base-Bootstrap.v3-dkh.29.mcz'.
+	'Bootstrap.v34-dkh.266.mcz'.
 	'GemStone-ANSI-Streams-dkh.9.mcz'.
 	'GemStone-Indexing-Extensions-dkh.3.mcz'.
 	'Sport3.010.v3-dkh.29.mcz'.
@@ -1966,6 +2046,8 @@ _calculateUpgradeClass
 		ifTrue: [ ^ GsuGsDevKit_3_5_x_Upgrade ].
 	(imageVersion beginsWith: '3.6')
 		ifTrue: [ ^ GsuGsDevKit_3_6_x_Upgrade ].
+	(imageVersion beginsWith: '3.7')
+		ifTrue: [ ^ GsuGsDevKit_3_7_x_Upgrade ].
 	self error: 'Image version ' , imageVersion printString , ' not supported'
 %
 
@@ -1974,6 +2056,8 @@ classmethod: GsuAbstractGsDevKitUpgrade
 _calculateUpgradedVersion
 	| upgradedVersionInt |
 	upgradedVersionInt := self _upgradedVersionInt.
+	upgradedVersionInt = 37
+		ifTrue: [ ^ GsuGemStone_3_7_x_Release new ].
 	upgradedVersionInt = 36
 		ifTrue: [ ^ GsuGemStone_3_6_x_Release new ].
 	upgradedVersionInt = 35
@@ -3737,6 +3821,17 @@ _prepareImage_class__mcDefinitionType_source
       {type.
       opts} ]
     ifFalse: [ type ]'
+%
+
+! Class implementation for 'GsuGsDevKit_3_7_x_Upgrade'
+
+!		Instance methods for 'GsuGsDevKit_3_7_x_Upgrade'
+
+category: 'private'
+method: GsuGsDevKit_3_7_x_Upgrade
+_defaultTargetRelease
+
+	^ GsuGemStone_3_7_x_Release major: 3 minor: 7  patch: self _patchRelease
 %
 
 ! Class implementation for 'GsuGsDevKitBootstrap'

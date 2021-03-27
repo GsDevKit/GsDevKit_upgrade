@@ -1,0 +1,14 @@
+{
+	"category" : "GsDevKit_upgrade-Common",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "",
+	"instvars" : [
+		 ],
+	"name" : "GsuGemStone_3_7_x_Release",
+	"pools" : [
+		 ],
+	"super" : "GsuGemStone_3_6_x_Release",
+	"type" : "normal" }

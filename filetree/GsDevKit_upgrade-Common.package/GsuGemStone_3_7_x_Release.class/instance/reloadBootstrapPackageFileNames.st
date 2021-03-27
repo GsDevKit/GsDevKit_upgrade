@@ -1,31 +1,12 @@
-Class {
-	#name : 'GsuGemStone_3_6_x_Release',
-	#superclass : 'GsuGemStone_3_5_x_Release',
-	#category : 'GsDevKit_upgrade-Common'
-}
-
-{ #category : 'bootstrapping' }
-GsuGemStone_3_6_x_Release >> bootstrapPackageFileNames [
-	"answer an ordered list of the Monticello packages that are needed to bootstrap GsDevKit/GLASS into image"
-
-	self error: 'Bootstrap upgrades not supported for GemStone 3.6.x and beyond'
-]
-
-{ #category : 'accessing' }
-GsuGemStone_3_6_x_Release >> minor [
-
-	^ minor ifNil: [ 6]
-]
-
-{ #category : 'bootstrapping' }
-GsuGemStone_3_6_x_Release >> reloadBootstrapPackageFileNames [
+bootstrapping
+reloadBootstrapPackageFileNames
 	"answer an ordered list of the Monticello packages that are needed to reload GLASS into image"
 
 	^ {'GemStone-Compression-dkh.1.mcz'.
 	'Core.v3-dkh.85.mcz'.
 	'GemStone-Compression-dkh.3.mcz'.
 	'Base-Bootstrap.v3-dkh.29.mcz'.
-	'Bootstrap.v34-dkh.265.mcz'.
+	'Bootstrap.v34-dkh.266.mcz'.
 	'GemStone-ANSI-Streams-dkh.9.mcz'.
 	'GemStone-Indexing-Extensions-dkh.3.mcz'.
 	'Sport3.010.v3-dkh.29.mcz'.
@@ -46,4 +27,3 @@ GsuGemStone_3_6_x_Release >> reloadBootstrapPackageFileNames [
 	'Metacello-GitHub-dkh.22.mcz'.
 	'Network-Url-dkh.3.mcz'.
 	'Utf8Encoding.310-dkh.32.mcz'}
-]

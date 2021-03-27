@@ -6,4 +6,6 @@ _calculateUpgradeClass
 		ifTrue: [ ^ GsuGsDevKit_3_5_x_Upgrade ].
 	(imageVersion beginsWith: '3.6')
 		ifTrue: [ ^ GsuGsDevKit_3_6_x_Upgrade ].
+	(imageVersion beginsWith: '3.7')
+		ifTrue: [ ^ GsuGsDevKit_3_7_x_Upgrade ].
 	self error: 'Image version ' , imageVersion printString , ' not supported'

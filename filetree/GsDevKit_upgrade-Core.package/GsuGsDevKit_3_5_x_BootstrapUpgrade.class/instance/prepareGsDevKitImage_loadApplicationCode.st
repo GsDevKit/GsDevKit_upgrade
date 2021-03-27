@@ -1,15 +1,6 @@
 prepare gsdevkit  image
 prepareGsDevKitImage_loadApplicationCode
-	"explicitly load each of the configuration packages lised in boolStrapApplicationLoadSpecs"
-
-	"load application code"
-
-	self timeStampedLog: 'Prepare gsdevkit - load GsDevKit application code'.	"now load application"
-
-	self loadApplicationLoadSpecs.
-
-	self _reloadExistingConfigurations.
-
+	super prepareGsDevKitImage_loadApplicationCode.
 	(self _globalNamed: 'TransactionBoundaryDefaultPolicy') isActive
 		ifFalse: [ 
 			"after application loaded, need to reenable SessionMethodTransactionBoundaryPolicy, since 
@@ -19,6 +10,4 @@ prepareGsDevKitImage_loadApplicationCode
 			(self _globalNamed: 'SessionMethodTransactionBoundaryPolicy') install.
 			self
 				timeStampedLog:
-					'Prepare gsdevkit -  reenabled SessionMethodTransactionBoundaryPolicy' ].
-
-	self log: '		load GsDevKit application code DONE (commit)'
+					'Prepare gsdevkit -  reenabled SessionMethodTransactionBoundaryPolicy' ]

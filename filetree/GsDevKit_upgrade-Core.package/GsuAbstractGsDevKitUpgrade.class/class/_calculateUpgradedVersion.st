@@ -2,6 +2,8 @@ private
 _calculateUpgradedVersion
 	| upgradedVersionInt |
 	upgradedVersionInt := self _upgradedVersionInt.
+	upgradedVersionInt = 37
+		ifTrue: [ ^ GsuGemStone_3_7_x_Release new ].
 	upgradedVersionInt = 36
 		ifTrue: [ ^ GsuGemStone_3_6_x_Release new ].
 	upgradedVersionInt = 35

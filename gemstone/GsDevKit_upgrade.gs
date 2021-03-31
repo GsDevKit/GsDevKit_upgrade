@@ -1907,20 +1907,20 @@ _reloadProjectNamed: projectName projectSpec: projectSpecOrNilOrString loads: lo
 				ifFalse: [ 
 					repoDescription := projectSpecOrNilOrString repositoryDescriptions first.
 					loads ifNil: [ loadList := projectSpecOrNilOrString loads ifNil: [ {} ] ] ] ].
-	loadListString := ''.
+	loadListString := ' (default load)'.
 	loadList isEmpty 
 		ifFalse:  [ loadListString := ' loads: ', loadList printString ].
 
 	repoDescription
 		ifNotNil: [
-			self bannerLog: '		Reloading Project ', projectName, ' repository: ', repoDescription printString, loadListString.
+			self bannerLog: '		Reloading Project ', projectName, ' repository: ', repoDescription printString, loadListString printString.
 			metacello := ((self _globalNamed: 'Metacello') new) 
 				baseline: projectName;
 				repository: repoDescription ]
 		ifNil: [ 
 			projectSpec notNil
 				ifTrue: [
-					self bannerLog: '		Reloading Project ', projectName printString, loadListString.
+					self bannerLog: '		Reloading Project ', projectName printString, loadListString printString.
 					metacello := ((self _globalNamed: 'Metacello') image) 
 						baseline: projectName;
 						yourself ]

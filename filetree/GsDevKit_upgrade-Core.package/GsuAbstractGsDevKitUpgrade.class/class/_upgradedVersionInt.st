@@ -21,7 +21,7 @@ _upgradedVersionInt
 					hist := '  v' , iVer , '  ' ] ].
 	ofs ~~ 0
 		ifTrue: [ 
-			#(36 35 34 33 32)
+			#(37 36 35 34 33 32)
 				do: [ :ver | 
 					| num vStr |
 					num := ScaledDecimal numerator: ver denominator: 10 scale: 1.

@@ -38,5 +38,6 @@ GsuGemStone_3_7_x_Release >> reloadBootstrapPackageFileNames [
 	'Metacello-FileTree-dkh.29.mcz'.
 	'Metacello-GitHub-dkh.22.mcz'.
 	'Network-Url-dkh.3.mcz'.
-	'Utf8Encoding.310-dkh.32.mcz'}
+	'Utf8Encoding.310-dkh.32.mcz'.
+	'OB-Tools.v33-dkh.140.mcz'}
 ]

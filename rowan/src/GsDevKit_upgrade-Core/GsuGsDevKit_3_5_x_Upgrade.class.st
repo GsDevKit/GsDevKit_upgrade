@@ -5,6 +5,11 @@ Class {
 }
 
 { #category : 'private' }
+GsuGsDevKit_3_5_x_Upgrade >> _baseVersion [
+	^ self major asString , '.' , self minor asString , '.'
+]
+
+{ #category : 'private' }
 GsuGsDevKit_3_5_x_Upgrade >> _bootstrapRelease [
 
 	^ GsuGemStone_3_5_x_Release major: 3 minor: 5 patch: self _patchRelease
@@ -19,7 +24,7 @@ GsuGsDevKit_3_5_x_Upgrade >> _defaultTargetRelease [
 { #category : 'private' }
 GsuGsDevKit_3_5_x_Upgrade >> _patchRelease [
 	| baseVersion imageVersion |
-	baseVersion := self major asString , '.' , self minor asString , '.'.
+	baseVersion := self _baseVersion.
 	imageVersion := ImageVersion at: #'gsVersion'.
 	^ Integer
 		fromString:

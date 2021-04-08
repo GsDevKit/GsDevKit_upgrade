@@ -3326,6 +3326,12 @@ resolveForUpgrade
 
 category: 'private'
 method: GsuGsDevKit_3_5_x_Upgrade
+_baseVersion
+	^ self major asString , '.' , self minor asString , '.'
+%
+
+category: 'private'
+method: GsuGsDevKit_3_5_x_Upgrade
 _bootstrapRelease
 
 	^ GsuGemStone_3_5_x_Release major: 3 minor: 5 patch: self _patchRelease
@@ -3342,7 +3348,7 @@ category: 'private'
 method: GsuGsDevKit_3_5_x_Upgrade
 _patchRelease
 	| baseVersion imageVersion |
-	baseVersion := self major asString , '.' , self minor asString , '.'.
+	baseVersion := self _baseVersion.
 	imageVersion := ImageVersion at: #'gsVersion'.
 	^ Integer
 		fromString:
@@ -3800,7 +3806,7 @@ resolveForUpgrade
 category: 'private'
 method: GsuGsDevKit_3_6_x_Upgrade
 _bootstrapRelease
-	self error: 'bootstrap upgrades to 3.6.x is not supported'
+	self error: 'bootstrap upgrades to ', self _baseVersion, 'x is not supported'
 %
 
 category: 'private'

@@ -1,7 +1,7 @@
 private
 _patchRelease
 	| baseVersion imageVersion |
-	baseVersion := self major asString , '.' , self minor asString , '.'.
+	baseVersion := self _baseVersion.
 	imageVersion := ImageVersion at: #'gsVersion'.
 	^ Integer
 		fromString:

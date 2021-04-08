@@ -3747,8 +3747,8 @@ prepareImage_user_patch_Class__mcDefinitionType
 	[ 
 	Class
 		compileMethod: self _prepareImage_class__mcDefinitionType_source
-		category: '*monticello'
-		using: self upgradeUserProfile symbolList ]
+		dictionaries: self upgradeUserProfile symbolList
+		category: '*monticello' ]
 		onException: CompileError
 		do: [ :ex | 
 			self

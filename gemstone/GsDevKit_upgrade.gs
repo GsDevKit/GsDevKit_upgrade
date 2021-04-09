@@ -1406,8 +1406,7 @@ reloadBootstrapPackageFileNames
 	'Metacello-FileTree-dkh.29.mcz'.
 	'Metacello-GitHub-dkh.22.mcz'.
 	'Network-Url-dkh.3.mcz'.
-	'Utf8Encoding.310-dkh.32.mcz'.
-	'OB-Tools.v37-dkh.146.mcz'}
+	'Utf8Encoding.310-dkh.32.mcz'}
 %
 
 ! Class implementation for 'GsuAbstractGsDevKit'
@@ -1662,7 +1661,7 @@ _defaultBootstrapApplicationLoadSpecs
 	self _todeLoaded
 		ifTrue: [
 			self timeStampedLog: '	load BaselineOfMetacello and BaselineOfTode (default)'.
-			"first update Metacello and then update Tode"
+			"first update Metacello and then update Tode and reload GLASS1 after updating Tode"
 			^	{
 				{
 					'Metacello'. 
@@ -1671,6 +1670,10 @@ _defaultBootstrapApplicationLoadSpecs
 				{
 					'Tode'. 
 					self _projectSpecForBaseline: 'BaselineOfTode'.
+				}.
+				{
+					'GLASS1'. 
+					self _projectSpecForBaseline: 'BaselineOfGLASS1'.
 				}.
 			} ].
 	self _glass1Loaded

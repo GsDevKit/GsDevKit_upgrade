@@ -34,7 +34,7 @@ GsuAbstractGsDevKit >> _defaultBootstrapApplicationLoadSpecs [
 	self _todeLoaded
 		ifTrue: [
 			self timeStampedLog: '	load BaselineOfMetacello and BaselineOfTode (default)'.
-			"first update Metacello and then update Tode"
+			"first update Metacello and then update Tode and reload GLASS1 after updating Tode"
 			^	{
 				{
 					'Metacello'. 
@@ -43,6 +43,10 @@ GsuAbstractGsDevKit >> _defaultBootstrapApplicationLoadSpecs [
 				{
 					'Tode'. 
 					self _projectSpecForBaseline: 'BaselineOfTode'.
+				}.
+				{
+					'GLASS1'. 
+					self _projectSpecForBaseline: 'BaselineOfGLASS1'.
 				}.
 			} ].
 	self _glass1Loaded

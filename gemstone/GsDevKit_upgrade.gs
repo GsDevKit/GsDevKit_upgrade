@@ -1662,7 +1662,10 @@ _defaultBootstrapApplicationLoadSpecs
 	self _todeLoaded
 		ifTrue: [
 			self timeStampedLog: '	load BaselineOfMetacello and BaselineOfTode (default)'.
-			"first update Metacello and then update Tode and reload GLASS1 after updating Tode"
+			"first update Metacello and then update Tode and reload GLASS1 after updating Tode. 
+				in 3.7.0, OB-Tools package changed and Tode only loades Base group of GLASS1,
+				so it is prudent to reload GLASS1 to ensure that we pick up the full set of classes
+				needed for new version."
 			^	{
 				{
 					'Metacello'. 

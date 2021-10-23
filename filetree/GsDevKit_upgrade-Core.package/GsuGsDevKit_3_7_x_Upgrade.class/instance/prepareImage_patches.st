@@ -1,17 +1,5 @@
-Class {
-	#name : 'GsuGsDevKit_3_7_x_Upgrade',
-	#superclass : 'GsuGsDevKit_3_6_x_Upgrade',
-	#category : 'GsDevKit_upgrade-Core'
-}
-
-{ #category : 'private' }
-GsuGsDevKit_3_7_x_Upgrade >> _defaultTargetRelease [
-
-	^ GsuGemStone_3_7_x_Release major: 3 minor: 7  patch: self _patchRelease
-]
-
-{ #category : 'prepare image' }
-GsuGsDevKit_3_7_x_Upgrade >> prepareImage_patches [
+prepare image
+prepareImage_patches
 	"need to arrange for SequenceableCollection>>readStream to return an AnsiReadStream "
 
 	| category |
@@ -26,4 +14,3 @@ GsuGsDevKit_3_7_x_Upgrade >> prepareImage_patches [
 		compileMethod: 'readStream ^ AnsiReadStream on: self'
 		dictionaries: self upgradeUserProfile symbolList
 		category: category) ifNotNil: [ :ar | self error: 'did not compile' ]
-]

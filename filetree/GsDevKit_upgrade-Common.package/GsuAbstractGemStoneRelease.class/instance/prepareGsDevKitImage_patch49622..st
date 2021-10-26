@@ -1,0 +1,3 @@
+prepare gsdevkit image
+prepareGsDevKitImage_patch49622: aGsDevKitUpgrade
+	aGsDevKitUpgrade prepareGsDevKitImage_bug49622_patch

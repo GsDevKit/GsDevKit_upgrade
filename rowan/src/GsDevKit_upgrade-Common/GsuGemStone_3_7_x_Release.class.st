@@ -10,6 +10,11 @@ GsuGemStone_3_7_x_Release >> minor [
 	^ minor ifNil: [ 7]
 ]
 
+{ #category : 'prepare gsdevkit image' }
+GsuGemStone_3_7_x_Release >> prepareGsDevKitImage_patch49622: aGsDevKitUpgrade [
+	"noop for upgrades from 3.7.0 or later"
+]
+
 { #category : 'bootstrapping' }
 GsuGemStone_3_7_x_Release >> reloadBootstrapPackageFileNames [
 	"answer an ordered list of the Monticello packages that are needed to reload GLASS into image"

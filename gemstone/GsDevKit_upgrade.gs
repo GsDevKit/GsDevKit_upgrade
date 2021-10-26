@@ -651,6 +651,12 @@ prepareGsDevKitImage_patch46217:  aGsDevKitUpgrade
 
 category: 'prepare gsdevkit image'
 method: GsuAbstractGemStoneRelease
+prepareGsDevKitImage_patch49622: aGsDevKitUpgrade
+	aGsDevKitUpgrade prepareGsDevKitImage_bug49622_patch
+%
+
+category: 'prepare gsdevkit image'
+method: GsuAbstractGemStoneRelease
 prepareGsDevKitImage_patch_compileMethodCategory:  aGsDevKitUpgrade
 
 	aGsDevKitUpgrade prepareGsDevKitImage_patch_compileMethodCategory
@@ -1375,6 +1381,12 @@ method: GsuGemStone_3_7_x_Release
 minor
 
 	^ minor ifNil: [ 7]
+%
+
+category: 'prepare gsdevkit image'
+method: GsuGemStone_3_7_x_Release
+prepareGsDevKitImage_patch49622: aGsDevKitUpgrade
+	"noop for upgrades from 3.7.0 or later"
 %
 
 category: 'bootstrapping'
@@ -2287,6 +2299,7 @@ prepareGsDevKitImage
 		prepareGsDevKitImage_patch46217: self;
 		prepareGsDevKitImage_patch_compileMethodCategory: self;
 		prepareGsDevKitImage_recompilePragmaMethods: self;
+		prepareGsDevKitImage_patch49622: self;		
 		prepareGsDevKitImage_bootstrapGsDevkit: self;
 		prepareGsDevKitImage_resetExistingGlobalState: self;
 		yourself.
@@ -2348,6 +2361,15 @@ prepareGsDevKitImage_bug46217_patch
 	System commit.
 
 	self log: '	46217 patched (commit)'.
+%
+
+category: 'prepare gsdevkit  image'
+method: GsuAbstractGsDevKitUpgrade
+prepareGsDevKitImage_bug49622_patch
+	"Bug 49622 - starting in 3.7.0 ReadByteStream an optimized version of ReadStream should be used 
+		in GLASS applications instead of AnsiReadStream in subclasses of SequenceableCollection"
+
+	"noop for pre-3.7.0 upgrades"
 %
 
 category: 'prepare gsdevkit  image'
@@ -3847,23 +3869,25 @@ _prepareImage_class__mcDefinitionType_source
 
 !		Instance methods for 'GsuGsDevKit_3_7_x_Upgrade'
 
-category: 'prepare image'
+category: 'prepare gsdevkit  image'
 method: GsuGsDevKit_3_7_x_Upgrade
-prepareImage_patches
-	"need to arrange for SequenceableCollection>>readStream to return an AnsiReadStream "
+prepareGsDevKitImage_bug49622_patch
+	"Bug 49622 - starting in 3.7.0 ReadByteStream an optimized version of ReadStream should be used 
+		in GLASS applications instead of AnsiReadStream in SequenceableCollection snf String"
 
 	| category |
-	category := #'49622 experiment'.
-	super prepareImage_patches.
+	category := #'49622 patch'.
+	self timeStampedLog: 'Prepare gsdevkit - patch 49622'.
 
-	self
-		timeStampedLog:
-			'	patch SequenceableCollection >> readStream in category '
-				, category asString printString , ' as ' , System myUserProfile userId.
 	(SequenceableCollection
 		compileMethod: 'readStream ^ AnsiReadStream on: self'
 		dictionaries: self upgradeUserProfile symbolList
-		category: category) ifNotNil: [ :ar | self error: 'did not compile' ]
+		category: category) ifNotNil: [ :ar | self error: 'did not compile' ].
+
+	(String
+		compileMethod: 'readStream ^ AnsiReadStream on: self'
+		dictionaries: self upgradeUserProfile symbolList
+		category: category) ifNotNil: [ :ar | self error: 'did not compile' ].
 %
 
 category: 'private'

@@ -1,17 +1,5 @@
-Class {
-	#name : 'GsuGsDevKit_3_7_x_Upgrade',
-	#superclass : 'GsuGsDevKit_3_6_x_Upgrade',
-	#category : 'GsDevKit_upgrade-Core'
-}
-
-{ #category : 'private' }
-GsuGsDevKit_3_7_x_Upgrade >> _defaultTargetRelease [
-
-	^ GsuGemStone_3_7_x_Release major: 3 minor: 7  patch: self _patchRelease
-]
-
-{ #category : 'prepare gsdevkit  image' }
-GsuGsDevKit_3_7_x_Upgrade >> prepareGsDevKitImage_bug49622_patch [
+prepare gsdevkit  image
+prepareGsDevKitImage_bug49622_patch
 	"Bug 49622 - starting in 3.7.0 ReadByteStream an optimized version of ReadStream should be used 
 		in GLASS applications instead of AnsiReadStream in SequenceableCollection snf String"
 
@@ -28,4 +16,3 @@ GsuGsDevKit_3_7_x_Upgrade >> prepareGsDevKitImage_bug49622_patch [
 		compileMethod: 'readStream ^ AnsiReadStream on: self'
 		dictionaries: self upgradeUserProfile symbolList
 		category: category) ifNotNil: [ :ar | self error: 'did not compile' ].
-]

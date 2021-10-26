@@ -233,6 +233,11 @@ GsuAbstractGemStoneRelease >> prepareGsDevKitImage_patch46217:  aGsDevKitUpgrade
 ]
 
 { #category : 'prepare gsdevkit image' }
+GsuAbstractGemStoneRelease >> prepareGsDevKitImage_patch49622: aGsDevKitUpgrade [
+	aGsDevKitUpgrade prepareGsDevKitImage_bug49622_patch
+]
+
+{ #category : 'prepare gsdevkit image' }
 GsuAbstractGemStoneRelease >> prepareGsDevKitImage_recompilePragmaMethods:  aGsDevKitUpgrade [
 
 	aGsDevKitUpgrade prepareGsDevKitImage_recompilePragmaMethods

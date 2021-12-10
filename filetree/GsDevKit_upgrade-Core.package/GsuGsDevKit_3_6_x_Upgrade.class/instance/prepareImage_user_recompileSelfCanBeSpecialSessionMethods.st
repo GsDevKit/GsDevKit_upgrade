@@ -25,4 +25,8 @@ prepareImage_user_recompileSelfCanBeSpecialSessionMethods
 							mDict := dictsArray at: 1.
 							cDict := dictsArray at: 2.
 							mDict
-								valuesDo: [ :meth | meth recompileIntoMethodDict: mDict intoCategories: cDict symbolList: nil ] ] ] ]
+								valuesDo: [ :meth | 
+									meth
+										recompileIntoMethodDict: mDict
+										intoCategories: cDict
+										symbolList: GsCurrentSession currentSession symbolList ] ] ] ]

@@ -602,6 +602,16 @@ prepareGsDevKitImage_bootstrapGsDevkit:  aGsDevKitUpgrade
 
 category: 'prepare gsdevkit image'
 method: GsuAbstractGemStoneRelease
+prepareGsDevKitImage_cleanSessionMethodMetaData:  aGsDevKitUpgrade
+	"Make a pass through the Session Method packages and remove 
+		methods that are instances of GsMethod. Should only be done 
+		when upgrading from from 3.2.x and earlier to 3.3.x through 3.5.x"
+
+	aGsDevKitUpgrade prepareGsDevKitImage_cleanSessionMethodMetaData
+%
+
+category: 'prepare gsdevkit image'
+method: GsuAbstractGemStoneRelease
 prepareGsDevKitImage_clearMonticelloCaches:  aGsDevKitUpgrade
 
 	aGsDevKitUpgrade 
@@ -1003,6 +1013,16 @@ method: GsuGemStone_3_3_x_Release
 minor
 
 	^ minor ifNil: [ 3 ]
+%
+
+category: 'prepare gsdevkit image'
+method: GsuGemStone_3_3_x_Release
+prepareGsDevKitImage_cleanSessionMethodMetaData: aGsDevKitUpgrade
+	"Make a pass through the Session Method packages and remove 
+		methods that are instances of GsMethod. Should only be done 
+		when upgrading from from 3.2.x and earlier to 3.3.x through 3.5.x"
+
+	"noop"
 %
 
 category: 'prepare image'
@@ -2302,6 +2322,7 @@ prepareGsDevKitImage
 		prepareGsDevKitImage_patch49622: self;		
 		prepareGsDevKitImage_bootstrapGsDevkit: self;
 		prepareGsDevKitImage_resetExistingGlobalState: self;
+		prepareGsDevKitImage_cleanSessionMethodMetaData: self;
 		yourself.
 	self updateDBFHistoryFinishUpgrade.
 	System commit.
@@ -2370,6 +2391,14 @@ prepareGsDevKitImage_bug49622_patch
 		in GLASS applications instead of AnsiReadStream in subclasses of SequenceableCollection"
 
 	"noop for pre-3.7.0 upgrades"
+%
+
+category: 'prepare gsdevkit  image'
+method: GsuAbstractGsDevKitUpgrade
+prepareGsDevKitImage_cleanSessionMethodMetaData
+	"remove all instances of GsMethod from session method packages"
+
+	"noop"
 %
 
 category: 'prepare gsdevkit  image'
@@ -3255,6 +3284,39 @@ minor
 	^ 3
 %
 
+category: 'prepare gsdevkit  image'
+method: GsuGsDevKit_3_3_x_BootstrapUpgrade
+prepareGsDevKitImage_cleanSessionMethodMetaData
+	"remove all instances of GsMethod from session method packages"
+
+	| obsoleteGsMethodClass |
+	obsoleteGsMethodClass := ObsoleteClasses at: #'GsMethod'.
+	obsoleteGsMethodClass
+		ifNil: [ 
+			self
+				timeStampedLog:
+					'SKIP - clean session method state (no GsMethod class in ObsoleteClasses'.
+			^ self ].
+	self timeStampedLog: 'Prepare gsdevkit - clean session method state '.
+
+	GsPackagePolicy current
+		packages_Do: [ :gsPackage | 
+			| badBoys |
+			badBoys := Dictionary new.
+			gsPackage sessionMethods
+				keysAndValuesDo: [ :behavior :ar | 
+					(ar at: 1)
+						keysAndValuesDo: [ :selector :method | 
+							(method isKindOf: obsoleteGsMethodClass)
+								ifTrue: [ (badBoys at: behavior ifAbsentPut: [ Set new ]) add: selector ] ] ].
+			badBoys
+				keysAndValuesDo: [ :beh :sels | sels do: [ :sel | gsPackage removeMethodAt: sel for: beh ] ] ].
+
+	System commit.
+
+	self log: '	methods removed from session methods (commit)'
+%
+
 ! Class implementation for 'GsuGsDevKit_3_4_x_BootstrapUpgrade'
 
 !		Instance methods for 'GsuGsDevKit_3_4_x_BootstrapUpgrade'
@@ -3609,7 +3671,7 @@ _defaultExistingConfigurationOfNames
 	" These two configurations are the only configurations that must be removed, before loading GLASS1 or GsDevKit or tODE"
 
 	| default |
-	default := { #ConfigurationOfGsMisc . #ConfigurationOfGsCore}.
+	default := { #ConfigurationOfGsMisc . #ConfigurationOfGsCore . #ConfigurationOfGofer }.
 	^ default
 %
 
@@ -3740,6 +3802,14 @@ minor
 	^ 6
 %
 
+category: 'prepare gsdevkit  image'
+method: GsuGsDevKit_3_6_x_Upgrade
+prepareGsDevKitImage_cleanSessionMethodMetaData
+	"remove all instances of GsMethod from session method packages"
+
+	"noop - 3.6.x and beyond cannot be upgraded from releases earlier than 3.3.x"
+%
+
 category: 'prepare image user'
 method: GsuGsDevKit_3_6_x_Upgrade
 prepareImage_user_36x_fundamentals
@@ -3820,7 +3890,11 @@ prepareImage_user_recompileSelfCanBeSpecialSessionMethods
 							mDict := dictsArray at: 1.
 							cDict := dictsArray at: 2.
 							mDict
-								valuesDo: [ :meth | meth recompileIntoMethodDict: mDict intoCategories: cDict symbolList: nil ] ] ] ]
+								valuesDo: [ :meth | 
+									meth
+										recompileIntoMethodDict: mDict
+										intoCategories: cDict
+										symbolList: GsCurrentSession currentSession symbolList ] ] ] ]
 %
 
 category: 'initialization'

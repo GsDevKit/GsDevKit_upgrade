@@ -28,6 +28,7 @@ prepareGsDevKitImage
 		prepareGsDevKitImage_patch49622: self;		
 		prepareGsDevKitImage_bootstrapGsDevkit: self;
 		prepareGsDevKitImage_resetExistingGlobalState: self;
+		prepareGsDevKitImage_cleanSessionMethodMetaData: self;
 		yourself.
 	self updateDBFHistoryFinishUpgrade.
 	System commit.

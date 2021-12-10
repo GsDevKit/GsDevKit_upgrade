@@ -32,7 +32,7 @@ in GemStone/S:
 
 I believe that there are developers using each of these environments and 
 therefore need to be considered when it comes to upgrading.
-The basick idea is that once each of these environments has been upgraded, it
+The basic idea is that once each of these environments has been upgraded, it
 should be straightforward for the develper to reload the rest of their 
 projects.
 
@@ -70,8 +70,8 @@ GLASS1.0-beta.9.1 was the first common version between
 **[ConfigurationOfGLASS-dkh.224.mcz][10]** managed on GemSource][10] and 
 **[BaselineOfGLASS1][9]** managed on [GitHub][11].
 
-GLASS1 is supported (read tested) for GemStone versions 2.4.8 through 3.4.3
-(currently the lastest released version of GemStone/S).
+GLASS1 is supported (read tested) for GemStone versions 2.4.8 through 3.6.3
+(currently the latest released version of GemStone/S).
 
 GLASS1 follows the principle of continuous delivery where every release to the
 `master` branch can be safely used in production.
@@ -137,7 +137,7 @@ that has not been recompiled to the new class format.
 
 To upgrade using a **Monticello**-based package system, it is necessary to 
 *bootstrap* the **Monticello** loading code into the image, using only code
-that has already been upgraded by `$GEMSTONE/binupgradeImage`.
+that has already been upgraded by `$GEMSTONE/bin/upgradeImage`.
 
 ##### Bootstrap GLASS - GLASS1/GsDevKit - tODE
 The simplest way to do this is:

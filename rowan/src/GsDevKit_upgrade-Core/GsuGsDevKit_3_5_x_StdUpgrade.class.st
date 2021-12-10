@@ -9,7 +9,7 @@ GsuGsDevKit_3_5_x_StdUpgrade >> _defaultExistingConfigurationOfNames [
 	" These two configurations are the only configurations that must be removed, before loading GLASS1 or GsDevKit or tODE"
 
 	| default |
-	default := { #ConfigurationOfGsMisc . #ConfigurationOfGsCore}.
+	default := { #ConfigurationOfGsMisc . #ConfigurationOfGsCore . #ConfigurationOfGofer }.
 	^ default
 ]
 

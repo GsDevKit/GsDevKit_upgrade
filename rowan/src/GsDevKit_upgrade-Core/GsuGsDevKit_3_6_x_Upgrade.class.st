@@ -138,7 +138,11 @@ GsuGsDevKit_3_6_x_Upgrade >> prepareImage_user_recompileSelfCanBeSpecialSessionM
 							mDict := dictsArray at: 1.
 							cDict := dictsArray at: 2.
 							mDict
-								valuesDo: [ :meth | meth recompileIntoMethodDict: mDict intoCategories: cDict symbolList: nil ] ] ] ]
+								valuesDo: [ :meth | 
+									meth
+										recompileIntoMethodDict: mDict
+										intoCategories: cDict
+										symbolList: GsCurrentSession currentSession symbolList ] ] ] ]
 ]
 
 { #category : 'initialization' }

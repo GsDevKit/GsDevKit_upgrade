@@ -479,6 +479,7 @@ GsuAbstractGsDevKitUpgrade >> prepareGsDevKitImage [
 		prepareGsDevKitImage_patch49622: self;		
 		prepareGsDevKitImage_bootstrapGsDevkit: self;
 		prepareGsDevKitImage_resetExistingGlobalState: self;
+		prepareGsDevKitImage_cleanSessionMethodMetaData: self;
 		yourself.
 	self updateDBFHistoryFinishUpgrade.
 	System commit.
@@ -530,6 +531,13 @@ GsuAbstractGsDevKitUpgrade >> prepareGsDevKitImage_bug49622_patch [
 		in GLASS applications instead of AnsiReadStream in subclasses of SequenceableCollection"
 
 	"noop for pre-3.7.0 upgrades"
+]
+
+{ #category : 'prepare gsdevkit  image' }
+GsuAbstractGsDevKitUpgrade >> prepareGsDevKitImage_cleanSessionMethodMetaData [
+	"remove all instances of GsMethod from session method packages"
+
+	"noop"
 ]
 
 { #category : 'prepare gsdevkit  image' }

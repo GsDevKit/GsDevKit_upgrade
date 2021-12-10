@@ -184,6 +184,15 @@ GsuAbstractGemStoneRelease >> prepareGsDevKitImage_bootstrapGsDevkit:  aGsDevKit
 ]
 
 { #category : 'prepare gsdevkit image' }
+GsuAbstractGemStoneRelease >> prepareGsDevKitImage_cleanSessionMethodMetaData:  aGsDevKitUpgrade [
+	"Make a pass through the Session Method packages and remove 
+		methods that are instances of GsMethod. Should only be done 
+		when upgrading from from 3.2.x and earlier to 3.3.x through 3.5.x"
+
+	aGsDevKitUpgrade prepareGsDevKitImage_cleanSessionMethodMetaData
+]
+
+{ #category : 'prepare gsdevkit image' }
 GsuAbstractGemStoneRelease >> prepareGsDevKitImage_clearMonticelloCaches:  aGsDevKitUpgrade [
 
 	aGsDevKitUpgrade 

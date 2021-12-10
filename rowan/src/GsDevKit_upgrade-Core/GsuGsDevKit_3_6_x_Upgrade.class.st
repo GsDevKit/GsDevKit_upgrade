@@ -55,6 +55,13 @@ GsuGsDevKit_3_6_x_Upgrade >> minor [
 	^ 6
 ]
 
+{ #category : 'prepare gsdevkit  image' }
+GsuGsDevKit_3_6_x_Upgrade >> prepareGsDevKitImage_cleanSessionMethodMetaData [
+	"remove all instances of GsMethod from session method packages"
+
+	"noop - 3.6.x and beyond cannot be upgraded from releases earlier than 3.3.x"
+]
+
 { #category : 'prepare image user' }
 GsuGsDevKit_3_6_x_Upgrade >> prepareImage_user_36x_fundamentals [
 	"patches needed to load GLASS for 3.6.x and later"

@@ -1953,12 +1953,6 @@ _reloadProjectNamed: projectName projectSpec: projectSpecOrNilOrString loads: lo
 
 	repoDescription
 		ifNotNil: [
-"hack"
-(self _globalNamed: 'Gofer') new 
-			directory: ((self _globalNamed: 'ServerFileDirectory') on: '/home/dhenrich/work/j_37x/examples/monticello/repository');
-			version: 'ConfigurationOfGsCore-dkh.333';
-			load.
-"kcah"
 			self bannerLog: '		Reloading Project ', projectName, ' repository: ', repoDescription printString, loadListString printString.
 			metacello := ((self _globalNamed: 'Metacello') new) 
 				baseline: projectName;

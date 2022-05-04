@@ -1,0 +1,25 @@
+#!/usr/bin/env superdoit_stone
+options
+{
+}
+%
+usage
+-----
+USAGE 
+  $basename [--help | -h] [--debug | -D]
+
+DESCRIPTION
+  GsDevKit_upgrade script.
+
+OPTIONS
+  -h, --help                 display usage message
+  -D, --debug                bring up topaz debugger in the event of a script error
+
+EXAMPLES
+  $basename --help
+  $basename -D
+  $basename
+-----
+%
+doit
+%

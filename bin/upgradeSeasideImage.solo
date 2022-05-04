@@ -1,0 +1,189 @@
+#!/usr/bin/env superdoit_solo
+options
+{
+	SuperDoitOptionalOptionWithRequiredArg long: 'gemstone' default: '$GEMSTONE'.
+	SuperDoitOptionalOptionWithRequiredArg long: 'upgradeLogDir' default: '$upgradeLogDir'.
+
+	SuperDoitOptionalOptionWithRequiredArg long: 'stoneName' short: 's' default: 'gs64stone'.
+	SuperDoitOptionalOptionWithRequiredArg long: 'userName' short: 'u' default: 'DataCurator'.
+	SuperDoitOptionalOptionWithRequiredArg long: 'password' short: 'p' default: 'swordfish'.
+	SuperDoitOptionalOptionWithRequiredArg long: 'tempObjCache' short: 'c' default: '100000'.
+	SuperDoitOptionalOptionWithRequiredArg long: 'upgradeInstance' short: 'P' default: '$GEMSTONE/upgrade/createGsDevKit_upgrade.topaz'.
+
+	SuperDoitOptionalOptionWithNoArg long: 'debugGem' short: 'W'.
+	SuperDoitOptionalOptionWithNoArg long: 'upgradeImage'.
+}
+%
+instvars
+gemstone
+upgradeLogDir
+%
+usage
+-----
+USAGE 
+  $basename [--help | -h] [--debug | -D]
+
+DESCRIPTION
+  Driver script for full upgrade of GLASS/GsDevKit image.
+
+OPTIONS
+  -h, --help                 display usage message
+  -D, --debug                bring up topaz debugger in the event of a script error
+
+EXAMPLES
+  $basename --help
+  $basename -D
+  $basename -D --upgradeImage --upgradeLogDir=./upgradeLog -s battery_k
+-----
+%
+SPECS
+[
+RwLoadSpecificationV2 {
+	#projectName : 'GsCommands',
+	#projectSpecFile : 'rowan/project.ston',
+	#diskUrl : '$GEMSTONE/examples/GsCommands/projectsHome/GsCommands',
+	#componentNames : [
+		'Commands'
+	],
+	#platformProperties : {
+		'gemstone' : {
+			'allusers' : {
+				#defaultSymbolDictName : 'UserGlobals'
+			}
+		}
+	},
+	#comment : ''
+}
+]
+%
+method
+resolveEnvVars
+	gemstone := self gemstone
+		ifNotNil: [:value |
+			| expanded |
+			expanded := value asFileReference pathString.
+			System gemEnvironmentVariable: 'GEMSTONE' put: expanded ]
+		ifNil: [ self error: '$GEMSTONE or --gemstone required' ].
+	self upgradeLogDir
+		ifNotNil: [:value |
+			upgradeLogDir := value asFileReference.
+			upgradeLogDir exists
+				ifFalse: [ self error: 'The upgradeLogDir: ', upgradeLogDir pathString , ' does not exist.' ]. 
+			System gemEnvironmentVariable: 'upgradeLogDir' put: upgradeLogDir pathString.]
+		ifNil: [ self error: '$upgradeLogDir or --upgradeLogDir required' ].
+%
+method
+upgradeImagePrompt
+	^ '=========================
+Starting GemStone/S 64 3.x kernel class filein.
+
+Note: All user defined changes and additions to kernel classes will be
+removed. It is therefore advised that all such changes be filed out before
+starting conversion and filed back in after conversion is complete. Layered
+products which change the kernel classes, such as GemConnect, will also lose
+the changes. All such products must be reinstalled following the upgrade.
+
+Stone name is $stoneName.
+=========================
+
+Press the return key to continue...
+' copyReplaceAll: '$stoneName' with: self stoneName
+%
+method
+upgradeSeasideImagePrompt
+	^('=========================
+Starting GemStone/S 64 3.x Seaside image upgrade.
+
+Note:	This script should be run AFTER upgradeImage has been run.
+			SessionMethods will be enabled and all code included in the 
+			GLASS, GLASS1 or tODE project will be reloaded.
+		
+			There are 4 phases performed by this script and each script is 
+			performed in its own topaz session:
+
+			1. As SystemUser, install GsDevKit_upgrade code and 
+					GsuAbstractGsDevKitUpgrade>>prepareImage. 
+			2. As $username, GsuAbstractGsDevKitUpgrade>>prepareImage_pragma_user 
+			3. As SystemUser, GsuAbstractGsDevKitUpgrade>>prepareImage_pragma_systemuser
+			4. As $username, GsuAbstractGsDevKitUpgrade>>prepareImage_user and 
+					GsuAbstractGsDevKitUpgrade>>prepareGsDevKitImage
+
+			For additional details about the work performed during each phase see
+			https://github.com/GsDevKit/GsDevKit_upgrade .
+	
+Stone name is $stoneName.
+=========================
+
+Press the return key to continue...
+'
+	copyReplaceAll: '$username' with: self userName)
+	copyReplaceAll: '$stoneName' with: self stoneName
+%
+method
+displayPromptAndWait: scriptPrompt
+	self stdout nextPutAll:scriptPrompt.
+	GsFile stdin next
+%
+method
+bannerLog: message
+	self stdout
+		nextPutAll: '======';
+		lf;
+		nextPutAll: message;
+		lf;
+		nextPutAll: '======';
+		lf
+%
+method
+executeCommand: commandLine withInput: stdinStringOrNil withOutputFile: redirectPathString commandName: commandName
+	self stdout
+		lf;
+		nextPutAll:
+				'======  invoking ' , commandLine printString , ' to ' , redirectPathString
+						, ' @ ' , DateAndTime now printString;
+		lf;
+		nextPutAll: '****************************************';
+		lf.
+	[ 
+	GsHostProcess new
+		commandLine: commandLine;
+		appendToFiles: true;
+		stderrPath: redirectPathString;
+		stdoutPath: redirectPathString;
+		executeWithInput: stdinStringOrNil ]
+		on: ChildError
+		do: [ :ex | 
+			self
+				logChildError: ex
+				message: 'Unhandled Error in upgradeSeasideImage.solo script: ' , commandLine.
+			self
+				error:
+					'The command ' , commandName , ' exited with status ' , ex status printString ]
+%
+method
+gemstoneUpgradeImage
+	self displayPromptAndWait: self upgradeImagePrompt.
+	self bannerLog: '	start $GEMSTONE/bin/upgradeImage '.
+	self
+		executeCommand:
+			'$GEMSTONE/bin/upgradeImage' asFileReference pathString , ' -s '
+				, self stoneName
+		withInput: (String with: Character lf)
+		withOutputFile: (upgradeLogDir / 'upgradeImage.log') pathString
+		commandName: 'upgradeImage'.
+	self bannerLog: '	finish $GEMSTONE/bin/upgradeImage'.
+%
+method
+gemstoneUpgradeSeasideImage
+		self displayPromptAndWait: self upgradeSeasideImagePrompt.
+	self error: 'gemstoneUpgradeSeasideImage not yet implemented'
+%
+doit
+	self resolveEnvVars.
+	self preDoitSpecLoad: [:spec | spec projectsHome: '$GEMSTONE/examples/GsCommands/projectsHome' ].
+	self upgradeImage
+		ifTrue: [ self gemstoneUpgradeImage ]
+		ifFalse: [ self bannerLog: 'Skipping updateImage' ].
+	self gemstoneUpgradeSeasideImage.
+	^ self noResult
+%

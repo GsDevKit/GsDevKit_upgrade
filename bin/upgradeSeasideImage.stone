@@ -22,4 +22,5 @@ EXAMPLES
 -----
 %
 doit
+	self error: 'upgradeSeasideImage.stone not yet implemented'
 %

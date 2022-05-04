@@ -135,6 +135,42 @@ bannerLog: message
 		lf
 %
 method
+logChildError: childError message: message
+	"dump stack if a childError occurs, to add in debugging."
+
+	| listenForDebug |
+	listenForDebug := (System gemConfigurationAt: 'GEM_LISTEN_FOR_DEBUG') == true.
+	listenForDebug
+		ifTrue: [ 
+			childError messageText.	"prime the details ... don't want exception class, etc."
+			self stdout
+				nextPutAll: '---------------------';
+				lf;
+				nextPutAll: message;
+				lf;
+				nextPutAll: '---------------------';
+				lf;
+				nextPutAll: childError details;
+				lf;
+				nextPutAll: '---------------------';
+				lf;
+				nextPutAll: (GsProcess stackReportToLevel: 300);
+				lf;
+				nextPutAll: '---------------------';
+				lf;
+				nextPutAll: 'GsProcess @' , GsProcess _current asOop printString;
+				yourself.
+			listenForDebug
+				ifTrue: [ 
+					self _stdout
+						nextPutAll:
+							' (DEBUGGEM ' , (System gemVersionReport at: 'processId') asString , ')' ].
+			self stdout
+				lf;
+				nextPutAll: '---------------------';
+				lf ]
+%
+method
 executeCommand: commandLine withInput: stdinStringOrNil withOutputFile: redirectPathString commandName: commandName
 	self stdout
 		lf;
@@ -165,9 +201,7 @@ gemstoneUpgradeImage
 	self displayPromptAndWait: self upgradeImagePrompt.
 	self bannerLog: '	start $GEMSTONE/bin/upgradeImage '.
 	self
-		executeCommand:
-			'$GEMSTONE/bin/upgradeImage' asFileReference pathString , ' -s '
-				, self stoneName
+		executeCommand: '$GEMSTONE/bin/upgradeImage' asFileReference pathString
 		withInput: (String with: Character lf)
 		withOutputFile: (upgradeLogDir / 'upgradeImage.log') pathString
 		commandName: 'upgradeImage'.
@@ -175,8 +209,20 @@ gemstoneUpgradeImage
 %
 method
 gemstoneUpgradeSeasideImage
-		self displayPromptAndWait: self upgradeSeasideImagePrompt.
-	self error: 'gemstoneUpgradeSeasideImage not yet implemented'
+	| commandString |
+	self displayPromptAndWait: self upgradeSeasideImagePrompt.
+	self bannerLog: '	start ', self dirname pathString, '/upgradeSeasideImage.stone '.
+	commandString := String new.
+	commandString 
+		add: (self dirname / 'upgradeSeasideImage.stone') pathString.
+	self debugGem
+		ifTrue: [ commandString add: ' -- -C "GEM_LISTEN_FOR_DEBUG=TRUE;"' ].
+	self
+		executeCommand: commandString
+			withInput: (String with: Character lf)
+			withOutputFile: (upgradeLogDir / 'upgradeSeasideImage.log') pathString
+			commandName: 'upgradeSeasideImage.stone'.
+	self bannerLog: '	finish $GEMSTONE/bin/upgradeImage.stone'.
 %
 doit
 	self resolveEnvVars.

@@ -21,6 +21,46 @@ EXAMPLES
   $basename
 -----
 %
+method
+logAndWaitForDebug: ex
+	| listenForDebug |
+	listenForDebug := (System gemConfigurationAt: 'GEM_LISTEN_FOR_DEBUG') == true.
+	listenForDebug
+		ifTrue: [ 
+			ex messageText.	"prime the details ... don't want exception class, etc."
+			self stdout
+				nextPutAll: '---------------------';
+				lf;
+				nextPutAll: ex details;
+				lf;
+				nextPutAll: '---------------------';
+				lf;
+				nextPutAll: (GsProcess stackReportToLevel: 300);
+				lf;
+				nextPutAll: '---------------------';
+				lf;
+				nextPutAll: 'GsProcess @' , GsProcess _current asOop printString;
+				yourself.
+			listenForDebug
+				ifTrue: [ 
+					self stdout
+						nextPutAll:
+							' (DEBUGGEM ' , (System gemVersionReport at: 'processId') asString , ')' ].
+			self stdout
+				lf;
+				nextPutAll: '---------------------';
+				lf ].
+	self stdout nextPutAll: 'USE ''THREADS CLEAR'' AFTER attaching with DEBUGGEM and before exiting topaz session to terminate execution'.
+	[ true ] whileTrue: [
+		"loop waiting for DEBUGGEM to attach"
+		(Delay forSeconds: 1) wait]
+%
 doit
-	self error: 'upgradeSeasideImage.stone not yet implemented'
+	[
+		self error: 'upgradeSeasideImage.stone not yet implemented'
+	] on: Error, Halt
+		do: [:ex | 
+			(System gemConfigurationAt: 'GEM_LISTEN_FOR_DEBUG') == false
+				ifTrue: [ ex pass ].
+			self logAndWaitForDebug: ex ].
 %

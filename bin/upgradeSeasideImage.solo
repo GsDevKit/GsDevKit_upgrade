@@ -139,21 +139,22 @@ logChildError: childError message: message
 	"dump stack if a childError occurs, to add in debugging."
 
 	| listenForDebug |
+	childError messageText.	"prime the details ... don't want exception class, etc."
+	self stdout
+		nextPutAll: '---------------------';
+		lf;
+		nextPutAll: message;
+		lf;
+		nextPutAll: '---------------------';
+		lf;
+		nextPutAll: childError details;
+		lf;
+		nextPutAll: '---------------------';
+		lf.
 	listenForDebug := (System gemConfigurationAt: 'GEM_LISTEN_FOR_DEBUG') == true.
 	listenForDebug
 		ifTrue: [ 
-			childError messageText.	"prime the details ... don't want exception class, etc."
 			self stdout
-				nextPutAll: '---------------------';
-				lf;
-				nextPutAll: message;
-				lf;
-				nextPutAll: '---------------------';
-				lf;
-				nextPutAll: childError details;
-				lf;
-				nextPutAll: '---------------------';
-				lf;
 				nextPutAll: (GsProcess stackReportToLevel: 300);
 				lf;
 				nextPutAll: '---------------------';
@@ -169,6 +170,8 @@ logChildError: childError message: message
 				lf;
 				nextPutAll: '---------------------';
 				lf ]
+		ifFalse: [
+			]
 %
 method
 executeCommand: commandLine withInput: stdinStringOrNil withOutputFile: redirectPathString commandName: commandName
@@ -191,7 +194,7 @@ executeCommand: commandLine withInput: stdinStringOrNil withOutputFile: redirect
 		do: [ :ex | 
 			self
 				logChildError: ex
-				message: 'Unhandled Error in upgradeSeasideImage.solo script: ' , commandLine.
+				message: 'Unhandled Error in upgradeSeasideImage.solo script: ' , commandLine, '. See ', redirectPathString, ' for details'.
 			self
 				error:
 					'The command ' , commandName , ' exited with status ' , ex status printString ]

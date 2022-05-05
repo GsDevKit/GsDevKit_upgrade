@@ -23,7 +23,7 @@ EXAMPLES
 %
 method
 logAndWaitForDebug: ex
-	| listenForDebug |
+	| listenForDebug loop |
 	listenForDebug := (System gemConfigurationAt: 'GEM_LISTEN_FOR_DEBUG') == true.
 	listenForDebug
 		ifTrue: [ 
@@ -50,10 +50,14 @@ logAndWaitForDebug: ex
 				lf;
 				nextPutAll: '---------------------';
 				lf ].
-	self stdout nextPutAll: 'USE ''THREADS CLEAR'' AFTER attaching with DEBUGGEM and before exiting topaz session to terminate execution'.
-	[ true ] whileTrue: [
-		"loop waiting for DEBUGGEM to attach"
-		(Delay forSeconds: 1) wait]
+	loop := true.
+	[
+		[ loop ] whileTrue: [
+			"loop waiting for DEBUGGEM to attach"
+			(Delay forSeconds: 1) wait ]
+	] on: Break do: [:br | 
+		"stop looping if DEBUGGEM attach has occured (soft break)"
+		loop := false. br pass ]
 %
 doit
 	[
@@ -63,4 +67,5 @@ doit
 			(System gemConfigurationAt: 'GEM_LISTEN_FOR_DEBUG') == false
 				ifTrue: [ ex pass ].
 			self logAndWaitForDebug: ex ].
+	^ self noResult
 %

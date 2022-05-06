@@ -200,39 +200,141 @@ executeCommand: commandLine withInput: stdinStringOrNil withOutputFile: redirect
 					'The command ' , commandName , ' exited with status ' , ex status printString ]
 %
 method
+waitForStone: stoneName
+	"see if stone is running and do not wait"
+	[(Rowan globalNamed: 'GsWaitStone') waitForStoneName: stoneName timeout: -1] 
+		on: ChildError
+		do: [:ex | 
+			| exitMessage exitStatus |
+			exitStatus := ex status.
+			exitMessage := exitStatus = 1
+				ifTrue: [ 
+					'Stone ' , stoneName
+						, ' is already servicing the maximum number of sessions' ]
+				ifFalse: [ 
+					exitStatus = 2
+						ifTrue: [ 
+							'Stone ' , stoneName
+								, ' is rejecting connections during startup or shutdown' ]
+						ifFalse: [ 'Stone ' , stoneName , ' was not found' ] ].
+			self stdout nextPutAll: exitMessage; lf.
+			"does not return"
+			self exit: exitMessage withStatus: 1 ] 
+%
+method
+seasideUserTopaziniFile
+	^ upgradeLogDir / 'topazini_SeasideUser'
+%
+method
+systemUserTopaziniFile
+	^ upgradeLogDir / 'topazini_SystemUser'
+%
+method
+createTopaziniFiles
+	| topaziniFile |
+	"Create two topazini files. One for SystemUser and one for seaside user"
+	topaziniFile := self systemUserTopaziniFile.
+	topaziniFile exists
+		ifFalse: [ 
+			topaziniFile
+				writeStreamDo: [ :fileStream | 
+					fileStream
+						nextPutAll: 'set gemstone ' , self stoneName; lf;
+						nextPutAll: 'set user SystemUser'; lf;
+						nextPutAll: 'set password swordfish'; lf ] ].
+	topaziniFile := self seasideUserTopaziniFile.
+	topaziniFile exists
+		ifFalse: [ 
+			topaziniFile
+				writeStreamDo: [ :fileStream | 
+					fileStream
+						nextPutAll: 'set gemstone ' , self stoneName; lf;
+						nextPutAll: 'set user ', self userName; lf;
+						nextPutAll: 'set password ', self password; lf ] ].	
+%
+method
 gemstoneUpgradeImage
+	| commandString scriptName commandName |
+	commandName := '$GEMSTONE/bin/upgradeImage'.
+	scriptName := commandName asFileReference pathString.
+	commandString := String new.
+	commandString 
+		add: scriptName ;
+		add: ' -c ', self tempObjCache, ' -s ', self stoneName;
+		yourself.
 	self displayPromptAndWait: self upgradeImagePrompt.
 	self bannerLog: '	start $GEMSTONE/bin/upgradeImage '.
 	self
-		executeCommand: '$GEMSTONE/bin/upgradeImage' asFileReference pathString
+		executeCommand: commandString
 		withInput: (String with: Character lf)
-		withOutputFile: (upgradeLogDir / 'upgradeImage.log') pathString
-		commandName: 'upgradeImage'.
+		withOutputFile: (upgradeLogDir / 'upgradeImage.out') pathString
+		commandName: commandName.
 	self bannerLog: '	finish $GEMSTONE/bin/upgradeImage'.
 %
 method
-gemstoneUpgradeSeasideImage
-	| commandString |
-	self displayPromptAndWait: self upgradeSeasideImagePrompt.
-	self bannerLog: '	start ', self dirname pathString, '/upgradeSeasideImage.stone '.
+installGsDevKit_upgrade: logFile
+	| scriptName commandName commandString |
+	commandName := 'installGsDevKit_upgrade.stone'.
+	scriptName := (self dirname / commandName) pathString.
+	self bannerLog: '	start ', scriptName.
+	
 	commandString := String new.
 	commandString 
-		add: (self dirname / 'upgradeSeasideImage.stone') pathString.
+		add: scriptName ;
+		add: ' --upgradeLogDir=', self upgradeInstance;
+		add: ' -- -I ' , self seasideUserTopaziniFile pathString;
+		yourself.
 	self debugGem
-		ifTrue: [ commandString add: ' -- -C "GEM_LISTEN_FOR_DEBUG=TRUE;"' ].
+		ifTrue: [ commandString add: ' -C "GEM_LISTEN_FOR_DEBUG=TRUE;"' ].
+
 	self
 		executeCommand: commandString
 			withInput: (String with: Character lf)
-			withOutputFile: (upgradeLogDir / 'upgradeSeasideImage.log') pathString
-			commandName: 'upgradeSeasideImage.stone'.
-	self bannerLog: '	finish $GEMSTONE/bin/upgradeImage.stone'.
+			withOutputFile: logFile
+			commandName: commandName.
+
+	self bannerLog: '	finish ', scriptName.
+%
+method
+upgradeSeasideImage: logFile
+	| scriptName commandName commandString |
+	commandName := 'upgradeSeasideImage.stone'.
+	scriptName := (self dirname / commandName) pathString.
+	self bannerLog: '	start ', scriptName.
+	
+	commandString := String new.
+	commandString 
+		add: scriptName;
+		add: ' --upgradeLogDir=', upgradeLogDir pathString;
+		add: ' -- -I ' , self seasideUserTopaziniFile pathString;
+		yourself.
+	self debugGem
+		ifTrue: [ commandString add: ' -C "GEM_LISTEN_FOR_DEBUG=TRUE;"' ].
+	self
+		executeCommand: commandString
+			withInput: (String with: Character lf)
+			withOutputFile: logFile
+			commandName: commandName.
+	self bannerLog: '	finish ', scriptName.
 %
 doit
+	| logFile instanceFile |
 	self resolveEnvVars.
+	self createTopaziniFiles.
 	self preDoitSpecLoad: [:spec | spec projectsHome: '$GEMSTONE/examples/GsCommands/projectsHome' ].
+	self waitForStone: self stoneName.
 	self upgradeImage
-		ifTrue: [ self gemstoneUpgradeImage ]
-		ifFalse: [ self bannerLog: 'Skipping updateImage' ].
-	self gemstoneUpgradeSeasideImage.
+		ifTrue: [
+			self bannerLog: 'Perform upgradeImage'. 
+			self gemstoneUpgradeImage ]
+		ifFalse: [ self bannerLog: 'Skipping upgradeImage' ].
+	instanceFile := self upgradeInstance asFileReference.
+	instanceFile copyTo: self upgradeLogDir asFileReference / instanceFile basename.
+	self displayPromptAndWait: self upgradeSeasideImagePrompt.
+"EXPECT extent0.dbf to be copied to stone and that startStone has been run"
+	logFile := (upgradeLogDir / 'upgradeSeasideImage.out') pathString.
+	self installGsDevKit_upgrade: logFile.	"Step 1. install GsDevKit_upgrade into stone as SystemUser"
+	self upgradeSeasideImage: logFile. 			"Step ?? run upgradeSeasideImage as <seaside-user>"
+	self bannerLog: '	finish $GEMSTONE/bin/upgradeImage.solo'.
 	^ self noResult
 %

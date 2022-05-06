@@ -1,0 +1,108 @@
+#!/usr/bin/env superdoit_stone
+options
+{
+	SuperDoitRequiredOptionWithRequiredArg long: 'upgradeLogDir'.
+}
+%
+usage
+-----
+USAGE 
+  $basename [--help | -h] [--debug | -D]
+
+DESCRIPTION
+  Step 1 of upgradeSeasideImage process: install GsDevKit_upgrade into image as SystemUser
+
+OPTIONS
+  -h, --help                 display usage message
+  -D, --debug                bring up topaz debugger in the event of a script error
+
+EXAMPLES
+  $basename --help
+  $basename -D
+  $basename
+-----
+%
+instvars
+upgradeLogDir
+%
+method
+logAndWaitForDebug: ex
+	| listenForDebug loop |
+	listenForDebug := (System gemConfigurationAt: 'GEM_LISTEN_FOR_DEBUG') == true.
+	listenForDebug
+		ifTrue: [ 
+			ex messageText.	"prime the details ... don't want exception class, etc."
+			self stdout
+				nextPutAll: '---------------------';
+				lf;
+				nextPutAll: ex details;
+				lf;
+				nextPutAll: '---------------------';
+				lf;
+				nextPutAll: (GsProcess stackReportToLevel: 300);
+				lf;
+				nextPutAll: '---------------------';
+				lf;
+				nextPutAll: 'GsProcess @' , GsProcess _current asOop printString;
+				yourself.
+			listenForDebug
+				ifTrue: [ 
+					self stdout
+						nextPutAll:
+							' (DEBUGGEM ' , (System gemVersionReport at: 'processId') asString , ')' ].
+			self stdout
+				lf;
+				nextPutAll: '---------------------';
+				lf ].
+	loop := true.
+	[
+		[ loop ] whileTrue: [
+			"loop waiting for DEBUGGEM to attach"
+			(Delay forSeconds: 1) wait ]
+	] on: Break do: [:br | 
+		"stop looping if DEBUGGEM attach has occured (soft break)"
+		loop := false. br pass ]
+%
+method
+installGsDevKit_upgrade
+	| symbolName session symbolList symbolDict dictName symDictSlot |
+	dictName := 'GsDevKit_Upgrade_SymDict_private'.
+	symbolName := dictName asSymbol.
+	session := GsCurrentSession currentSession.
+	symbolList := session symbolList.
+	symbolDict := symbolList
+		detect: [ :each | (each at: symbolName ifAbsent: [ nil ]) == each ]
+		ifNone: [ 
+			| newDict |
+			newDict := SymbolDictionary new
+				name: symbolName;
+				objectSecurityPolicy: symbolList objectSecurityPolicy;
+				yourself.
+			symDictSlot := System myUserProfile symbolList size.
+			System myUserProfile insertDictionary: newDict at: symDictSlot + 1.
+			newDict ].
+	UserGlobals at: symbolName put: symbolDict.
+	System commit.
+
+	GsFileIn fromServerPath: '$upgradeDir/GsDevKit_upgrade.gs'.
+
+	(symbolDict at: #'GsuAbstractGsDevKitUpgrade') _symbolDictionary: symbolDict.
+	UserGlobals removeKey: symbolName.
+	System commit.
+
+	GsFileIn fromServerPath: '$upgradeLogDir/createGsDevKit_upgrade.topaz'.
+
+	System myUserProfile removeDictionaryAt: (System myUserProfile symbolList size).
+	System commit.
+%
+doit
+	[
+		upgradeLogDir := ServerFileDirectory on: self upgradeLogDir.
+		self installGsDevKit_upgrade.
+	] on: Error, Halt
+		do: [:ex | 
+			(System gemConfigurationAt: 'GEM_LISTEN_FOR_DEBUG') == false
+				ifTrue: [ ex pass ].
+			self logAndWaitForDebug: ex ].
+	^ self noResult
+%

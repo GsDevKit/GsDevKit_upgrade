@@ -2,6 +2,7 @@
 options
 {
 	SuperDoitRequiredOptionWithRequiredArg long: 'upgradeLogDir'.
+	SuperDoitRequiredOptionWithRequiredArg long: 'userName'.
 }
 %
 usage
@@ -24,6 +25,16 @@ EXAMPLES
 %
 instvars
 upgradeLogDir
+%
+method
+bannerLog: message
+	self stdout
+		nextPutAll: '======';
+		lf;
+		nextPutAll: message;
+		lf;
+		nextPutAll: '======';
+		lf
 %
 method
 logAndWaitForDebug: ex
@@ -96,13 +107,22 @@ installGsDevKit_upgrade
 	System commit.
 %
 doit
+	self bannerLog: 'Running ----- ', self basename.
 	[
 		upgradeLogDir := ServerFileDirectory on: self upgradeLogDir.
+
+		UserGlobals 
+			at: #SeasideUpgradeUser 
+			put: self userName.
+
 		self installGsDevKit_upgrade.
+
+		UserGlobals removeKey: #SeasideUpgradeUser.
 	] on: Error, Halt
 		do: [:ex | 
 			(System gemConfigurationAt: 'GEM_LISTEN_FOR_DEBUG') == false
 				ifTrue: [ ex pass ].
 			self logAndWaitForDebug: ex ].
+	self bannerLog: 'Finished ----- ', self basename.
 	^ self noResult
 %

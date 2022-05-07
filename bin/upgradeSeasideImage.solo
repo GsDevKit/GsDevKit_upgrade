@@ -282,6 +282,7 @@ installGsDevKit_upgrade: logFile
 	commandString 
 		add: scriptName ;
 		add: ' --upgradeLogDir=', self upgradeInstance;
+		add: ' --userName=', self userName;
 		add: ' -- -I ' , self seasideUserTopaziniFile pathString;
 		yourself.
 	self debugGem
@@ -319,6 +320,7 @@ upgradeSeasideImage: logFile
 %
 doit
 	| logFile instanceFile |
+	self bannerLog: 'Running ----- ', self basename.
 	self resolveEnvVars.
 	self createTopaziniFiles.
 	self preDoitSpecLoad: [:spec | spec projectsHome: '$GEMSTONE/examples/GsCommands/projectsHome' ].
@@ -335,6 +337,6 @@ doit
 	logFile := (upgradeLogDir / 'upgradeSeasideImage.out') pathString.
 	self installGsDevKit_upgrade: logFile.	"Step 1. install GsDevKit_upgrade into stone as SystemUser"
 	self upgradeSeasideImage: logFile. 			"Step ?? run upgradeSeasideImage as <seaside-user>"
-	self bannerLog: '	finish $GEMSTONE/bin/upgradeImage.solo'.
+	self bannerLog: 'Finished ----- ', self basename.
 	^ self noResult
 %

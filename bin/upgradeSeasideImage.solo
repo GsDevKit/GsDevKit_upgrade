@@ -29,8 +29,8 @@ DESCRIPTION
   1. install GsDevKit_upgrade into image as SystemUser
   2. As <seaside-user>, GsuAbstractGsDevKitUpgrade>>prepareImage_pragma_user
   3. As SystemUser, GsuAbstractGsDevKitUpgrade>>prepareImage_pragma_systemuser
-  4.  As <seaside-user>, GsuAbstractGsDevKitUpgrade>>prepareImage_user and GsuAbstractGsDevKitUpgrade>>prepareGsDevKitImage
-  5. As SystemUser, Remove  globals created during upgrade.
+  4. As <seaside-user>, GsuAbstractGsDevKitUpgrade>>prepareImage_user and GsuAbstractGsDevKitUpgrade>>prepareGsDevKitImage
+  5. As SystemUser, Remove  globals created during upgrade
 
 OPTIONS
   -h, --help                 display usage message
@@ -104,7 +104,7 @@ Note:	This script should be run AFTER upgradeImage has been run.
 			SessionMethods will be enabled and all code included in the 
 			GLASS, GLASS1 or tODE project will be reloaded.
 		
-			There are 4 phases performed by this script and each script is 
+			There are 5 phases performed by this script and each script is 
 			performed in its own topaz session:
 
 			1. As SystemUser, install GsDevKit_upgrade code and 
@@ -113,7 +113,7 @@ Note:	This script should be run AFTER upgradeImage has been run.
 			3. As SystemUser, GsuAbstractGsDevKitUpgrade>>prepareImage_pragma_systemuser
 			4. As $username, GsuAbstractGsDevKitUpgrade>>prepareImage_user and 
 					GsuAbstractGsDevKitUpgrade>>prepareGsDevKitImage
-      5. As SystemUser, Remove globals created during upgrade.
+			5. As SystemUser, Remove globals created during upgrade
 
 			For additional details about the work performed during each phase see
 			https://github.com/GsDevKit/GsDevKit_upgrade .
@@ -351,6 +351,9 @@ doit
 	self upgradeSeasideImage_system_user: logFile step: '1'.	"Step 1. As SystemUser, install GsDevKit_upgrade code and GsuAbstractGsDevKitUpgrade>>prepareImage."
 	self upgradeSeasideImage_seaside_user: logFile step: '2'. "As <seaside-user>, GsuAbstractGsDevKitUpgrade>>prepareImage_pragma_user"
 	self upgradeSeasideImage_system_user: logFile step: '3'.	"Step 3. As SystemUser, GsuAbstractGsDevKitUpgrade>>prepareImage_pragma_systemuser"
+	self upgradeSeasideImage_seaside_user: logFile step: '4'.	"4. As <seaside-user>, GsuAbstractGsDevKitUpgrade>>prepareImage_user and GsuAbstractGsDevKitUpgrade>>prepareGsDevKitImage"
+	self upgradeSeasideImage_system_user: logFile step: '5'.	"Step 5. As SystemUser, Remove globals created during upgrade"
 	self bannerLog: 'Finished ----- ', self basename.
+	self bannerLog: 'upgradeSeasideImage is complete'.
 	^ self noResult
 %

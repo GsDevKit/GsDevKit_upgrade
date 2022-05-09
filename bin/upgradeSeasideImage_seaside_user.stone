@@ -2,6 +2,7 @@
 options
 {
 	SuperDoitOptionalOptionWithNoArg long: 'step2'.
+	SuperDoitOptionalOptionWithNoArg long: 'step4'.
 }
 %
 usage
@@ -72,20 +73,33 @@ logAndWaitForDebug: ex
 %
 method
 doStep2
-		self bannerLog: '2. As ', System myUserProfile userId, ', GsuAbstractGsDevKitUpgrade>>prepareImage_pragma_user'.
-		(((AllUsers userWithId: 'SystemUser') 
-			objectNamed: #UserGlobals) 
-				at: #'GsDevKit_Image_Upgrade')
-					prepareImage_pragma_user.
-		System commit.
+	self bannerLog: '2. As ', System myUserProfile userId, ', GsuAbstractGsDevKitUpgrade>>prepareImage_pragma_user'.
+	(((AllUsers userWithId: 'SystemUser') 
+		objectNamed: #UserGlobals) 
+			at: #'GsDevKit_Image_Upgrade')
+				prepareImage_pragma_user.
+	System commit.
 	self bannerLog: 'Finished Step 2. ----- ', self basename.
+	^ self noResult
+%
+method
+doStep4
+	self bannerLog: '4. As ', System myUserProfile userId, ', GsuAbstractGsDevKitUpgrade>>prepareImage_user and GsuAbstractGsDevKitUpgrade>>prepareGsDevKitImage'.
+	(((AllUsers userWithId: 'SystemUser') 
+		objectNamed: #UserGlobals) 
+			at: #'GsDevKit_Image_Upgrade')
+				prepareImage_user;
+				prepareGsDevKitImage.
+	System commit.
+	self bannerLog: 'Finished Step 4. ----- ', self basename.
 	^ self noResult
 %
 doit
 	self bannerLog: 'Running ----- ', self basename.
 	[
 		self step2 ifTrue: [ ^ self doStep2 ].
-		self error: 'Expected --step2 option'
+		self step4 ifTrue: [ ^ self doStep4 ].
+		self error: 'Expected option --step2 or --step4'
 	] on: Error, Halt
 		do: [:ex | 
 			(System gemConfigurationAt: 'GEM_LISTEN_FOR_DEBUG') == false

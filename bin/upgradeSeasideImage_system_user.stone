@@ -5,6 +5,7 @@ options
 
 	SuperDoitOptionalOptionWithNoArg long: 'step1'.
 	SuperDoitOptionalOptionWithNoArg long: 'step3'.
+	SuperDoitOptionalOptionWithNoArg long: 'step5'.
 }
 %
 usage
@@ -130,12 +131,24 @@ doStep3
 	self bannerLog: 'Finished Step 3. ----- ', self basename.
 	^ self noResult
 %
+method
+doStep5
+	self bannerLog: '5. As ', System myUserProfile userId, ', Remove globals created during upgrade'.
+	System myUserProfile userId = 'SystemUser'
+		ifFalse: [ self error: self basename, ' is expected to be run as SystemUser' ].
+	UserGlobals removeKey: #'GsDevKit_Image_Upgrade' ifAbsent: [].
+	UserGlobals removeKey: #'GsDevKit_Upgrade_Cache' ifAbsent: [].
+	System commit.
+	self bannerLog: 'Finished Step 5. ----- ', self basename.
+	^ self noResult
+%
 doit
 	self bannerLog: 'Running ----- ', self basename.
 	[
 		self step1 ifTrue: [ ^ self doStep1 ].
 		self step3 ifTrue: [ ^ self doStep3 ].
-		self error: 'Expected option --step1 or --step3'
+		self step5 ifTrue: [ ^ self doStep5 ].
+		self error: 'Expected option --step1, --step3 or --step5'
 	] on: Error, Halt
 		do: [:ex | 
 			(System gemConfigurationAt: 'GEM_LISTEN_FOR_DEBUG') == false

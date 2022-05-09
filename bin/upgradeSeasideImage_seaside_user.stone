@@ -1,6 +1,7 @@
 #!/usr/bin/env superdoit_stone
 options
 {
+	SuperDoitOptionalOptionWithNoArg long: 'step2'.
 }
 %
 usage
@@ -69,16 +70,22 @@ logAndWaitForDebug: ex
 		"stop looping if DEBUGGEM attach has occured (soft break)"
 		loop := false. br pass ]
 %
-doit
-	self bannerLog: 'Running ----- ', self basename.
-	[
+method
+doStep2
 		self bannerLog: '2. As ', System myUserProfile userId, ', GsuAbstractGsDevKitUpgrade>>prepareImage_pragma_user'.
 		(((AllUsers userWithId: 'SystemUser') 
 			objectNamed: #UserGlobals) 
 				at: #'GsDevKit_Image_Upgrade')
 					prepareImage_pragma_user.
-		System commitTransaction.
-		self bannerLog: '3.??'.
+		System commit.
+	self bannerLog: 'Finished Step 2. ----- ', self basename.
+	^ self noResult
+%
+doit
+	self bannerLog: 'Running ----- ', self basename.
+	[
+		self step2 ifTrue: [ ^ self doStep2 ].
+		self error: 'Expected --step2 option'
 	] on: Error, Halt
 		do: [:ex | 
 			(System gemConfigurationAt: 'GEM_LISTEN_FOR_DEBUG') == false

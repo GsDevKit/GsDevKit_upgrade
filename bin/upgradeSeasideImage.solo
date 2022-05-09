@@ -28,6 +28,7 @@ DESCRIPTION
 
   1. install GsDevKit_upgrade into image as SystemUser
   2. As $username, GsuAbstractGsDevKitUpgrade>>prepareImage_pragma_user
+	3. As SystemUser, GsuAbstractGsDevKitUpgrade>>prepareImage_pragma_systemuser
 
 OPTIONS
   -h, --help                 display usage message
@@ -275,9 +276,10 @@ gemstoneUpgradeImage
 	self bannerLog: '	finish $GEMSTONE/bin/upgradeImage'.
 %
 method
-installGsDevKit_upgrade: logFile
+upgradeSeasideImage_system_user: logFile step: stepNumber
+	"driver .stone script for running SystemUser tasks"
 	| scriptName commandName commandString |
-	commandName := 'installGsDevKit_upgrade.stone'.
+	commandName := 'upgradeSeasideImage_system_user.stone'.
 	scriptName := (self dirname / commandName) pathString.
 	self bannerLog: '	start ', scriptName.
 	
@@ -285,6 +287,7 @@ installGsDevKit_upgrade: logFile
 	commandString 
 		add: scriptName ;
 		add: ' --seasideUserName=', self userName;
+		add: ' --step', stepNumber; 
 		add: ' -- -I ' , self systemUserTopaziniFile pathString;
 		yourself.
 	self debugGem
@@ -299,15 +302,17 @@ installGsDevKit_upgrade: logFile
 	self bannerLog: '	finish ', scriptName.
 %
 method
-upgradeSeasideImage: logFile
+upgradeSeasideImage_seaside_user: logFile step: stepNumber
+	"driver .stone script for running <seaside-user> tasks"
 	| scriptName commandName commandString |
-	commandName := 'upgradeSeasideImage.stone'.
+	commandName := 'upgradeSeasideImage_seaside_user.stone'.
 	scriptName := (self dirname / commandName) pathString.
 	self bannerLog: '	start ', scriptName.
 	
 	commandString := String new.
 	commandString 
 		add: scriptName;
+		add: ' --step', stepNumber; 
 		add: ' -- -I ' , self seasideUserTopaziniFile pathString;
 		yourself.
 	self debugGem
@@ -336,8 +341,8 @@ doit
 	self displayPromptAndWait: self upgradeSeasideImagePrompt.
 "EXPECT extent0.dbf to be copied to stone and that startStone has been run"
 	logFile := (upgradeLogDir / 'upgradeSeasideImage.out') pathString.
-	self installGsDevKit_upgrade: logFile.	"Step 1. install GsDevKit_upgrade into stone as SystemUser"
-	self upgradeSeasideImage: logFile. 			"Step ?? run upgradeSeasideImage as <seaside-user>"
+	self upgradeSeasideImage_system_user: logFile step: '1'.	"Step 1. install GsDevKit_upgrade into stone as SystemUser"
+	self upgradeSeasideImage_seaside_user: logFile step: '2'. "Step 2 run upgradeSeasideImage as --userName"
 	self bannerLog: 'Finished ----- ', self basename.
 	^ self noResult
 %

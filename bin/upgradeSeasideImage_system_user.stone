@@ -2,6 +2,8 @@
 options
 {
 	SuperDoitRequiredOptionWithRequiredArg long: 'seasideUserName'.
+
+	SuperDoitOptionalOptionWithNoArg long: 'step1'.
 }
 %
 usage
@@ -102,26 +104,31 @@ installGsDevKit_upgrade
 	System myUserProfile removeDictionaryAt: (System myUserProfile symbolList size).
 	System commit.
 %
-doit
-	self bannerLog: 'Running ----- ', self basename.
+method
+doStep1
 	self bannerLog: '1. As ', System myUserProfile userId, ', install GsDevKit_upgrade code and GsuAbstractGsDevKitUpgrade>>prepareImage.'.
 	System myUserProfile userId = 'SystemUser'
 		ifFalse: [ self error: self basename, ' is expected to be run as SystemUser' ].
+	UserGlobals 
+		at: #SeasideUpgradeUser 
+		put: self seasideUserName.
+
+	self installGsDevKit_upgrade.
+	(GsCurrentSession currentSession objectNamed: 'GsDevKit_Image_Upgrade') prepareImage.
+
+	UserGlobals removeKey: #SeasideUpgradeUser.
+	System commit.
+	self bannerLog: 'Finished Step 1. ----- ', self basename.
+	^ self noResult
+%
+doit
+	self bannerLog: 'Running ----- ', self basename.
 	[
-		UserGlobals 
-			at: #SeasideUpgradeUser 
-			put: self seasideUserName.
-
-		self installGsDevKit_upgrade.
-		(GsCurrentSession currentSession objectNamed: 'GsDevKit_Image_Upgrade') prepareImage.
-
-		UserGlobals removeKey: #SeasideUpgradeUser.
-		System commit.
+		self step1 ifTrue: [ ^ self doStep1 ].
+		self error: 'Expected --step1 option'
 	] on: Error, Halt
 		do: [:ex | 
 			(System gemConfigurationAt: 'GEM_LISTEN_FOR_DEBUG') == false
 				ifTrue: [ ex pass ].
 			self logAndWaitForDebug: ex ].
-	self bannerLog: 'Finished ----- ', self basename.
-	^ self noResult
 %

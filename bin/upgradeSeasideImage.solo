@@ -27,8 +27,10 @@ DESCRIPTION
   Driver script for full upgrade of GLASS/GsDevKit image.
 
   1. install GsDevKit_upgrade into image as SystemUser
-  2. As $username, GsuAbstractGsDevKitUpgrade>>prepareImage_pragma_user
-	3. As SystemUser, GsuAbstractGsDevKitUpgrade>>prepareImage_pragma_systemuser
+  2. As <seaside-user>, GsuAbstractGsDevKitUpgrade>>prepareImage_pragma_user
+  3. As SystemUser, GsuAbstractGsDevKitUpgrade>>prepareImage_pragma_systemuser
+  4.  As <seaside-user>, GsuAbstractGsDevKitUpgrade>>prepareImage_user and GsuAbstractGsDevKitUpgrade>>prepareGsDevKitImage
+  5. As SystemUser, Remove  globals created during upgrade.
 
 OPTIONS
   -h, --help                 display usage message
@@ -111,6 +113,7 @@ Note:	This script should be run AFTER upgradeImage has been run.
 			3. As SystemUser, GsuAbstractGsDevKitUpgrade>>prepareImage_pragma_systemuser
 			4. As $username, GsuAbstractGsDevKitUpgrade>>prepareImage_user and 
 					GsuAbstractGsDevKitUpgrade>>prepareGsDevKitImage
+      5. As SystemUser, Remove globals created during upgrade.
 
 			For additional details about the work performed during each phase see
 			https://github.com/GsDevKit/GsDevKit_upgrade .
@@ -345,8 +348,9 @@ doit
 		"upgradeSeasideImage.out should all of the relevant information including the prompt"
 		logStream nextPutAll: self upgradeSeasideImagePrompt; lf ].
 	logFile := logFile pathString.
-	self upgradeSeasideImage_system_user: logFile step: '1'.	"Step 1. install GsDevKit_upgrade into stone as SystemUser"
-	self upgradeSeasideImage_seaside_user: logFile step: '2'. "Step 2 run upgradeSeasideImage as --userName"
+	self upgradeSeasideImage_system_user: logFile step: '1'.	"Step 1. As SystemUser, install GsDevKit_upgrade code and GsuAbstractGsDevKitUpgrade>>prepareImage."
+	self upgradeSeasideImage_seaside_user: logFile step: '2'. "As <seaside-user>, GsuAbstractGsDevKitUpgrade>>prepareImage_pragma_user"
+	self upgradeSeasideImage_system_user: logFile step: '3'.	"Step 3. As SystemUser, GsuAbstractGsDevKitUpgrade>>prepareImage_pragma_systemuser"
 	self bannerLog: 'Finished ----- ', self basename.
 	^ self noResult
 %

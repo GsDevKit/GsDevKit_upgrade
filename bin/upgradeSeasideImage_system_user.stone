@@ -4,6 +4,7 @@ options
 	SuperDoitRequiredOptionWithRequiredArg long: 'seasideUserName'.
 
 	SuperDoitOptionalOptionWithNoArg long: 'step1'.
+	SuperDoitOptionalOptionWithNoArg long: 'step3'.
 }
 %
 usage
@@ -112,20 +113,29 @@ doStep1
 	UserGlobals 
 		at: #SeasideUpgradeUser 
 		put: self seasideUserName.
-
 	self installGsDevKit_upgrade.
 	(GsCurrentSession currentSession objectNamed: 'GsDevKit_Image_Upgrade') prepareImage.
-
 	UserGlobals removeKey: #SeasideUpgradeUser.
 	System commit.
 	self bannerLog: 'Finished Step 1. ----- ', self basename.
+	^ self noResult
+%
+method
+doStep3
+	self bannerLog: '3. As ', System myUserProfile userId, ', GsuAbstractGsDevKitUpgrade>>prepareImage_pragma_systemuser'.
+	System myUserProfile userId = 'SystemUser'
+		ifFalse: [ self error: self basename, ' is expected to be run as SystemUser' ].
+	(GsCurrentSession currentSession objectNamed: 'GsDevKit_Image_Upgrade') prepareImage_pragma_systemuser.
+	System commit.
+	self bannerLog: 'Finished Step 3. ----- ', self basename.
 	^ self noResult
 %
 doit
 	self bannerLog: 'Running ----- ', self basename.
 	[
 		self step1 ifTrue: [ ^ self doStep1 ].
-		self error: 'Expected --step1 option'
+		self step3 ifTrue: [ ^ self doStep3 ].
+		self error: 'Expected option --step1 or --step3'
 	] on: Error, Halt
 		do: [:ex | 
 			(System gemConfigurationAt: 'GEM_LISTEN_FOR_DEBUG') == false

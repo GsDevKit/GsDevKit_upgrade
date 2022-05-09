@@ -1,8 +1,7 @@
 #!/usr/bin/env superdoit_stone
 options
 {
-	SuperDoitRequiredOptionWithRequiredArg long: 'upgradeLogDir'.
-	SuperDoitRequiredOptionWithRequiredArg long: 'userName'.
+	SuperDoitRequiredOptionWithRequiredArg long: 'seasideUserName'.
 }
 %
 usage
@@ -22,9 +21,6 @@ EXAMPLES
   $basename -D
   $basename
 -----
-%
-instvars
-upgradeLogDir
 %
 method
 bannerLog: message
@@ -108,16 +104,19 @@ installGsDevKit_upgrade
 %
 doit
 	self bannerLog: 'Running ----- ', self basename.
+	self bannerLog: '1. As ', System myUserProfile userId, ', install GsDevKit_upgrade code and GsuAbstractGsDevKitUpgrade>>prepareImage.'.
+	System myUserProfile userId = 'SystemUser'
+		ifFalse: [ self error: self basename, ' is expected to be run as SystemUser' ].
 	[
-		upgradeLogDir := ServerFileDirectory on: self upgradeLogDir.
-
 		UserGlobals 
 			at: #SeasideUpgradeUser 
-			put: self userName.
+			put: self seasideUserName.
 
 		self installGsDevKit_upgrade.
+		(GsCurrentSession currentSession objectNamed: 'GsDevKit_Image_Upgrade') prepareImage.
 
 		UserGlobals removeKey: #SeasideUpgradeUser.
+		System commit.
 	] on: Error, Halt
 		do: [:ex | 
 			(System gemConfigurationAt: 'GEM_LISTEN_FOR_DEBUG') == false

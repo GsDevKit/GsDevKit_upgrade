@@ -1,7 +1,6 @@
 #!/usr/bin/env superdoit_stone
 options
 {
-	SuperDoitRequiredOptionWithRequiredArg long: 'upgradeLogDir'.
 }
 %
 usage
@@ -10,7 +9,7 @@ USAGE
   $basename [--help | -h] [--debug | -D]
 
 DESCRIPTION
-  GsDevKit_upgrade script.
+  2. As <seasideUserName>, GsuAbstractGsDevKitUpgrade>>prepareImage_pragma_user
 
 OPTIONS
   -h, --help                 display usage message
@@ -73,7 +72,13 @@ logAndWaitForDebug: ex
 doit
 	self bannerLog: 'Running ----- ', self basename.
 	[
-		self error: 'upgradeSeasideImage.stone not yet implemented'
+		self bannerLog: '2. As ', System myUserProfile userId, ', GsuAbstractGsDevKitUpgrade>>prepareImage_pragma_user'.
+		(((AllUsers userWithId: 'SystemUser') 
+			objectNamed: #UserGlobals) 
+				at: #'GsDevKit_Image_Upgrade')
+					prepareImage_pragma_user.
+		System commitTransaction.
+		self bannerLog: '3.??'.
 	] on: Error, Halt
 		do: [:ex | 
 			(System gemConfigurationAt: 'GEM_LISTEN_FOR_DEBUG') == false

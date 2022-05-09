@@ -26,6 +26,9 @@ USAGE
 DESCRIPTION
   Driver script for full upgrade of GLASS/GsDevKit image.
 
+  1. install GsDevKit_upgrade into image as SystemUser
+  2. As $username, GsuAbstractGsDevKitUpgrade>>prepareImage_pragma_user
+
 OPTIONS
   -h, --help                 display usage message
   -D, --debug                bring up topaz debugger in the event of a script error
@@ -281,9 +284,8 @@ installGsDevKit_upgrade: logFile
 	commandString := String new.
 	commandString 
 		add: scriptName ;
-		add: ' --upgradeLogDir=', self upgradeInstance;
-		add: ' --userName=', self userName;
-		add: ' -- -I ' , self seasideUserTopaziniFile pathString;
+		add: ' --seasideUserName=', self userName;
+		add: ' -- -I ' , self systemUserTopaziniFile pathString;
 		yourself.
 	self debugGem
 		ifTrue: [ commandString add: ' -C "GEM_LISTEN_FOR_DEBUG=TRUE;"' ].
@@ -306,7 +308,6 @@ upgradeSeasideImage: logFile
 	commandString := String new.
 	commandString 
 		add: scriptName;
-		add: ' --upgradeLogDir=', upgradeLogDir pathString;
 		add: ' -- -I ' , self seasideUserTopaziniFile pathString;
 		yourself.
 	self debugGem

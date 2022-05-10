@@ -5,6 +5,7 @@ options
 	SuperDoitOptionalOptionWithRequiredArg long: 'projectsHome' default: '$GEMSTONE/examples/GsCommands/projectsHome'.
 	SuperDoitOptionalOptionWithRequiredArg long: 'upgradeLogDir' default: '$upgradeLogDir'.
 
+	SuperDoitOptionalOptionWithRequiredArg long: 'gsdevkit_upgrade_gs' default: '$GEMSTONE/upgrade/GsDevKit_upgrade.gs'.
 	SuperDoitOptionalOptionWithRequiredArg long: 'stoneName' short: 's' default: 'gs64stone'.
 	SuperDoitOptionalOptionWithRequiredArg long: 'userName' short: 'u' default: 'DataCurator'.
 	SuperDoitOptionalOptionWithRequiredArg long: 'password' short: 'p' default: 'swordfish'.
@@ -296,6 +297,10 @@ upgradeSeasideImage_system_user: logFile step: stepNumber
 	commandString := String new.
 	commandString 
 		add: scriptName ;
+		yourself.
+	stepNumber = '1'
+		ifTrue: [ commandString add: ' --gsdevkit_upgrade_gs=', self gsdevkit_upgrade_gs ] .
+	commandString
 		add: ' --seasideUserName=', self userName;
 		add: ' --step', stepNumber; 
 		add: ' -- -I ' , self systemUserTopaziniFile pathString;

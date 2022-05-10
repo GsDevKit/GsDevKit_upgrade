@@ -3,6 +3,8 @@ options
 {
 	SuperDoitRequiredOptionWithRequiredArg long: 'seasideUserName'.
 
+	SuperDoitOptionalOptionWithRequiredArg long: 'gsdevkit_upgrade_gs' default: '$GEMSTONE/upgrade/GsDevKit_upgrade.gs'.
+
 	SuperDoitOptionalOptionWithNoArg long: 'step1'.
 	SuperDoitOptionalOptionWithNoArg long: 'step3'.
 	SuperDoitOptionalOptionWithNoArg long: 'step5'.
@@ -95,7 +97,7 @@ installGsDevKit_upgrade
 	UserGlobals at: symbolName put: symbolDict.
 	System commit.
 
-	GsFileIn fromServerPath: '$upgradeDir/GsDevKit_upgrade.gs'.
+	GsFileIn fromServerPath: self gsdevkit_upgrade_gs.
 
 	(symbolDict at: #'GsuAbstractGsDevKitUpgrade') _symbolDictionary: symbolDict.
 	UserGlobals removeKey: symbolName.

@@ -1,0 +1,10 @@
+RwSimpleProjectLoadComponentV2 {
+	#name : 'finworks/Core',
+	#condition : 'finworks',
+	#projectNames : [ ],
+	#componentNames : [ ],
+	#packageNames : [
+		'GsDevKit_upgrade-Finworks'
+	],
+	#comment : ''
+}

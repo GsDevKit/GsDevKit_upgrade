@@ -111,7 +111,7 @@ GsuGsDevKitUpgradeDeploymentTools >> deployTopazFilein: topazFileName topazFileH
 	| projectSetDefinition visitor deploymentDir projectSetModification topazFileNameMap |
 	projectSetDefinition := self
 		_projectSetFor: specName
-		customConditionalAttributes: {}.	"no tools"
+		customConditionalAttributes: {'finworks'}.	"no tools ... keep finworks"
 	deploymentDir := self _projectsHome / self _projectName / 'gemstone'.
 	deploymentDir ensureCreateDirectory.
 	topazFileNameMap := Dictionary new.

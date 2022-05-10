@@ -39,9 +39,11 @@ OPTIONS
   -D, --debug                bring up topaz debugger in the event of a script error
 
 EXAMPLES
-  $basename --help
-  $basename -D
-  $basename -D --upgradeImage --upgradeLogDir=./upgradeLog -s battery_k
+  export upgradeLogDir=<path-to-stone>/upgradeLog
+  export gemstone=<path-to-product-tree>/GemStone64Bit3.6.3-x86_64.Linux
+  export projectshome=<path-to-superDoit-project>/superDoit/gemstone/solo/product/examples/GsCommands/projectsHome
+  export gsdevkit_upgrade_project=<path-to-gsdevkit_upgrade-project>/GsDevKit_upgrade
+  $basename --projectsHome=$projectshome --gemstone=$gemstone --upgradeLogDir=$upgradeLogDir -s <stone-name> -P $gsdevkit_upgrade_project/bin/createFinworks_upgrade.topaz
 -----
 %
 SPECS

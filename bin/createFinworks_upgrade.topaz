@@ -1,0 +1,26 @@
+!=========================================================================
+! Copyright (C) GemTalk Systems 2019-2022.  All Rights Reserved.
+! MIT license: see https://github.com/GsDevKit/GsDevKit_upgrade/blob/master/LICENSE
+!
+! File - createFinworks_upgrade.topaz
+!
+! Purpose:
+! 	topaz script for creating the default Fineworks upgrade object, using the default values 
+!		for options.
+!
+!		To customize the upgrade edit this scrpt with the desired values and define the
+!			path to your script using the -P option to the upgradeSeasideImage shell 
+!			script.
+!
+!			See https://github.com/GsDevKit/GsDevKit_upgrade/blob/master/README.md for additional details.
+!
+!=======================================================================
+
+run
+	UserGlobals
+		at: #GsDevKit_Image_Upgrade
+		put: (GsuFinworks_3_6_x_Upgrade upgradeUserName: SeasideUpgradeUser).
+	System commitTransaction
+%
+! End File  createFinworks_upgrade.topaz
+

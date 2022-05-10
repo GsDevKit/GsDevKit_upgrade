@@ -2,6 +2,7 @@
 options
 {
 	SuperDoitOptionalOptionWithRequiredArg long: 'gemstone' default: '$GEMSTONE'.
+	SuperDoitOptionalOptionWithRequiredArg long: 'projectsHome' default: '$GEMSTONE/examples/GsCommands/projectsHome'.
 	SuperDoitOptionalOptionWithRequiredArg long: 'upgradeLogDir' default: '$upgradeLogDir'.
 
 	SuperDoitOptionalOptionWithRequiredArg long: 'stoneName' short: 's' default: 'gs64stone'.
@@ -12,6 +13,7 @@ options
 
 	SuperDoitOptionalOptionWithNoArg long: 'debugGem' short: 'W'.
 	SuperDoitOptionalOptionWithNoArg long: 'upgradeImage'.
+	SuperDoitOptionalOptionWithNoArg long: 'upgradeImageOnly'.
 }
 %
 instvars
@@ -68,8 +70,10 @@ resolveEnvVars
 		ifNotNil: [:value |
 			| expanded |
 			expanded := value asFileReference pathString.
-			System gemEnvironmentVariable: 'GEMSTONE' put: expanded ]
+			System gemEnvironmentVariable: 'GEMSTONE' put: expanded.
+			expanded ]
 		ifNil: [ self error: '$GEMSTONE or --gemstone required' ].
+	System gemEnvironmentVariable: 'upgradeDir' put: gemstone, '/upgrade'.
 	self upgradeLogDir
 		ifNotNil: [:value |
 			upgradeLogDir := value asFileReference.
@@ -77,6 +81,7 @@ resolveEnvVars
 				ifFalse: [ self error: 'The upgradeLogDir: ', upgradeLogDir pathString , ' does not exist.' ]. 
 			System gemEnvironmentVariable: 'upgradeLogDir' put: upgradeLogDir pathString.]
 		ifNil: [ self error: '$upgradeLogDir or --upgradeLogDir required' ].
+	 
 %
 method
 upgradeImagePrompt
@@ -332,12 +337,16 @@ doit
 	self bannerLog: 'Running ----- ', self basename.
 	self resolveEnvVars.
 	self createTopaziniFiles.
-	self preDoitSpecLoad: [:spec | spec projectsHome: '$GEMSTONE/examples/GsCommands/projectsHome' ].
+	self preDoitSpecLoad: [:spec | spec projectsHome: self projectsHome ].
 	self waitForStone: self stoneName.
-	self upgradeImage
+	(self upgradeImage or: [ self upgradeImageOnly ])
 		ifTrue: [
 			self bannerLog: 'Perform upgradeImage'. 
-			self gemstoneUpgradeImage ]
+			self gemstoneUpgradeImage.
+			self upgradeImageOnly 
+				ifTrue: [
+					self bannerLog: 'upgradeImage complete ... exiting because --upgradeImageOnly option present'.
+					^ self noResult ] ]
 		ifFalse: [ self bannerLog: 'Skipping upgradeImage' ].
 	instanceFile := self upgradeInstance asFileReference.
 	instanceFile copyTo: self upgradeLogDir asFileReference / instanceFile basename.

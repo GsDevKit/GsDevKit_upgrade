@@ -295,8 +295,8 @@ GsuAbstractGsDevKit >> _reloadProjectNamed: projectName projectSpec: projectSpec
 	self
 		_deploy: [
 		metacello copy get.
-		loadList isEmpty ifFalse:  [ metacello load: loadList ].
 		metacello onConflict: [ :ex :loaded :incoming | ex useIncoming ].
+		loadList isEmpty ifFalse:  [ metacello load: loadList ].
 		metacello load ].
 ]
 

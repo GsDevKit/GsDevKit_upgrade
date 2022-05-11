@@ -42,6 +42,6 @@ _reloadProjectNamed: projectName projectSpec: projectSpecOrNilOrString loads: lo
 	self
 		_deploy: [
 		metacello copy get.
-		metacello onConflict: [ :ex :loaded :incoming | ex useIncoming ].
+		metacello onConflict: self _onConflictBlock.
 		loadList isEmpty ifFalse:  [ metacello load: loadList ].
 		metacello load ].

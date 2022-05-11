@@ -1922,6 +1922,12 @@ _logUpgradeParameters
 		] on: Error do: [:ex  | self log: '			error extracting parameter ', ex description printString ] ]
 %
 
+category: 'application loading'
+method: GsuAbstractGsDevKit
+_onConflictBlock
+	^ [ :ex :loaded :incoming | ex useIncoming ]
+%
+
 category: 'private'
 method: GsuAbstractGsDevKit
 _projectSpecForBaseline: baselineClassName
@@ -1987,7 +1993,7 @@ _reloadProjectNamed: projectName projectSpec: projectSpecOrNilOrString loads: lo
 	self
 		_deploy: [
 		metacello copy get.
-		metacello onConflict: [ :ex :loaded :incoming | ex useIncoming ].
+		metacello onConflict: self _onConflictBlock.
 		loadList isEmpty ifFalse:  [ metacello load: loadList ].
 		metacello load ].
 %
@@ -4008,6 +4014,12 @@ prepareGsDevKitImage
 		yourself.	
 	self log: '	finished gsdevkit image (commit)'.
 	self prepareGsDevKitImageDoneBanner.
+%
+
+category: 'application loading'
+method: GsuFinworks_3_6_x_Upgrade
+_onConflictBlock
+	^ [ :ex :loaded :incoming | ex useLoaded ]
 %
 
 ! Class implementation for 'GsuGsDevKit_3_7_x_Upgrade'

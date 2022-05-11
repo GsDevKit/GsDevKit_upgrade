@@ -232,6 +232,11 @@ GsuAbstractGsDevKit >> _logUpgradeParameters [
 		] on: Error do: [:ex  | self log: '			error extracting parameter ', ex description printString ] ]
 ]
 
+{ #category : 'application loading' }
+GsuAbstractGsDevKit >> _onConflictBlock [
+	^ [ :ex :loaded :incoming | ex useIncoming ]
+]
+
 { #category : 'private' }
 GsuAbstractGsDevKit >> _projectSpecForBaseline: baselineClassName [
 	"Have to extract project spec from regsitry without sending messages, because methods may need to be recompiled"
@@ -295,7 +300,7 @@ GsuAbstractGsDevKit >> _reloadProjectNamed: projectName projectSpec: projectSpec
 	self
 		_deploy: [
 		metacello copy get.
-		metacello onConflict: [ :ex :loaded :incoming | ex useIncoming ].
+		metacello onConflict: self _onConflictBlock.
 		loadList isEmpty ifFalse:  [ metacello load: loadList ].
 		metacello load ].
 ]

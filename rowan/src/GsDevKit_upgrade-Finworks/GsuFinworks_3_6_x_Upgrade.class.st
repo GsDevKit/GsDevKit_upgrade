@@ -13,6 +13,11 @@ GsuFinworks_3_6_x_Upgrade class >> _calculateUpgradeClass [
 	self error: 'Image version ' , imageVersion printString , ' not supported'
 ]
 
+{ #category : 'application loading' }
+GsuFinworks_3_6_x_Upgrade >> _onConflictBlock [
+	^ [ :ex :loaded :incoming | ex useLoaded ]
+]
+
 { #category : 'phases' }
 GsuFinworks_3_6_x_Upgrade >> prepareGsDevKitImage [
 	"formerly done by $GEMSTONE/upgrade/prepareSeasideImage"

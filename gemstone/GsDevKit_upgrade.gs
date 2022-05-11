@@ -1987,8 +1987,8 @@ _reloadProjectNamed: projectName projectSpec: projectSpecOrNilOrString loads: lo
 	self
 		_deploy: [
 		metacello copy get.
-		loadList isEmpty ifFalse:  [ metacello load: loadList ].
 		metacello onConflict: [ :ex :loaded :incoming | ex useIncoming ].
+		loadList isEmpty ifFalse:  [ metacello load: loadList ].
 		metacello load ].
 %
 

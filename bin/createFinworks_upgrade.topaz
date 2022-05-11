@@ -19,7 +19,14 @@
 run
 	UserGlobals
 		at: #GsDevKit_Image_Upgrade
-		put: (GsuFinworks_3_6_x_Upgrade upgradeUserName: SeasideUpgradeUser).
+		put: 
+			((GsuFinworks_3_6_x_Upgrade upgradeUserName: SeasideUpgradeUser)
+				bootstrapApplicationLoadSpecs:
+					{ 
+						{ 'Metacello' . 'filetree:///export/capella4/users/dhenrich/finworks/wonka/3rdparty/gemstone/metacello-work/repository' } .
+						{ 'GLASS1' . 'filetree:///export/capella4/users/dhenrich/finworks/wonka/3rdparty/gemstone/glass/repository' . #( 'default' 'Base' 'Announcements') } .
+					};
+				yourself).
 	System commitTransaction
 %
 ! End File  createFinworks_upgrade.topaz

@@ -299,7 +299,11 @@ upgradeSeasideImage_system_user: logFile step: stepNumber
 		add: scriptName ;
 		yourself.
 	stepNumber = '1'
-		ifTrue: [ commandString add: ' --gsdevkit_upgrade_gs=', self gsdevkit_upgrade_gs ] .
+		ifTrue: [ 
+			commandString 
+				add: ' --gsdevkit_upgrade_gs=', self gsdevkit_upgrade_gs;
+				add: ' --upgradeInstance=', self upgradeInstance;
+				yourself ] .
 	commandString
 		add: ' --seasideUserName=', self userName;
 		add: ' --step', stepNumber; 

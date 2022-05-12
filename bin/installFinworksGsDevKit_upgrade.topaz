@@ -1,0 +1,45 @@
+#  file $GsDevKit_upgrade/bin/installGsDevKit_upgrade.topaz
+# expect to be logged in as SystemUser to install GsDevKit_upgrade into image
+#
+
+run
+	"Install upgrade support code"
+	| symbolName session symbolList symbolDict dictName symDictSlot |
+	dictName := 'GsDevKit_Upgrade_SymDict_private'.
+	symbolName := dictName asSymbol.
+	session := GsCurrentSession currentSession.
+	symbolList := session symbolList.
+	symbolDict := symbolList
+		detect: [ :each | (each at: symbolName ifAbsent: [ nil ]) == each ]
+		ifNone: [ 
+			| newDict |
+			newDict := SymbolDictionary new
+				name: symbolName;
+				objectSecurityPolicy: symbolList objectSecurityPolicy;
+				yourself.
+			symDictSlot := System myUserProfile symbolList size.
+			System myUserProfile insertDictionary: newDict at: symDictSlot + 1.
+			newDict ].
+	UserGlobals at: dictName asSymbol put: symbolDict.
+	true
+%
+
+commit
+
+input $upgrade_gs
+ 
+run
+	(GsDevKit_Upgrade_SymDict_private at: #'GsuAbstractGsDevKitUpgrade') _symbolDictionary: GsDevKit_Upgrade_SymDict_private.
+	UserGlobals removeKey: GsDevKit_Upgrade_SymDict_private name.
+	true
+%
+commit
+
+input $upgradeLogDir/createGsDevKit_upgrade.topaz
+
+run
+	System myUserProfile removeDictionaryAt: (System myUserProfile symbolList size).
+	System commitTransaction
+%
+# end  file seaside/bin/installGsDevKit_upgrade.topaz
+

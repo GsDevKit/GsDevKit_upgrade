@@ -15,8 +15,8 @@ doit
 (Object
 	subclass: 'GsuAbstractGemStoneRelease'
 	instVarNames: #( major minor patch )
-	classVars: #(  )
-	classInstVars: #(  )
+	classVars: #()
+	classInstVars: #()
 	poolDictionaries: #()
 	inDictionary: GsDevKit_Upgrade_SymDict_private
 	options: #()
@@ -46,9 +46,9 @@ removeallclassmethods GsuAbstractGemStoneRelease
 doit
 (GsuAbstractGemStoneRelease
 	subclass: 'GsuGemStone_2_4_x_Release'
-	instVarNames: #(  )
-	classVars: #(  )
-	classInstVars: #(  )
+	instVarNames: #()
+	classVars: #()
+	classInstVars: #()
 	poolDictionaries: #()
 	inDictionary: GsDevKit_Upgrade_SymDict_private
 	options: #()
@@ -64,9 +64,9 @@ removeallclassmethods GsuGemStone_2_4_x_Release
 doit
 (GsuAbstractGemStoneRelease
 	subclass: 'GsuGemStone_3_0_x_Release'
-	instVarNames: #(  )
-	classVars: #(  )
-	classInstVars: #(  )
+	instVarNames: #()
+	classVars: #()
+	classInstVars: #()
 	poolDictionaries: #()
 	inDictionary: GsDevKit_Upgrade_SymDict_private
 	options: #()
@@ -82,9 +82,9 @@ removeallclassmethods GsuGemStone_3_0_x_Release
 doit
 (GsuAbstractGemStoneRelease
 	subclass: 'GsuGemStone_3_1_x_Release'
-	instVarNames: #(  )
-	classVars: #(  )
-	classInstVars: #(  )
+	instVarNames: #()
+	classVars: #()
+	classInstVars: #()
 	poolDictionaries: #()
 	inDictionary: GsDevKit_Upgrade_SymDict_private
 	options: #()
@@ -100,9 +100,9 @@ removeallclassmethods GsuGemStone_3_1_x_Release
 doit
 (GsuAbstractGemStoneRelease
 	subclass: 'GsuGemStone_3_2_x_Release'
-	instVarNames: #(  )
-	classVars: #(  )
-	classInstVars: #(  )
+	instVarNames: #()
+	classVars: #()
+	classInstVars: #()
 	poolDictionaries: #()
 	inDictionary: GsDevKit_Upgrade_SymDict_private
 	options: #()
@@ -118,9 +118,9 @@ removeallclassmethods GsuGemStone_3_2_x_Release
 doit
 (GsuAbstractGemStoneRelease
 	subclass: 'GsuGemStone_3_3_x_Release'
-	instVarNames: #(  )
-	classVars: #(  )
-	classInstVars: #(  )
+	instVarNames: #()
+	classVars: #()
+	classInstVars: #()
 	poolDictionaries: #()
 	inDictionary: GsDevKit_Upgrade_SymDict_private
 	options: #()
@@ -136,9 +136,9 @@ removeallclassmethods GsuGemStone_3_3_x_Release
 doit
 (GsuAbstractGemStoneRelease
 	subclass: 'GsuGemStone_3_4_x_Release'
-	instVarNames: #(  )
-	classVars: #(  )
-	classInstVars: #(  )
+	instVarNames: #()
+	classVars: #()
+	classInstVars: #()
 	poolDictionaries: #()
 	inDictionary: GsDevKit_Upgrade_SymDict_private
 	options: #()
@@ -154,9 +154,9 @@ removeallclassmethods GsuGemStone_3_4_x_Release
 doit
 (GsuAbstractGemStoneRelease
 	subclass: 'GsuGemStone_3_5_x_Release'
-	instVarNames: #(  )
-	classVars: #(  )
-	classInstVars: #(  )
+	instVarNames: #()
+	classVars: #()
+	classInstVars: #()
 	poolDictionaries: #()
 	inDictionary: GsDevKit_Upgrade_SymDict_private
 	options: #()
@@ -172,9 +172,9 @@ removeallclassmethods GsuGemStone_3_5_x_Release
 doit
 (GsuGemStone_3_5_x_Release
 	subclass: 'GsuGemStone_3_6_x_Release'
-	instVarNames: #(  )
-	classVars: #(  )
-	classInstVars: #(  )
+	instVarNames: #()
+	classVars: #()
+	classInstVars: #()
 	poolDictionaries: #()
 	inDictionary: GsDevKit_Upgrade_SymDict_private
 	options: #()
@@ -190,9 +190,9 @@ removeallclassmethods GsuGemStone_3_6_x_Release
 doit
 (GsuGemStone_3_6_x_Release
 	subclass: 'GsuGemStone_3_7_x_Release'
-	instVarNames: #(  )
-	classVars: #(  )
-	classInstVars: #(  )
+	instVarNames: #()
+	classVars: #()
+	classInstVars: #()
 	poolDictionaries: #()
 	inDictionary: GsDevKit_Upgrade_SymDict_private
 	options: #()
@@ -209,8 +209,8 @@ doit
 (Object
 	subclass: 'GsuAbstractGsDevKit'
 	instVarNames: #( upgradeUserName upgradeSymbolDict upgradeSymbolDictName bootstrapPostLoadClassList bootstrapRepositoryDirectory bootstrapApplicationLoadSpecs bootstrapExistingConfigurationList skipLoadApplication )
-	classVars: #(  )
-	classInstVars: #(  )
+	classVars: #()
+	classInstVars: #()
 	poolDictionaries: #()
 	inDictionary: GsDevKit_Upgrade_SymDict_private
 	options: #()
@@ -228,7 +228,7 @@ doit
 	subclass: 'GsuAbstractGsDevKitUpgrade'
 	instVarNames: #( sourceGemStoneRelease targetGemStoneRelease methodsWithPragmas )
 	classVars: #( TheSymbolDictionary )
-	classInstVars: #(  )
+	classInstVars: #()
 	poolDictionaries: #()
 	inDictionary: GsDevKit_Upgrade_SymDict_private
 	options: #()
@@ -261,9 +261,9 @@ removeallclassmethods GsuAbstractGsDevKitUpgrade
 doit
 (GsuAbstractGsDevKitUpgrade
 	subclass: 'GsuGsDevKit_3_2_x_BootstrapUpgrade'
-	instVarNames: #(  )
-	classVars: #(  )
-	classInstVars: #(  )
+	instVarNames: #()
+	classVars: #()
+	classInstVars: #()
 	poolDictionaries: #()
 	inDictionary: GsDevKit_Upgrade_SymDict_private
 	options: #()
@@ -279,9 +279,9 @@ removeallclassmethods GsuGsDevKit_3_2_x_BootstrapUpgrade
 doit
 (GsuAbstractGsDevKitUpgrade
 	subclass: 'GsuGsDevKit_3_3_x_BootstrapUpgrade'
-	instVarNames: #(  )
-	classVars: #(  )
-	classInstVars: #(  )
+	instVarNames: #()
+	classVars: #()
+	classInstVars: #()
 	poolDictionaries: #()
 	inDictionary: GsDevKit_Upgrade_SymDict_private
 	options: #()
@@ -297,9 +297,9 @@ removeallclassmethods GsuGsDevKit_3_3_x_BootstrapUpgrade
 doit
 (GsuAbstractGsDevKitUpgrade
 	subclass: 'GsuGsDevKit_3_4_x_BootstrapUpgrade'
-	instVarNames: #(  )
-	classVars: #(  )
-	classInstVars: #(  )
+	instVarNames: #()
+	classVars: #()
+	classInstVars: #()
 	poolDictionaries: #()
 	inDictionary: GsDevKit_Upgrade_SymDict_private
 	options: #()
@@ -315,9 +315,9 @@ removeallclassmethods GsuGsDevKit_3_4_x_BootstrapUpgrade
 doit
 (GsuAbstractGsDevKitUpgrade
 	subclass: 'GsuGsDevKit_3_5_x_Upgrade'
-	instVarNames: #(  )
-	classVars: #(  )
-	classInstVars: #(  )
+	instVarNames: #()
+	classVars: #()
+	classInstVars: #()
 	poolDictionaries: #()
 	inDictionary: GsDevKit_Upgrade_SymDict_private
 	options: #()
@@ -333,9 +333,9 @@ removeallclassmethods GsuGsDevKit_3_5_x_Upgrade
 doit
 (GsuGsDevKit_3_5_x_Upgrade
 	subclass: 'GsuGsDevKit_3_5_x_BootstrapUpgrade'
-	instVarNames: #(  )
-	classVars: #(  )
-	classInstVars: #(  )
+	instVarNames: #()
+	classVars: #()
+	classInstVars: #()
 	poolDictionaries: #()
 	inDictionary: GsDevKit_Upgrade_SymDict_private
 	options: #()
@@ -351,9 +351,9 @@ removeallclassmethods GsuGsDevKit_3_5_x_BootstrapUpgrade
 doit
 (GsuGsDevKit_3_5_x_Upgrade
 	subclass: 'GsuGsDevKit_3_5_x_StdUpgrade'
-	instVarNames: #(  )
-	classVars: #(  )
-	classInstVars: #(  )
+	instVarNames: #()
+	classVars: #()
+	classInstVars: #()
 	poolDictionaries: #()
 	inDictionary: GsDevKit_Upgrade_SymDict_private
 	options: #()
@@ -369,9 +369,9 @@ removeallclassmethods GsuGsDevKit_3_5_x_StdUpgrade
 doit
 (GsuGsDevKit_3_5_x_StdUpgrade
 	subclass: 'GsuGsDevKit_3_6_x_Upgrade'
-	instVarNames: #(  )
-	classVars: #(  )
-	classInstVars: #(  )
+	instVarNames: #()
+	classVars: #()
+	classInstVars: #()
 	poolDictionaries: #()
 	inDictionary: GsDevKit_Upgrade_SymDict_private
 	options: #()
@@ -387,9 +387,9 @@ removeallclassmethods GsuGsDevKit_3_6_x_Upgrade
 doit
 (GsuGsDevKit_3_6_x_Upgrade
 	subclass: 'GsuFinworks_3_6_x_Upgrade'
-	instVarNames: #(  )
-	classVars: #(  )
-	classInstVars: #(  )
+	instVarNames: #()
+	classVars: #()
+	classInstVars: #()
 	poolDictionaries: #()
 	inDictionary: GsDevKit_Upgrade_SymDict_private
 	options: #()
@@ -405,9 +405,9 @@ removeallclassmethods GsuFinworks_3_6_x_Upgrade
 doit
 (GsuGsDevKit_3_6_x_Upgrade
 	subclass: 'GsuGsDevKit_3_7_x_Upgrade'
-	instVarNames: #(  )
-	classVars: #(  )
-	classInstVars: #(  )
+	instVarNames: #()
+	classVars: #()
+	classInstVars: #()
 	poolDictionaries: #()
 	inDictionary: GsDevKit_Upgrade_SymDict_private
 	options: #()
@@ -424,8 +424,8 @@ doit
 (GsuAbstractGsDevKit
 	subclass: 'GsuGsDevKitBootstrap'
 	instVarNames: #( bootstrapGemStoneRelease )
-	classVars: #(  )
-	classInstVars: #(  )
+	classVars: #()
+	classInstVars: #()
 	poolDictionaries: #()
 	inDictionary: GsDevKit_Upgrade_SymDict_private
 	options: #()
@@ -3870,8 +3870,9 @@ prepareImage_user_patch_Class__mcDefinitionType
 	[ 
 	Class
 		compileMethod: self _prepareImage_class__mcDefinitionType_source
+		dictionaries: self upgradeUserProfile symbolList
 		category: '*monticello'
-		using: self upgradeUserProfile symbolList ]
+		environmentId: 0 ]
 		onException: CompileError
 		do: [ :ex | 
 			self

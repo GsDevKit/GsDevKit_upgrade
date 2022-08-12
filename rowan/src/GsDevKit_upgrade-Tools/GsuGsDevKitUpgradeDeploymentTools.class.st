@@ -59,12 +59,19 @@ GsuGsDevKitUpgradeDeploymentTools >> _projectName [
 
 { #category : 'private' }
 GsuGsDevKitUpgradeDeploymentTools >> _projectSetFor: specName customConditionalAttributes: customConditionalAttributes [
-	^ RwProjectSetDefinition new
-		addProject:
-				(self
-						_projectFor: specName
-						customConditionalAttributes: customConditionalAttributes) _resolvedProject;
-		yourself
+	| definedProject |
+	definedProject := self
+		_projectFor: specName
+		customConditionalAttributes: customConditionalAttributes.
+	Rowan version < '3.0.0' asRwSemanticVersionNumber
+		ifTrue: [ 
+			^ RwProjectSetDefinition new
+				addProject: definedProject _resolvedProject;
+				yourself ]
+		ifFalse: [ 
+			^ RwProjectSetDefinition new
+				addProject: definedProject _concreteProject;
+				yourself ]
 ]
 
 { #category : 'private' }
@@ -79,10 +86,13 @@ GsuGsDevKitUpgradeDeploymentTools >> deployFiletreeRepository [
 
 { #category : 'filetree' }
 GsuGsDevKitUpgradeDeploymentTools >> deployFiletreeRepository: deploymentName specName: specName [
-	| project projectSetDefinition visitor projectSetModification |
+	| project projectSetDefinition visitor projectSetModification resolvedProject |
 	project := self _projectFor: specName customConditionalAttributes: {}.	"no tools"
+	resolvedProject := Rowan version < '3.0.0' asRwSemanticVersionNumber
+		ifTrue: [ project _resolvedProject ]
+		ifFalse: [ project _concreteProject ].
 	projectSetDefinition := RwProjectSetDefinition new
-		addProject: project _resolvedProject;
+		addProject: resolvedProject;
 		yourself.
 	projectSetModification := projectSetDefinition
 		compareAgainstBase: RwProjectSetDefinition new.

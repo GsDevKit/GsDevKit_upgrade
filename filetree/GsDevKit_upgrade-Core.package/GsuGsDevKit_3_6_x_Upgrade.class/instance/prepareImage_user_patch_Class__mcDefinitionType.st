@@ -6,8 +6,9 @@ prepareImage_user_patch_Class__mcDefinitionType
 	[ 
 	Class
 		compileMethod: self _prepareImage_class__mcDefinitionType_source
+		dictionaries: self upgradeUserProfile symbolList
 		category: '*monticello'
-		using: self upgradeUserProfile symbolList ]
+		environmentId: 0 ]
 		onException: CompileError
 		do: [ :ex | 
 			self

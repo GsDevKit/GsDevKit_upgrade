@@ -1422,7 +1422,7 @@ reloadBootstrapPackageFileNames
 	'GemStone-ANSI-Streams-dkh.9.mcz'.
 	'GemStone-Indexing-Extensions-dkh.3.mcz'.
 	'Sport3.010.v3-dkh.29.mcz'.
-	'Squeak.v36-dkh.342.mcz'.
+	'Squeak.v36-dkh.343.mcz'.
 	'Regex-Core-DaleHenrichs.3.mcz'.
 	'Regex-Tests-Core-DaleHenrichs.5.mcz'.
 	'PackageInfo-Base.g-dkh.36.mcz'.

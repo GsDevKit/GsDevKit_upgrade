@@ -72,7 +72,9 @@ GsuFinworks_3_6_x_Upgrade >> prepareImage_user_36x_fundamentals [
 
 	super prepareImage_user_36x_fundamentals.
 	self
-		prepareImage_user_patch_Class___optionsForDefinition
+		prepareImage_user_patch_Class___optionsForDefinition.
+	"not sure how this guy is getting corrupted"
+	(System myUserProfile objectNamed: 'UUID') generatorClass: nil.
 ]
 
 { #category : 'prepare image user' }

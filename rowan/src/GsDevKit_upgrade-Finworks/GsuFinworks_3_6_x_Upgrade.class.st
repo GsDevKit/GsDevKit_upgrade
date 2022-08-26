@@ -18,6 +18,12 @@ GsuFinworks_3_6_x_Upgrade >> _onConflictBlock [
 	^ [ :ex :loaded :incoming | ex useLoaded ]
 ]
 
+{ #category : 'private' }
+GsuFinworks_3_6_x_Upgrade >> _prepareImage_class__optionsForDefinition_source [
+^' _optionsForDefinition
+ self _optionsStringForDefinition'
+]
+
 { #category : 'phases' }
 GsuFinworks_3_6_x_Upgrade >> prepareGsDevKitImage [
 	"formerly done by $GEMSTONE/upgrade/prepareSeasideImage"
@@ -58,4 +64,32 @@ GsuFinworks_3_6_x_Upgrade >> prepareGsDevKitImage [
 		yourself.	
 	self log: '	finished gsdevkit image (commit)'.
 	self prepareGsDevKitImageDoneBanner.
+]
+
+{ #category : 'prepare image user' }
+GsuFinworks_3_6_x_Upgrade >> prepareImage_user_36x_fundamentals [
+	"patches needed to load GLASS for 3.6.x and later"
+
+	super prepareImage_user_36x_fundamentals.
+	self
+		prepareImage_user_patch_Class___optionsForDefinition
+]
+
+{ #category : 'prepare image user' }
+GsuFinworks_3_6_x_Upgrade >> prepareImage_user_patch_Class___optionsForDefinition [
+	"'_optionsForDefinition replaced by _optionsStringForDefinition ... expect this method to be removed when Core package loaded first time"
+
+	self timeStampedLog: '	patch Class>>_optionsForDefinition'.
+	[ 
+	Class
+		compileMethod: self _prepareImage_class__optionsForDefinition_source
+		dictionaries: self upgradeUserProfile symbolList
+		category: '*core-squek'
+		environmentId: 0 ]
+		onException: CompileError
+		do: [ :ex | 
+			self
+				error:
+					'Did not compile:
+' , (GsNMethod _sourceWithErrors: ex errorDetails fromString: ex sourceString) ]
 ]

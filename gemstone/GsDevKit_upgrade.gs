@@ -4059,7 +4059,7 @@ category: 'private'
 method: GsuFinworks_3_6_x_Upgrade
 _prepareImage_class__optionsForDefinition_source
 ^' _optionsForDefinition
- self _optionsStringForDefinition'
+ ^ self _optionsStringForDefinition'
 %
 
 ! Class implementation for 'GsuGsDevKit_3_7_x_Upgrade'

@@ -86,7 +86,7 @@ GsuFinworks_3_6_x_Upgrade >> prepareImage_user_patch_Class___optionsForDefinitio
 	Class
 		compileMethod: self _prepareImage_class__optionsForDefinition_source
 		dictionaries: self upgradeUserProfile symbolList
-		category: '*core-squek'
+		category: 'upgrade patch'
 		environmentId: 0 ]
 		onException: CompileError
 		do: [ :ex | 

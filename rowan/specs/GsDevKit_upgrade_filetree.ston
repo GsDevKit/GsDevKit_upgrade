@@ -8,7 +8,7 @@ RwLoadSpecificationV2 {
 		'Core'
 	],
 	#customConditionalAttributes : [
-		'tools'
+		'tools', 'finworks'
 	],
 	#comment : 'Load the core classes'
 }

@@ -12,7 +12,6 @@ prepareGsDevKitImage
 
 	"run as gsdevkit user"
 
-
 	self prepareGsDevKitImageBanner.
 	self log: 'Prepare gsdevkit image'.
 	self updateDBFHistoryStartUpgrade.
@@ -25,7 +24,8 @@ prepareGsDevKitImage
 		prepareGsDevKitImage_patch46217: self;
 		prepareGsDevKitImage_patch_compileMethodCategory: self;
 		prepareGsDevKitImage_recompilePragmaMethods: self;
-		prepareGsDevKitImage_patch49622: self;		
+		prepareGsDevKitImage_patch49622: self;
+		prepareGsDevKitImage_removeObsoleteClasses: self;
 		prepareGsDevKitImage_bootstrapGsDevkit: self;
 		prepareGsDevKitImage_resetExistingGlobalState: self;
 		prepareGsDevKitImage_cleanSessionMethodMetaData: self;
@@ -35,6 +35,6 @@ prepareGsDevKitImage
 	self sourceGemStoneRelease
 		prepareGsDevKitImage_loadApplicationCode: self;
 		prepareGsDevKitImage_validation: self;
-		yourself.	
+		yourself.
 	self log: '	finished gsdevkit image (commit)'.
-	self prepareGsDevKitImageDoneBanner.
+	self prepareGsDevKitImageDoneBanner

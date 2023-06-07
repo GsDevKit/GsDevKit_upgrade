@@ -1,5 +1,5 @@
 !=========================================================================
-! Copyright (C) GemTalk Systems 2019-2023.  All Rights Reserved.
+! Copyright (C) GemTalk Systems 2019.  All Rights Reserved.
 ! MIT license: see https://github.com/GsDevKit/GsDevKit_upgrade/blob/master/LICENSE
 !
 ! File - seaside/bin/GsDevKit_upgrade.gs
@@ -684,6 +684,14 @@ method: GsuAbstractGemStoneRelease
 prepareGsDevKitImage_removeAllMethods:  aGsDevKitUpgrade
 
 	aGsDevKitUpgrade prepareGsDevKitImage_removeAllMethods
+%
+
+category: 'prepare gsdevkit image'
+method: GsuAbstractGemStoneRelease
+prepareGsDevKitImage_removeObsoleteClasses:  aGsDevKitUpgrade
+	"opportunity to remove classes from GsDevKit image, what may be present in Globals"
+
+	aGsDevKitUpgrade prepareGsDevKitImage_removeObsoleteClasses
 %
 
 category: 'prepare gsdevkit image'
@@ -2300,7 +2308,6 @@ prepareGsDevKitImage
 
 	"run as gsdevkit user"
 
-
 	self prepareGsDevKitImageBanner.
 	self log: 'Prepare gsdevkit image'.
 	self updateDBFHistoryStartUpgrade.
@@ -2313,7 +2320,8 @@ prepareGsDevKitImage
 		prepareGsDevKitImage_patch46217: self;
 		prepareGsDevKitImage_patch_compileMethodCategory: self;
 		prepareGsDevKitImage_recompilePragmaMethods: self;
-		prepareGsDevKitImage_patch49622: self;		
+		prepareGsDevKitImage_patch49622: self;
+		prepareGsDevKitImage_removeObsoleteClasses: self;
 		prepareGsDevKitImage_bootstrapGsDevkit: self;
 		prepareGsDevKitImage_resetExistingGlobalState: self;
 		prepareGsDevKitImage_cleanSessionMethodMetaData: self;
@@ -2323,9 +2331,9 @@ prepareGsDevKitImage
 	self sourceGemStoneRelease
 		prepareGsDevKitImage_loadApplicationCode: self;
 		prepareGsDevKitImage_validation: self;
-		yourself.	
+		yourself.
 	self log: '	finished gsdevkit image (commit)'.
-	self prepareGsDevKitImageDoneBanner.
+	self prepareGsDevKitImageDoneBanner
 %
 
 category: 'prepare gsdevkit  image'
@@ -2570,6 +2578,14 @@ prepareGsDevKitImage_removeAllMethods
 	System commit.
 
 	self log: '	methods removed (commit)'.
+%
+
+category: 'prepare gsdevkit  image'
+method: GsuAbstractGsDevKitUpgrade
+prepareGsDevKitImage_removeObsoleteClasses
+	"opportunity to remove classes from GsDevKit image, what may be present in Globals"
+
+	"noop until 3.7.0"
 %
 
 category: 'prepare gsdevkit  image'
@@ -3956,6 +3972,48 @@ prepareGsDevKitImage_bug49622_patch
 		compileMethod: 'readStream ^ AnsiReadStream on: self'
 		dictionaries: self upgradeUserProfile symbolList
 		category: category) ifNotNil: [ :ar | self error: 'did not compile' ].
+%
+
+category: 'prepare gsdevkit  image'
+method: GsuGsDevKit_3_7_x_Upgrade
+prepareGsDevKitImage_removeObsoleteClasses
+	"remove obsolete classes (those now implemented in base image, from GsDevKit image (upgradeSymbolDict) 
+		and recompile methods that reference the obsolete class"
+
+	"see https://github.com/GsDevKit/GsDevKit_upgrade/issues/29"
+
+	"these obsolete GsDevKit classes are now present in the GemStone base 3.7.0 image and the GsDevKit implementations need to be removed"
+
+	| obsoleteClassNames classOrganizer gsDevKitSymbolDict gsDevKitSymbolDictName |
+	self
+		timeStampedLog:
+			'Prepare gsdevkit - recompile remove obsolete classes (those replaced by base image) and recompile references to each class'.
+	obsoleteClassNames := #(#'ZnCharacterWriteStream' #'ZnCharacterReadStream' #'ZnUTF8Encoder' #'ZnCharacterEncoder' #'ZnBufferedWriteStream' #'ZnBufferedReadStream' #'ZnCharacterEncodingError').
+	classOrganizer := ClassOrganizer newExcludingGlobals.	"exclude Globals, impossible to for Globals to have methods referencing GsDevKit methods"
+	gsDevKitSymbolDict := self upgradeSymbolDict.
+	gsDevKitSymbolDictName := gsDevKitSymbolDict name asString.
+	obsoleteClassNames
+		do: [ :obsoleteClassName | 
+			(gsDevKitSymbolDict at: obsoleteClassName ifAbsent: [  ])
+				ifNil: [ 
+					self
+						log:
+							'	ignoring class ' , obsoleteClassName
+								, ' that are not in upgrade symbol dictionary ' , gsDevKitSymbolDictName ]
+				ifNotNil: [ :obsoleteClass | 
+					self log: '	remove ' , obsoleteClass , ' from ' , gsDevKitSymbolDictName.
+					gsDevKitSymbolDict removeKey: obsoleteClass.
+					self log: '	scanning for methods referencing ' , obsoleteClassName.
+					(classOrganizer referencesToObject: obsoleteClass)
+						do: [ :aGsNMethod | 
+							self
+								log:
+									'	recompiling ' , aGsNMethod inClass name , ' >> ' , aGsNMethod selector.
+							aGsNMethod recompileFromSource ] ] ].
+	System commit.
+	self
+		log:
+			'	done removing obsolete classes and recompiling methods with references to obsolete classes.. (commit)'
 %
 
 category: 'private'

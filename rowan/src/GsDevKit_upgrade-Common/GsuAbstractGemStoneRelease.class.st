@@ -259,6 +259,13 @@ GsuAbstractGemStoneRelease >> prepareGsDevKitImage_removeAllMethods:  aGsDevKitU
 ]
 
 { #category : 'prepare gsdevkit image' }
+GsuAbstractGemStoneRelease >> prepareGsDevKitImage_removeObsoleteClasses:  aGsDevKitUpgrade [
+	"opportunity to remove classes from GsDevKit image, what may be present in Globals"
+
+	aGsDevKitUpgrade prepareGsDevKitImage_removeObsoleteClasses
+]
+
+{ #category : 'prepare gsdevkit image' }
 GsuAbstractGemStoneRelease >> prepareGsDevKitImage_resetExistingGlobalState:  aGsDevKitUpgrade [
 
 	aGsDevKitUpgrade prepareGsDevKitImage_resetExistingGlobalState

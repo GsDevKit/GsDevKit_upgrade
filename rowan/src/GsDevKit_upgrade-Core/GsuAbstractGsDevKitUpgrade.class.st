@@ -463,7 +463,6 @@ GsuAbstractGsDevKitUpgrade >> prepareGsDevKitImage [
 
 	"run as gsdevkit user"
 
-
 	self prepareGsDevKitImageBanner.
 	self log: 'Prepare gsdevkit image'.
 	self updateDBFHistoryStartUpgrade.
@@ -476,7 +475,8 @@ GsuAbstractGsDevKitUpgrade >> prepareGsDevKitImage [
 		prepareGsDevKitImage_patch46217: self;
 		prepareGsDevKitImage_patch_compileMethodCategory: self;
 		prepareGsDevKitImage_recompilePragmaMethods: self;
-		prepareGsDevKitImage_patch49622: self;		
+		prepareGsDevKitImage_patch49622: self;
+		prepareGsDevKitImage_removeObsoleteClasses: self;
 		prepareGsDevKitImage_bootstrapGsDevkit: self;
 		prepareGsDevKitImage_resetExistingGlobalState: self;
 		prepareGsDevKitImage_cleanSessionMethodMetaData: self;
@@ -486,9 +486,9 @@ GsuAbstractGsDevKitUpgrade >> prepareGsDevKitImage [
 	self sourceGemStoneRelease
 		prepareGsDevKitImage_loadApplicationCode: self;
 		prepareGsDevKitImage_validation: self;
-		yourself.	
+		yourself.
 	self log: '	finished gsdevkit image (commit)'.
-	self prepareGsDevKitImageDoneBanner.
+	self prepareGsDevKitImageDoneBanner
 ]
 
 { #category : 'prepare gsdevkit  image' }
@@ -706,6 +706,13 @@ GsuAbstractGsDevKitUpgrade >> prepareGsDevKitImage_removeAllMethods [
 	System commit.
 
 	self log: '	methods removed (commit)'.
+]
+
+{ #category : 'prepare gsdevkit  image' }
+GsuAbstractGsDevKitUpgrade >> prepareGsDevKitImage_removeObsoleteClasses [
+	"opportunity to remove classes from GsDevKit image, what may be present in Globals"
+
+	"noop until 3.7.0"
 ]
 
 { #category : 'prepare gsdevkit  image' }

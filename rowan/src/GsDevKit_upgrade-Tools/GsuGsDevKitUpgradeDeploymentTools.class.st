@@ -23,7 +23,7 @@ GsuGsDevKitUpgradeDeploymentTools >> _defaultTopazFileHeader: fileName [
 
 	^ (WriteStream on: String new)
 		nextPutAll: '!========================================================================='; lf;
-		nextPutAll: '! Copyright (C) GemTalk Systems 2019.  All Rights Reserved.'; lf;
+		nextPutAll: '! Copyright (C) GemTalk Systems 2019-', Date today year printString, '.  All Rights Reserved.'; lf;
 		nextPutAll: '! MIT license: see https://github.com/GsDevKit/GsDevKit_upgrade/blob/master/LICENSE'; lf;
 		nextPutAll: '!'; lf;
 		nextPutAll: '! File - seaside/bin/', fileName, '.gs'; lf;

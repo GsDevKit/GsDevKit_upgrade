@@ -24,8 +24,8 @@ prepareGsDevKitImage_removeObsoleteClasses
 							'	ignoring class ' , obsoleteClassName
 								, ' that are not in upgrade symbol dictionary ' , gsDevKitSymbolDictName ]
 				ifNotNil: [ :obsoleteClass | 
-					self log: '	remove ' , obsoleteClass , ' from ' , gsDevKitSymbolDictName.
-					gsDevKitSymbolDict removeKey: obsoleteClass.
+					self log: '	remove ' , obsoleteClassName , ' from ' , gsDevKitSymbolDictName.
+					gsDevKitSymbolDict removeKey: obsoleteClassName.
 					self log: '	scanning for methods referencing ' , obsoleteClassName.
 					(classOrganizer referencesToObject: obsoleteClass)
 						do: [ :aGsNMethod | 

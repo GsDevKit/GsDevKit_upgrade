@@ -62,6 +62,7 @@ GsuGsDevKit_3_7_x_Upgrade >> prepareGsDevKitImage_removeObsoleteClasses [
 	gsDevKitSymbolDictName := gsDevKitSymbolDict name asString.
 	self
 		_deploy: [ 
+			"instance migration for the instances of ZnInvalidUTF8, ZnNullEncoder, and ZnByteEncoder"
 			[ 
 			self
 				log:
@@ -69,8 +70,10 @@ GsuGsDevKit_3_7_x_Upgrade >> prepareGsDevKitImage_removeObsoleteClasses [
 			assocs := {#'ZnCharacterEncodingError'.
 			#'ZnCharacterEncoder'}
 				collect: [ :className | 
-					"we need to do the migration of instances at the very end of the process"
-					gsDevKitSymbolDict removeAssociationAt: className ].
+					| assoc |
+					assoc := gsDevKitSymbolDict associationAt: className.
+					gsDevKitSymbolDict removeAssociation: assoc.
+					assoc ].
 			self
 				_moveClassNamed: #'ZnInvalidUTF8'
 				toNewSuperclassNamed: #'ZnCharacterEncodingError'.

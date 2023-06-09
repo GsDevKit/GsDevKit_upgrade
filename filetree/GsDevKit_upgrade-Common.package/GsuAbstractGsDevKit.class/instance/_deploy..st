@@ -12,4 +12,4 @@ _deploy: aBlock
 			ensure: [ 
 				platformSupportClass autoCommit: oldAutoCommit.
 				platformSupportClass autoMigrate: oldAutoMigrate ] ]
-	ifNotNil: [ :deployerClass | deployerClass deploy: aBlock ]
+	ifNotNil: [ :deployerClass | deployerClass bulkMigrate: aBlock ]

@@ -57,7 +57,7 @@ GsuGsDevKit_3_7_x_Upgrade >> prepareGsDevKitImage_removeObsoleteClasses [
 		timeStampedLog:
 			'Prepare gsdevkit - recompile remove obsolete classes (those replaced by base image) and recompile references to each class'.
 	obsoleteClassNames := #(#'ZnCharacterWriteStream' #'ZnCharacterReadStream' #'ZnUTF8Encoder' #'ZnCharacterEncoder' #'ZnBufferedWriteStream' #'ZnBufferedReadStream' #'ZnCharacterEncodingError').
-	classOrganizer := ClassOrganizer newExcludingGlobals.	"exclude Globals, impossible to for Globals to have methods referencing GsDevKit methods"
+	classOrganizer := ClassOrganizer new.
 	gsDevKitSymbolDict := self upgradeSymbolDict.
 	gsDevKitSymbolDictName := gsDevKitSymbolDict name asString.
 	self

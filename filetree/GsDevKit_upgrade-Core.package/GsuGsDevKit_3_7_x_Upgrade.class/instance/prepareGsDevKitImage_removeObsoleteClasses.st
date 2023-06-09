@@ -8,13 +8,18 @@ prepareGsDevKitImage_removeObsoleteClasses
 	"these obsolete GsDevKit classes are now present in the GemStone base 3.7.0 image and the GsDevKit implementations need to be removed"
 
 	| obsoleteClassNames classOrganizer gsDevKitSymbolDict gsDevKitSymbolDictName assocs |
+	gsDevKitSymbolDict := self upgradeSymbolDict.
+	obsoleteClassNames := #(#'ZnCharacterWriteStream' #'ZnCharacterReadStream' #'ZnUTF8Encoder' #'ZnCharacterEncoder' #'ZnBufferedWriteStream' #'ZnBufferedReadStream' #'ZnCharacterEncodingError')
+		select: [ :className | gsDevKitSymbolDict includesKey: className ].
+	obsoleteClassNames isEmpty
+		ifTrue: [ 
+			self timeStampedLog: 'Prepare gsdevkit - no obsolete Zinc classes present'.
+			^ self ].
+	classOrganizer := ClassOrganizer new.
+	gsDevKitSymbolDictName := gsDevKitSymbolDict name asString.
 	self
 		timeStampedLog:
-			'Prepare gsdevkit - recompile remove obsolete classes (those replaced by base image) and recompile references to each class'.
-	obsoleteClassNames := #(#'ZnCharacterWriteStream' #'ZnCharacterReadStream' #'ZnUTF8Encoder' #'ZnCharacterEncoder' #'ZnBufferedWriteStream' #'ZnBufferedReadStream' #'ZnCharacterEncodingError').
-	classOrganizer := ClassOrganizer new.
-	gsDevKitSymbolDict := self upgradeSymbolDict.
-	gsDevKitSymbolDictName := gsDevKitSymbolDict name asString.
+			'Prepare gsdevkit - recompile remove obsolete Zinc classes (those replaced by base image) and recompile references to each class'.
 	self
 		_deploy: [ 
 			"instance migration for the instances of ZnInvalidUTF8, ZnNullEncoder, and ZnByteEncoder"

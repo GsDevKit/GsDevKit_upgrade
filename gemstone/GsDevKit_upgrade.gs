@@ -4330,7 +4330,3 @@ _removeClassNamed: className
 %
 
 ! End File - seaside/bin/GsDevKit_upgrade.gs
-]
-%
-
-! End File - seaside/bin/GsDevKit_upgrade.gs

@@ -27,18 +27,16 @@ prepareGsDevKitImage_removeObsoleteClasses
 				ifNotNil: [ :obsoleteClass | 
 					self log: '	remove ' , obsoleteClassName , ' from ' , gsDevKitSymbolDictName.
 					obsoleteClass removeFromSystem.
-					false
-						ifTrue: [ 
-							"with removeFromSystem, the removed classes are automatically added to 
-								UndefinedSystems, so recompile will be automatic when the new classes 
-								come into the system ... so skip the recompile"
-							self log: '	scanning for methods referencing ' , obsoleteClassName.
-							(classOrganizer referencesToObject: obsoleteClass)
-								do: [ :aGsNMethod | 
-									self
-										log:
-											'	recompiling ' , aGsNMethod inClass name , ' >> ' , aGsNMethod selector.
-									aGsNMethod recompileFromSource ] ] ] ].
+					"with removeFromSystem, the removed classes are automatically added to 
+						UndefinedSystems, so recompile will be automatic when the new classes 
+						come into the system ... so skip the recompile"
+					self log: '	scanning for methods referencing ' , obsoleteClassName.
+					(classOrganizer referencesToObject: obsoleteClass)
+						do: [ :aGsNMethod | 
+							self
+								log:
+									'	recompiling ' , aGsNMethod inClass name , ' >> ' , aGsNMethod selector.
+							aGsNMethod recompileFromSource ] ] ].
 	System commit.
 	self
 		log:

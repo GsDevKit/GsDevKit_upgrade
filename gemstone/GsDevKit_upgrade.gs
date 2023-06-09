@@ -4004,18 +4004,16 @@ prepareGsDevKitImage_removeObsoleteClasses
 				ifNotNil: [ :obsoleteClass | 
 					self log: '	remove ' , obsoleteClassName , ' from ' , gsDevKitSymbolDictName.
 					obsoleteClass removeFromSystem.
-					false
-						ifTrue: [ 
-							"with removeFromSystem, the removed classes are automatically added to 
-								UndefinedSystems, so recompile will be automatic when the new classes 
-								come into the system ... so skip the recompile"
-							self log: '	scanning for methods referencing ' , obsoleteClassName.
-							(classOrganizer referencesToObject: obsoleteClass)
-								do: [ :aGsNMethod | 
-									self
-										log:
-											'	recompiling ' , aGsNMethod inClass name , ' >> ' , aGsNMethod selector.
-									aGsNMethod recompileFromSource ] ] ] ].
+					"with removeFromSystem, the removed classes are automatically added to 
+						UndefinedSystems, so recompile will be automatic when the new classes 
+						come into the system ... so skip the recompile"
+					self log: '	scanning for methods referencing ' , obsoleteClassName.
+					(classOrganizer referencesToObject: obsoleteClass)
+						do: [ :aGsNMethod | 
+							self
+								log:
+									'	recompiling ' , aGsNMethod inClass name , ' >> ' , aGsNMethod selector.
+							aGsNMethod recompileFromSource ] ] ].
 	System commit.
 	self
 		log:
@@ -4329,6 +4327,10 @@ _removeClassNamed: className
 							(ar at: 1) removeKey: (ar at: 2).
 							self log: '		remove class named ', (ar at: 2) printString, ' from symbol dictionary ', (ar at: 1) name printString ] ]
 				ifFalse: [ self log: '		DID NOT remove class named: ', className printString ] ]
+%
+
+! End File - seaside/bin/GsDevKit_upgrade.gs
+]
 %
 
 ! End File - seaside/bin/GsDevKit_upgrade.gs

@@ -59,9 +59,6 @@ GsuGsDevKit_3_7_x_Upgrade >> prepareGsDevKitImage_removeObsoleteClasses [
 				ifNotNil: [ :obsoleteClass | 
 					self log: '	remove ' , obsoleteClassName , ' from ' , gsDevKitSymbolDictName.
 					obsoleteClass removeFromSystem.
-					"with removeFromSystem, the removed classes are automatically added to 
-						UndefinedSystems, so recompile will be automatic when the new classes 
-						come into the system ... so skip the recompile"
 					self log: '	scanning for methods referencing ' , obsoleteClassName.
 					(classOrganizer referencesToObject: obsoleteClass)
 						do: [ :aGsNMethod | 

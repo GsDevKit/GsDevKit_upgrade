@@ -4005,12 +4005,16 @@ prepareGsDevKitImage_removeObsoleteClasses
 					self log: '	remove ' , obsoleteClassName , ' from ' , gsDevKitSymbolDictName.
 					obsoleteClass removeFromSystem.
 					self log: '	scanning for methods referencing ' , obsoleteClassName.
-					(classOrganizer referencesToObject: obsoleteClass)
-						do: [ :aGsNMethod | 
-							self
-								log:
-									'	recompiling ' , aGsNMethod inClass name , ' >> ' , aGsNMethod selector.
-							aGsNMethod recompileFromSource ] ] ].
+					(innocentBystanders includes: obsoleteClass)
+						ifFalse: [ 
+							"method references to the innocentBystanders will be repaired 
+								when they are reloaded into the image"
+							(classOrganizer referencesToObject: obsoleteClass)
+								do: [ :aGsNMethod | 
+									self
+										log:
+											'	recompiling ' , aGsNMethod inClass name , ' >> ' , aGsNMethod selector.
+									aGsNMethod recompileFromSource ] ] ] ].
 	System commit.
 	self
 		log:

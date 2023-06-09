@@ -38,7 +38,7 @@ prepareGsDevKitImage_removeObsoleteClasses
 			self
 				_moveClassNamed: #'ZnByteEncoder'
 				toNewSuperclassNamed: #'ZnCharacterEncoder' ]
-				ensure: [ assocs do: [ :assoc | gsDevKitSymbolDict addAssocation: assoc ] ] ].
+				ensure: [ assocs do: [ :assoc | gsDevKitSymbolDict addAssociation: assoc ] ] ].
 	obsoleteClassNames
 		do: [ :obsoleteClassName | 
 			(gsDevKitSymbolDict at: obsoleteClassName ifAbsent: [  ])

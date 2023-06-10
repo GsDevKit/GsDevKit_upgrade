@@ -25,6 +25,7 @@ prepareGsDevKitImage
 		prepareGsDevKitImage_patch_compileMethodCategory: self;
 		prepareGsDevKitImage_recompilePragmaMethods: self;
 		prepareGsDevKitImage_patch49622: self;
+		prepareGsDevKitImage_patch__optionsForDefinition: self;
 		prepareGsDevKitImage_removeObsoleteClasses: self;
 		prepareGsDevKitImage_bootstrapGsDevkit: self;
 		prepareGsDevKitImage_resetExistingGlobalState: self;

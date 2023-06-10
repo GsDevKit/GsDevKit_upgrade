@@ -674,6 +674,14 @@ prepareGsDevKitImage_patch_compileMethodCategory:  aGsDevKitUpgrade
 
 category: 'prepare gsdevkit image'
 method: GsuAbstractGemStoneRelease
+prepareGsDevKitImage_patch__optionsForDefinition:  aGsDevKitUpgrade
+  "in 3.6 Class>>_optionsForDefinition was replaced by Class>>_optionsStringForDefinition ... in 3.7, this became a problem so the method must be patched when upgrading to 3.7.0 from 3.4.x through 3.5.x"
+
+	aGsDevKitUpgrade prepareGsDevKitImage_patch__optionsForDefinition
+%
+
+category: 'prepare gsdevkit image'
+method: GsuAbstractGemStoneRelease
 prepareGsDevKitImage_recompilePragmaMethods:  aGsDevKitUpgrade
 
 	aGsDevKitUpgrade prepareGsDevKitImage_recompilePragmaMethods
@@ -1366,6 +1374,14 @@ method: GsuGemStone_3_6_x_Release
 minor
 
 	^ minor ifNil: [ 6]
+%
+
+category: 'prepare gsdevkit image'
+method: GsuGemStone_3_6_x_Release
+prepareGsDevKitImage_patch__optionsForDefinition: aGsDevKitUpgrade
+	"in 3.6 Class>>_optionsForDefinition was replaced by Class>>_optionsStringForDefinition ... in 3.7, this became a problem so the method must be patched when upgrading to 3.7.0 from 3.4.x through 3.5.x"
+
+	"noop 3.6 and beyond"
 %
 
 category: 'bootstrapping'
@@ -2321,6 +2337,7 @@ prepareGsDevKitImage
 		prepareGsDevKitImage_patch_compileMethodCategory: self;
 		prepareGsDevKitImage_recompilePragmaMethods: self;
 		prepareGsDevKitImage_patch49622: self;
+		prepareGsDevKitImage_patch__optionsForDefinition: self;
 		prepareGsDevKitImage_removeObsoleteClasses: self;
 		prepareGsDevKitImage_bootstrapGsDevkit: self;
 		prepareGsDevKitImage_resetExistingGlobalState: self;
@@ -2552,6 +2569,14 @@ prepareGsDevKitImage_patch_compileMethodCategory
 	"patch only needed suring standard upgrade ..."
 
 	"noop"
+%
+
+category: 'prepare gsdevkit  image'
+method: GsuAbstractGsDevKitUpgrade
+prepareGsDevKitImage_patch__optionsForDefinition
+	"_optionsForDefinition replaced by _optionsStringForDefinition in 3.6. Not used during upgrade until 3.7.0 upgrade. See _moveClassNamed:toNewSuperclassNamed:"
+
+	"noop until 3.7.0"
 %
 
 category: 'prepare gsdevkit  image'
@@ -3976,6 +4001,14 @@ prepareGsDevKitImage_bug49622_patch
 
 category: 'prepare gsdevkit  image'
 method: GsuGsDevKit_3_7_x_Upgrade
+prepareGsDevKitImage_patch__optionsForDefinition
+	"_optionsForDefinition replaced by _optionsStringForDefinition in 3.6. Not used during upgrade until 3.7.0 upgrade. See _moveClassNamed:toNewSuperclassNamed:"
+
+	self prepareImage_user_patch_Class__optionsForDefinition
+%
+
+category: 'prepare gsdevkit  image'
+method: GsuGsDevKit_3_7_x_Upgrade
 prepareGsDevKitImage_removeObsoleteClasses
 	"remove obsolete classes (those now implemented in base image, from GsDevKit image (upgradeSymbolDict) 
 		and recompile methods that reference the obsolete class"
@@ -4046,6 +4079,27 @@ prepareGsDevKitImage_removeObsoleteClasses
 			'	done removing obsolete classes and recompiling methods with references to obsolete classes.. (commit)'
 %
 
+category: 'prepare image user'
+method: GsuGsDevKit_3_7_x_Upgrade
+prepareImage_user_patch_Class__optionsForDefinition
+	"_optionsForDefinition replaced by _optionsStringForDefinition in 3.6. Not used during upgrade until 3.7.0. See _moveClassNamed:toNewSuperclassNamed:"
+
+	self
+		timeStampedLog:
+			'	patch Class >> _optionsForDefinition in category *core' , ' as ' , System myUserProfile userId.
+	[ 
+	Class
+		compileMethod: self _prepareImage_class__optionsForDefinition_patchSource
+		category: '*core'
+		using: self upgradeUserProfile symbolList ]
+		onException: CompileError
+		do: [ :ex | 
+			self
+				error:
+					'Did not compile:
+' , (GsNMethod _sourceWithErrors: ex errorDetails fromString: ex sourceString) ]
+%
+
 category: 'private'
 method: GsuGsDevKit_3_7_x_Upgrade
 _defaultTargetRelease
@@ -4065,6 +4119,15 @@ _moveClassNamed: className toNewSuperclassNamed: superclassName
 	newClass
 		copyMethodsFrom: oldClass
 		dictionaries: GsSession currentSession symbolList
+%
+
+category: 'private'
+method: GsuGsDevKit_3_7_x_Upgrade
+_prepareImage_class__optionsForDefinition_patchSource
+
+	^  '_optionsForDefinition
+  "in 3.6 Class>>_optionsForDefinition was replaced by Class>>_optionsStringForDefinition ... in 3.7, this became a problem. Both are in the Core package"
+	^ self _optionsStringForDefinition'
 %
 
 ! Class implementation for 'GsuGsDevKitBootstrap'

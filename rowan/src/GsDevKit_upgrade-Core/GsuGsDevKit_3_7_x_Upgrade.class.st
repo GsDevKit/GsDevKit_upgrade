@@ -23,6 +23,14 @@ GsuGsDevKit_3_7_x_Upgrade >> _moveClassNamed: className toNewSuperclassNamed: su
 		dictionaries: GsSession currentSession symbolList
 ]
 
+{ #category : 'private' }
+GsuGsDevKit_3_7_x_Upgrade >> _prepareImage_class__optionsForDefinition_patchSource [
+
+	^  '_optionsForDefinition
+  "in 3.6 Class>>_optionsForDefinition was replaced by Class>>_optionsStringForDefinition ... in 3.7, this became a problem. Both are in the Core package"
+	^ self _optionsStringForDefinition'
+]
+
 { #category : 'prepare gsdevkit  image' }
 GsuGsDevKit_3_7_x_Upgrade >> prepareGsDevKitImage_bug49622_patch [
 	"Bug 49622 - starting in 3.7.0 ReadByteStream an optimized version of ReadStream should be used 
@@ -41,6 +49,13 @@ GsuGsDevKit_3_7_x_Upgrade >> prepareGsDevKitImage_bug49622_patch [
 		compileMethod: 'readStream ^ AnsiReadStream on: self'
 		dictionaries: self upgradeUserProfile symbolList
 		category: category) ifNotNil: [ :ar | self error: 'did not compile' ].
+]
+
+{ #category : 'prepare gsdevkit  image' }
+GsuGsDevKit_3_7_x_Upgrade >> prepareGsDevKitImage_patch__optionsForDefinition [
+	"_optionsForDefinition replaced by _optionsStringForDefinition in 3.6. Not used during upgrade until 3.7.0 upgrade. See _moveClassNamed:toNewSuperclassNamed:"
+
+	self prepareImage_user_patch_Class__optionsForDefinition
 ]
 
 { #category : 'prepare gsdevkit  image' }
@@ -112,4 +127,24 @@ GsuGsDevKit_3_7_x_Upgrade >> prepareGsDevKitImage_removeObsoleteClasses [
 	self
 		log:
 			'	done removing obsolete classes and recompiling methods with references to obsolete classes.. (commit)'
+]
+
+{ #category : 'prepare image user' }
+GsuGsDevKit_3_7_x_Upgrade >> prepareImage_user_patch_Class__optionsForDefinition [
+	"_optionsForDefinition replaced by _optionsStringForDefinition in 3.6. Not used during upgrade until 3.7.0. See _moveClassNamed:toNewSuperclassNamed:"
+
+	self
+		timeStampedLog:
+			'	patch Class >> _optionsForDefinition in category *core' , ' as ' , System myUserProfile userId.
+	[ 
+	Class
+		compileMethod: self _prepareImage_class__optionsForDefinition_patchSource
+		category: '*core'
+		using: self upgradeUserProfile symbolList ]
+		onException: CompileError
+		do: [ :ex | 
+			self
+				error:
+					'Did not compile:
+' , (GsNMethod _sourceWithErrors: ex errorDetails fromString: ex sourceString) ]
 ]

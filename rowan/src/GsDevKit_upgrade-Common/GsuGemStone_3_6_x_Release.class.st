@@ -17,6 +17,13 @@ GsuGemStone_3_6_x_Release >> minor [
 	^ minor ifNil: [ 6]
 ]
 
+{ #category : 'prepare gsdevkit image' }
+GsuGemStone_3_6_x_Release >> prepareGsDevKitImage_patch__optionsForDefinition: aGsDevKitUpgrade [
+	"in 3.6 Class>>_optionsForDefinition was replaced by Class>>_optionsStringForDefinition ... in 3.7, this became a problem so the method must be patched when upgrading to 3.7.0 from 3.4.x through 3.5.x"
+
+	"noop 3.6 and beyond"
+]
+
 { #category : 'bootstrapping' }
 GsuGemStone_3_6_x_Release >> reloadBootstrapPackageFileNames [
 	"answer an ordered list of the Monticello packages that are needed to reload GLASS into image"

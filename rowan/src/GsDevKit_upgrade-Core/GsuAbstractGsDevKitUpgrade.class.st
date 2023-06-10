@@ -476,6 +476,7 @@ GsuAbstractGsDevKitUpgrade >> prepareGsDevKitImage [
 		prepareGsDevKitImage_patch_compileMethodCategory: self;
 		prepareGsDevKitImage_recompilePragmaMethods: self;
 		prepareGsDevKitImage_patch49622: self;
+		prepareGsDevKitImage_patch__optionsForDefinition: self;
 		prepareGsDevKitImage_removeObsoleteClasses: self;
 		prepareGsDevKitImage_bootstrapGsDevkit: self;
 		prepareGsDevKitImage_resetExistingGlobalState: self;
@@ -643,6 +644,13 @@ GsuAbstractGsDevKitUpgrade >> prepareGsDevKitImage_loadApplicationCode [
 	self loadApplicationLoadSpecs.
 
 	self log: '		load GsDevKit application code DONE (commit)'.
+]
+
+{ #category : 'prepare gsdevkit  image' }
+GsuAbstractGsDevKitUpgrade >> prepareGsDevKitImage_patch__optionsForDefinition [
+	"_optionsForDefinition replaced by _optionsStringForDefinition in 3.6. Not used during upgrade until 3.7.0 upgrade. See _moveClassNamed:toNewSuperclassNamed:"
+
+	"noop until 3.7.0"
 ]
 
 { #category : 'prepare gsdevkit  image' }

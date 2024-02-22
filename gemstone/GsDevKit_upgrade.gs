@@ -1,5 +1,5 @@
 !=========================================================================
-! Copyright (C) GemTalk Systems 2019-2023.  All Rights Reserved.
+! Copyright (C) GemTalk Systems 2019-2024.  All Rights Reserved.
 ! MIT license: see https://github.com/GsDevKit/GsDevKit_upgrade/blob/master/LICENSE
 !
 ! File - seaside/bin/GsDevKit_upgrade.gs

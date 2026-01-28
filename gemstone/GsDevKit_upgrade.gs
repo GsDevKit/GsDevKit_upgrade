@@ -1442,11 +1442,11 @@ reloadBootstrapPackageFileNames
 	'Core.v3-dkh.86.mcz'.
 	'GemStone-Compression-dkh.3.mcz'.
 	'Base-Bootstrap.v3-dkh.29.mcz'.
-	'Bootstrap.v34-dkh.266.mcz'.
+	'Bootstrap.v34-kdk.267.mcz'.
 	'GemStone-ANSI-Streams-dkh.9.mcz'.
 	'GemStone-Indexing-Extensions-dkh.3.mcz'.
 	'Sport3.010.v3-dkh.29.mcz'.
-	'Squeak.v36-dkh.343.mcz'.
+	'Squeak.v36-kdk.344.mcz'.
 	'Regex-Core-DaleHenrichs.3.mcz'.
 	'Regex-Tests-Core-DaleHenrichs.5.mcz'.
 	'PackageInfo-Base.g-dkh.36.mcz'.
